@@ -137,6 +137,7 @@ class NXREST_API:
         faults = self._get_faults()
 
         if faults["totalCount"] == '0':
+            print("No logs.")
             return 
 
         keep = ("imdata", 

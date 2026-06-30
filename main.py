@@ -1,31 +1,31 @@
-
+import argparse
 import os
-from dotenv import load_dotenv
-from nxapi_requets import SwitchConnection, NXREST_API
+from nxapi_requets import NXREST_API
 
-load_dotenv()
+def main(args):
 
-
-"""
-client_cert_auth=False
-client_cert='PATH_TO_CLIENT_CERT_FILE'
-client_private_key='PATH_TO_CLIENT_PRIVATE_KEY_FILE'
-ca_cert='PATH_TO_CA_CERT_THAT_SIGNED_NXAPI_SERVER_CERT'
-"""
-
-
-def main():
-
+    
     switchuser=os.getenv("SWITCH_USER_ID")
     switchpassword=os.getenv("SWITCH_PASSWORD")
 
-    if switchuser == None or switchpassword == None:
-        print("Incomplete .env")
-        return
 
-    sc = NXREST_API(switchuser, switchpassword, "192.168.1.1")
+    if switchuser == None or switchpassword == None:
+            print("Incomplete .env")
+            return
+
+    sc = NXREST_API(switchuser, switchpassword, args.switch_ip)
     sc.print_system_info()    
-    sc.print_logs()
+    if(args.logs):
+        sc.print_logs()
     sc.logout()
 
-main()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="A program to communicate with NX-API on NX-OS")
+
+
+    parser.add_argument("switch_ip")
+    parser.add_argument("--logs", help="Get logs of the Switch", action="store_true")
+
+    args = parser.parse_args()
+    main()
