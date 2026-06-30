@@ -24,8 +24,8 @@ def main():
         return
 
     sc = NXREST_API(switchuser, switchpassword, "192.168.1.1")
-    res = sc.get_hostname()
-    print(res)
+    sc.print_system_info()    
+    sc.print_logs()
     sc.logout()
 
 main()
