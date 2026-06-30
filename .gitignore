@@ -1,0 +1,9 @@
+# Remove local environment
+.venv
+__pycache__
+uv.lock
+.python-version
+
+
+# Remove .env
+.env
