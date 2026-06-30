@@ -1,7 +1,7 @@
 
 import os
 from dotenv import load_dotenv
-from nxapi_requets import SwitchConnection
+from nxapi_requets import SwitchConnection, NXREST_API
 
 load_dotenv()
 
@@ -23,8 +23,9 @@ def main():
         print("Incomplete .env")
         return
 
-    sc = SwitchConnection(switchuser, switchpassword, "192.168.1.1")
+    sc = NXREST_API(switchuser, switchpassword, "192.168.1.1")
     res = sc.get_hostname()
     print(res)
+    sc.logout()
 
 main()
