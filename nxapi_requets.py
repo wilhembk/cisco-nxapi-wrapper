@@ -226,6 +226,17 @@ class NXREST_API:
 
             print(f"{s}since {iface["lastLinkStChg"]}")
 
-            
+    def _get_stp(self):
+        return self._get("class/stpIf.json")
+    
 
+    def print_stp_loops(self):
+        stp_if = self._get_stp()
+        if stp_if["totalCount"] == '0':
+            print("No L2 loops detected.")
+            return
+        
+        data = glom(stp_if, ("imdata", ["stpIf.attributes.id"]))
 
+        for iface in data:
+            print(f"{ANSI.COLOR_RED}[STP] {iface} is deactivated because it is in a loop.")

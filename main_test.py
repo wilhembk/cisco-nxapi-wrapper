@@ -16,7 +16,7 @@ def main():
         return
 
     sc = NXREST_API(switchuser, switchpassword, "192.168.1.1")
-    print(sc.print_ifaces(filter_absent=False, filter_admin_down=True))
+    print(sc._get_stp())
     sc.logout()
 
 main()

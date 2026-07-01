@@ -20,7 +20,7 @@ def main(args):
     try:
         f = open(args.switch_ip_list, "r")
     except:
-        print(f"Could not open {args.swicth_ip_list}")
+        print(f"Could not open {args.switch_ip_list}")
         return
 
     for ip in f.readlines(): 
@@ -31,6 +31,7 @@ def main(args):
             sw.print_logs()
         if(args.ifstate):
             sw.print_ifaces()
+            sw.print_stp_loops()
         sw.logout()
 
 
