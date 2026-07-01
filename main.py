@@ -2,6 +2,10 @@ import argparse
 import os
 from nxapi_requets import NXREST_API
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 def main(args):
 
     
@@ -28,4 +32,4 @@ if __name__ == "__main__":
     parser.add_argument("--logs", help="Get logs of the Switch", action="store_true")
 
     args = parser.parse_args()
-    main()
+    main(args)

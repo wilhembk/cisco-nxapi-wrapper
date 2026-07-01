@@ -156,7 +156,76 @@ class NXREST_API:
         for log in data:
             prefix = ""
             if log["severity"].upper() == "WARNING":
-                prefix = f"{ANSI.COLOR_YELLOW} "
+                prefix = f"{ANSI.COLOR_YELLOW}"
             else:
-                prefix = f"{ANSI.COLOR_RED} "
-            print(f"{prefix}[{log["severity"].upper()}] ({log["code"]}) at \"{log["dn"]}\" : {log["descr"]}. Caused by {log["cause"]} {ANSI.RESET_ALL}")
+                prefix = f"{ANSI.COLOR_RED}"
+            print(f"{prefix}[{log["severity"].upper()}] ({log["code"]}) At \"{log["dn"]}\" : {log["descr"]}. Caused by {log["cause"]} {ANSI.RESET_ALL}")
+
+
+    def _get_ifaces(self):
+        return self._get("class/ethpmPhysIf.json")
+    
+
+    def get_ifaces_states(self) -> list:
+        
+        ifaces = self._get_ifaces()
+
+        keep = ("imdata",
+                [{
+                    "adminSt": "ethpmPhysIf.attributes.adminSt",
+                    "dn": "ethpmPhysIf.attributes.dn",
+                    "lastLinkStChg": "ethpmPhysIf.attributes.lastLinkStChg",
+                    "operSt": "ethpmPhysIf.attributes.operSt",
+                    "operStQual": "ethpmPhysIf.attributes.operStQual",
+                }]
+                )
+        
+        data = glom(ifaces, keep)
+
+        for i in range(len(data)):
+            data[i]["dn"] = data[i]["dn"].lstrip("sys/intf/phys-[").rstrip("]/phys") 
+            # Show as "eth1/33" where 1 is the card number, and 33 the port number.
+
+        return data
+
+
+    def print_ifaces(self, filter_admin_down=False, filter_absent=False):
+        """
+        Print current interfaces state. Can filter out absent interfaces and interface
+        down by an admin.
+        """
+
+        data = self.get_ifaces_states()
+        if filter_admin_down:
+            data = list(filter(lambda iface: iface["adminSt"].upper() != "DOWN", data))
+
+        if filter_absent:
+            data = list(filter(lambda iface: iface["operStQual"].upper() != "XCVR-ABSENT", data))
+
+        for iface in data:
+
+            s = iface["dn"]
+
+            if iface["operStQual"].upper() == "XCVR-ABSENT":
+                s += f"\t{ANSI.COLOR_YELLOW}{ANSI.STYLE_BOLD}unplugged{ANSI.RESET_ALL}\tis"
+            else:
+                s += f"\t{ANSI.COLOR_BLUE}{ANSI.STYLE_BOLD}plugged{ANSI.RESET_ALL}\t\tis"
+
+            if iface["adminSt"].upper() == "DOWN":
+                print(f"{s} {ANSI.COLOR_RED}{ANSI.STYLE_BOLD}DOWN{ANSI.RESET_ALL} by admin\tsince {iface["lastLinkStChg"]}")
+                continue
+
+            if iface["operSt"].upper() == "DOWN":
+                s += f" {ANSI.COLOR_RED}{ANSI.STYLE_BOLD}DOWN{ANSI.RESET_ALL}\t\t\t"
+
+            elif iface["operSt"].upper() == "UP":
+                s += f" {ANSI.COLOR_GREEN}{ANSI.STYLE_BOLD}UP{ANSI.RESET_ALL}\t\t\t"
+
+            else:
+                s += f" {ANSI.COLOR_YELLOW}{ANSI.STYLE_BOLD}{iface["operSt"]}{ANSI.RESET_ALL}\t\t\t"
+
+            print(f"{s}since {iface["lastLinkStChg"]}")
+
+            
+
+
