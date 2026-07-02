@@ -1,7 +1,70 @@
 # cisco-nxapi-wrapper
 
+## Reset de Switch
+
+Un switch sur NX-OS antérieur à 10.0 peut se réinitialiser de la façon suivante:
+
+### Réinitialisation du mot de passe
+
+1. Eteindre le switch, et s'y connecter en serial
+2. Appuyer sur CTRL+C continuellement pendant le boot
+3. Une fois sur le loader taper la commande 
+```
+loader > cmdline recoverymode=1
+```
+4. Identifier avec `dir` l'image de nxos sur laquelle boot (la plus récente, pas les versions `cs`)
+5. Utiliser la commande `boot nxos.<version>.bin` pour booter sur nxos
+6. Sur le mode `boot` du switch
+```
+switch(boot)# conf t
+switch(boot)(config)# admin-password <mot de passe>
+switch(boot)(config)# exit
+switch(boot)# load-nxos
+```
+7. Se connecter avec le username `admin` et le mot de passe choisi.
+
+> **A NOTER** que le démarrage peut prendre du temps, la configuration n'est pas immédiatement accessible.
+
+
+#### Simple réinitialisation de mot de passe
+Si l'on souhaite simplement modifier le mot de passe, il faut l'enregistrer dans la config
+```
+switch# conf t
+switch(config)# username admin password <mot de passe>
+switch(config)# exit
+switch# copy run start
+```
+
+### Réinitailisation complète
+
+Une fois l'accès au switch obtenu. On le réinitialise comme suit
+```
+switch# conf t
+switch(config)# write erase
+switch(config)# write erase boot
+switch(config)# exit
+switch# reload 
+```
+
+Au redémarrage, le switch va se charger sur le loader. Il faut démarrer sur une image de nixos en utilisant la commande `boot` (les versions disponibles sont visibles via `dir`)
+
+Une fois fait, le switch va boucler sur son processus POAP (POwer On Auto Provisioning), il cherche une configuration accesisble sur le réseau. Il faut taper `yes` pour passer en configuration manuelle.
+
+Procéder ensuite aux configurations manuelles classique. **Ne pas oublier l'adresse IP du port management et l'accès via ssh.**
+
+Une fois le switch configuré. IL faut lui indiquer l'image de boot. **Sinon, le switch redémarre en loader**
+```
+switch# conf t
+switch(config)# boot nxos.<version>.bin
+switch(config)# exit
+switch# copy run start
+```
+
+
 
 ## Premier démarrage (Connexion HTTP sur Management)
+
+**A NOTER**: Il est aussi possible d'immadiatemment utiliser la configuration de base en HTTPS autosigné.
 
 Il faut s'assurer que http est bien en écoute et que le vrf est sur le port management
 ```

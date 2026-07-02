@@ -1,4 +1,5 @@
 import sys
+import time
 
 class ANSI():
     RESET_ALL = "\x1b[0m" if sys.stdout.isatty() else ""
@@ -23,3 +24,40 @@ class ANSI():
     STYLE_BOLD = "\x1b[1m" if sys.stdout.isatty() else ""
     STYLE_ITALIC = "\x1b[3m" if sys.stdout.isatty() else ""
     STYLE_UNDERLINE = "\x1b[4m" if sys.stdout.isatty() else ""
+
+
+class Logger:
+
+    log_dir_path = ""
+    log_file_path = ""
+
+    def __init__(self, path: str):
+        self.log_dir_path = path
+        lt = time.localtime()
+        self.log_file_path = \
+            f"{self.log_dir_path}/log_{lt.tm_year}_{lt.tm_mon}_{lt.tm_mday}_{lt.tm_hour}_{lt.tm_min}_{lt.tm_sec}.log"
+        
+        f = None
+        try:
+           f = open(self.log_file_path, "w")
+        except:
+            print(f"{ANSI.COLOR_RED}[ERROR] Can't open log {self.log_file_path} file. Will log in stdout{ANSI.RESET_ALL}")
+            self.log_file_path = ""
+        if f: f.close()
+
+
+    def log(self, msg):
+
+        log_msg = f"{time.strftime("[%a, %d %b %Y %H:%M:%S]", time.localtime())} {msg}"
+        if self.log_file_path == "":
+            # No logs files. We print in stdout
+            print(log_msg)
+            return
+
+        with open(self.log_file_path, "a") as f:
+            f.write(log_msg+"\n")
+
+
+class ResultFile: 
+
+    pass

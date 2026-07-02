@@ -2,7 +2,9 @@ import requests
 import json
 from glom import glom 
 import urllib3
-from utils import ANSI
+from utils import ANSI, Logger
+import sys
+from datetime import datetime
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -48,12 +50,12 @@ class SwitchConnection:
 
 class NXREST_API:
 
-    def __init__(self, user_id: str, password: str, switch_ip: str):
+    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger):
         self.user_id = user_id
         self.password = password
         self.switch_ip = switch_ip
         self.api_url = f"https://{self.switch_ip}/api/"
-
+        self.logger = logger
         self.auth_cookie = {}
         self.login()
 
@@ -68,16 +70,21 @@ class NXREST_API:
             }
         }
 
+
         endpoint = self.api_url+"aaaLogin.json"
+
+        self.logger.log(f"Login into {self.switch_ip} with the provided credentials. (POST: {endpoint})")
 
         response = requests.request("POST", endpoint, data=json.dumps(payload), verify=False)
         if response.status_code == requests.codes.ok:
             data = json.loads(response.text)['imdata'][0]
             token = str(data['aaaLogin']['attributes']['token'])
             self.auth_cookie = {"APIC-cookie" : token}
+            self.logger.log(f"Logged into {self.switch_ip} successfully.")
             
         else:
-            raise Exception("Could not login to NX-API REST. Is the feature enabled ? Are the credentials correct ?")
+            self.logger.log(f"Login into {self.switch_ip} failed. Are the credentials correct ? Aborting.")
+            sys.exit(1)
         
     
     def logout(self):
@@ -102,9 +109,10 @@ class NXREST_API:
             self.login()
         
         endpoint = f"{self.api_url}{point}"
+        self.logger.log(f"GET {endpoint}")
         response = requests.request("GET", endpoint, cookies=self.auth_cookie, verify=False)
         if response.status_code != requests.codes.ok:
-            print(f"ERROR: No target for {endpoint}")
+            self.logger.log(f"The endpoint {endpoint} does not exist.")
             return {}
         return response.json()
     
@@ -112,6 +120,7 @@ class NXREST_API:
         return self._get("mo/sys.json")
 
     def get_hostname(self):
+        self.logger.log(f"Getting switch hostname")
         return glom(self._get_system(), ("imdata", ["topSystem.attributes.name"]))[0]
 
 
@@ -166,8 +175,8 @@ class NXREST_API:
         return self._get("class/ethpmPhysIf.json")
     
 
-    def get_ifaces_states(self) -> list:
-        
+    def get_ifaces_states(self, filter_admin_down=False, filter_absent=False) -> list:
+
         ifaces = self._get_ifaces()
 
         keep = ("imdata",
@@ -181,6 +190,12 @@ class NXREST_API:
                 )
         
         data = glom(ifaces, keep)
+        if filter_admin_down:
+            data = list(filter(lambda iface: iface["adminSt"].upper() != "DOWN", data))
+
+        if filter_absent:
+            data = list(filter(lambda iface: iface["operStQual"].upper() != "XCVR-ABSENT", data))
+
 
         for i in range(len(data)):
             data[i]["dn"] = data[i]["dn"].lstrip("sys/intf/phys-[").rstrip("]/phys") 
@@ -189,18 +204,29 @@ class NXREST_API:
         return data
 
 
+    def get_ifaces_down_since(self, days):
+        self.logger.log(f"Looking for unused interface since {days} days...")
+        data = self.get_ifaces_states(filter_admin_down=True, filter_absent=True)
+        
+        today = datetime.today()
+
+        # We check all down interfaces in data
+        for iface in filter(lambda iface: iface["operSt"].upper() != "UP", data):
+            # iface["laistLinkStChg"] = "YYYY-mm-ddTHH:MM:SS.ms+GMT"
+            down_since = datetime.strptime(iface["lastLinkStChg"].split("T")[0], "%Y-%m-%d")
+            down_days = (today - down_since).days
+            if down_days < days:
+                continue
+            self.logger.log(f"{iface["dn"]} is down since {down_days} days. Disable or unplug.")
+
+
     def print_ifaces(self, filter_admin_down=False, filter_absent=False):
         """
         Print current interfaces state. Can filter out absent interfaces and interface
         down by an admin.
         """
 
-        data = self.get_ifaces_states()
-        if filter_admin_down:
-            data = list(filter(lambda iface: iface["adminSt"].upper() != "DOWN", data))
-
-        if filter_absent:
-            data = list(filter(lambda iface: iface["operStQual"].upper() != "XCVR-ABSENT", data))
+        data = self.get_ifaces_states(filter_admin_down, filter_absent)
 
         for iface in data:
 
@@ -239,4 +265,4 @@ class NXREST_API:
         data = glom(stp_if, ("imdata", ["stpIf.attributes.id"]))
 
         for iface in data:
-            print(f"{ANSI.COLOR_RED}[STP] {iface} is deactivated because it is in a loop.")
+            print(f"{ANSI.COLOR_RED}[STP] {iface} is deactivated because it is in a loop.{ANSI.RESET_ALL}")
