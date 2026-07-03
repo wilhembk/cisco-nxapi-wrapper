@@ -2,7 +2,7 @@ import requests
 import json
 from glom import glom 
 import urllib3
-from utils import ANSI, Logger
+from utils import ANSI, Logger, ResultFile
 import sys
 from datetime import datetime
 
@@ -50,12 +50,13 @@ class SwitchConnection:
 
 class NXREST_API:
 
-    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger):
+    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile):
         self.user_id = user_id
         self.password = password
         self.switch_ip = switch_ip
         self.api_url = f"https://{self.switch_ip}/api/"
         self.logger = logger
+        self.result = result
         self.auth_cookie = {}
         self.login()
 
@@ -81,7 +82,8 @@ class NXREST_API:
             token = str(data['aaaLogin']['attributes']['token'])
             self.auth_cookie = {"APIC-cookie" : token}
             self.logger.log(f"Logged into {self.switch_ip} successfully.")
-            
+            self.result.begin_switch_result(self.get_hostname())
+              
         else:
             self.logger.log(f"Login into {self.switch_ip} failed. Are the credentials correct ? Aborting.")
             sys.exit(1)
@@ -101,6 +103,7 @@ class NXREST_API:
         endpoint = self.api_url+ "aaaLogout.json"
         requests.request("POST", endpoint, data=json.dumps(payload), cookies=self.auth_cookie, verify=False)
         self.auth_cookie = {}
+        self.result.end_switch_result()
 
 
     def _get(self, point: str):
@@ -124,51 +127,8 @@ class NXREST_API:
         return glom(self._get_system(), ("imdata", ["topSystem.attributes.name"]))[0]
 
 
-    def print_system_info(self):
-        system = self._get_system()
-        
-        keep = ("imdata",
-                [{
-                    "currentTime": "topSystem.attributes.currentTime",
-                    "name": "topSystem.attributes.name",
-                    "uptime": "topSystem.attributes.systemUpTime"
-                }])
-        
-        data = glom(system, keep)[0]
-        print(f"Hostname {data["name"]} - Current Time: {data["currentTime"]} - Uptime: {data["uptime"]}")
-
     def _get_faults(self):
         return self._get("class/faultInst.json")
-
-
-    def print_logs(self):
-
-        faults = self._get_faults()
-
-        if faults["totalCount"] == '0':
-            print("No logs.")
-            return 
-
-        keep = ("imdata", 
-                [{
-                    "cause":"faultInst.attributes.cause",
-                    "code":"faultInst.attributes.code",
-                    "descr":"faultInst.attributes.descr",
-                    "dn":"faultInst.attributes.dn",
-                    "severity":"faultInst.attributes.severity"
-                }]
-                )
-        
-        data = glom(faults, keep)
-
-        
-        for log in data:
-            prefix = ""
-            if log["severity"].upper() == "WARNING":
-                prefix = f"{ANSI.COLOR_YELLOW}"
-            else:
-                prefix = f"{ANSI.COLOR_RED}"
-            print(f"{prefix}[{log["severity"].upper()}] ({log["code"]}) At \"{log["dn"]}\" : {log["descr"]}. Caused by {log["cause"]} {ANSI.RESET_ALL}")
 
 
     def _get_ifaces(self):
@@ -204,22 +164,6 @@ class NXREST_API:
         return data
 
 
-    def get_ifaces_down_since(self, days):
-        self.logger.log(f"Looking for unused interface since {days} days...")
-        data = self.get_ifaces_states(filter_admin_down=True, filter_absent=True)
-        
-        today = datetime.today()
-
-        # We check all down interfaces in data
-        for iface in filter(lambda iface: iface["operSt"].upper() != "UP", data):
-            # iface["laistLinkStChg"] = "YYYY-mm-ddTHH:MM:SS.ms+GMT"
-            down_since = datetime.strptime(iface["lastLinkStChg"].split("T")[0], "%Y-%m-%d")
-            down_days = (today - down_since).days
-            if down_days < days:
-                continue
-            self.logger.log(f"{iface["dn"]} is down since {down_days} days. Disable or unplug.")
-
-
     def print_ifaces(self, filter_admin_down=False, filter_absent=False):
         """
         Print current interfaces state. Can filter out absent interfaces and interface
@@ -252,17 +196,40 @@ class NXREST_API:
 
             print(f"{s}since {iface["lastLinkStChg"]}")
 
+
+    def print_system_info(self):
+        system = self._get_system()
+        
+        keep = ("imdata",
+                [{
+                    "currentTime": "topSystem.attributes.currentTime",
+                    "name": "topSystem.attributes.name",
+                    "uptime": "topSystem.attributes.systemUpTime"
+                }])
+        
+        data = glom(system, keep)[0]
+        print(f"Hostname {data["name"]} - Current Time: {data["currentTime"]} - Uptime: {data["uptime"]}")
+
+
+
+    def get_ifaces_down_since(self, days):
+        self.logger.log(f"Looking for unused interface since {days} days...")
+        data = self.get_ifaces_states(filter_admin_down=True, filter_absent=True)
+        
+        today = datetime.today()
+
+        # We check all down interfaces in data
+        unused_ports = []
+        for iface in filter(lambda iface: iface["operSt"].upper() != "UP", data):
+            # iface["laistLinkStChg"] = "YYYY-mm-ddTHH:MM:SS.ms+GMT"
+            down_since = datetime.strptime(iface["lastLinkStChg"].split("T")[0], "%Y-%m-%d")
+            down_days = (today - down_since).days
+            if down_days < days:
+                continue
+            self.logger.log(f"{iface["dn"]} is down since {down_days} days. Disable or unplug.")
+            unused_ports.append(iface["dn"])
+        
+        self.result.unused_ports(days, unused_ports)            
+
     def _get_stp(self):
         return self._get("class/stpIf.json")
-    
-
-    def print_stp_loops(self):
-        stp_if = self._get_stp()
-        if stp_if["totalCount"] == '0':
-            print("No L2 loops detected.")
-            return
-        
-        data = glom(stp_if, ("imdata", ["stpIf.attributes.id"]))
-
-        for iface in data:
-            print(f"{ANSI.COLOR_RED}[STP] {iface} is deactivated because it is in a loop.{ANSI.RESET_ALL}")
