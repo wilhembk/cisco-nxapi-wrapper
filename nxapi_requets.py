@@ -8,11 +8,14 @@ from datetime import datetime
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-class SwitchConnection:
 
-    def __init__(self, user_id: str, password: str, switch_ip: str):
+class NXCLI_API:
+
+    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile):
         self.user_id = user_id
         self.password = password
+        self.logger = logger
+        self.result = result
         self.endpoint = f"https://{switch_ip}/ins"
 
     def _wrap_cmd(self, cmd: str):
@@ -33,6 +36,7 @@ class SwitchConnection:
             }
         ]
 
+        self.logger.log(f"Running command \"{cmd}\" via NXAPI-CLI")
         response = requests.post(
             self.endpoint,
             data=json.dumps(payload), 
@@ -47,10 +51,54 @@ class SwitchConnection:
     def get_hostname(self):
         return glom(self._wrap_cmd("show switchname"), "result.body.hostname")
     
+    def save_config(self):
+        return self._wrap_cmd("copy running-config startup-config")
+    
+
+    def get_transceiver_details(self):
+        """Returns the details of the transceivers, filtered down to plugged ones"""
+        return list(filter(
+                lambda iface: iface["sfp"] == "present", 
+                glom(self._wrap_cmd("show interface transceiver details"), "result.body.TABLE_interface.ROW_interface")))
+    
+    def check_for_tranceiver_alerts(self):
+        # Check for duplex
+        transceivers = self.get_transceiver_details()
+
+
+        self.result.output("--- Transceivers alerts ---")
+        for tran in transceivers:
+            iface = tran["interface"]
+            if "TABLE_lane" not in tran.keys:
+                # No data
+                continue
+
+            lanes = tran["TABLE_lane"]
+            for lane in lanes:
+                if "tx_alrm_hi" in lane.keys:
+                    # This an optic cable
+                    self.check_light_level_lane(iface, lane)
+        self.result.output("--------------------------")
+
+    def check_light_level_lane(self, iface, lane):
+
+        if "tx_pwr" not in lane.keys:
+            self.logger.log(f"No cable connected for lane {lane["lane_number"]} in {iface} !")
+            self.result.output(f"!!! Lane {lane["lane_number"]} on {iface} has NO CABLE !!!")
+
+        tx_alrm_hi = lane["tx_pwr_alrm_hi"]
+        tx_alrm_low = lane["tx_pwr_alrm_lo"]
+        tx_warn_hi = lane["tx_pwr_warn_hi"]
+        tx_warn_low = lane["tx_pwr_warn_lo"]
+        tx = lane["tx_pwr"]
+
+
+
 
 class NXREST_API:
 
     def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile):
+        """Call login to initialise the object auth cookies and start making requests"""
         self.user_id = user_id
         self.password = password
         self.switch_ip = switch_ip
@@ -58,7 +106,6 @@ class NXREST_API:
         self.logger = logger
         self.result = result
         self.auth_cookie = {}
-        self.login()
 
 
     def login(self):
@@ -83,10 +130,12 @@ class NXREST_API:
             self.auth_cookie = {"APIC-cookie" : token}
             self.logger.log(f"Logged into {self.switch_ip} successfully.")
             self.result.begin_switch_result(self.get_hostname())
+            return True
               
         else:
-            self.logger.log(f"Login into {self.switch_ip} failed. Are the credentials correct ? Aborting.")
-            sys.exit(1)
+            self.logger.log(f"Login into {self.switch_ip} failed. Are the credentials correct ? Ignoring this switch")
+            return False
+
         
     
     def logout(self):
@@ -158,7 +207,7 @@ class NXREST_API:
 
 
         for i in range(len(data)):
-            data[i]["dn"] = data[i]["dn"].lstrip("sys/intf/phys-[").rstrip("]/phys") 
+            data[i]["readable_id"] = data[i]["dn"].lstrip("sys/intf/phys-[").rstrip("]/phys") 
             # Show as "eth1/33" where 1 is the card number, and 33 the port number.
 
         return data
@@ -174,7 +223,7 @@ class NXREST_API:
 
         for iface in data:
 
-            s = iface["dn"]
+            s = iface["readable_id"]
 
             if iface["operStQual"].upper() == "XCVR-ABSENT":
                 s += f"\t{ANSI.COLOR_YELLOW}{ANSI.STYLE_BOLD}unplugged{ANSI.RESET_ALL}\tis"
@@ -226,10 +275,59 @@ class NXREST_API:
             down_days = (today - down_since).days
             if down_days < days:
                 continue
-            self.logger.log(f"{iface["dn"]} is down since {down_days} days. Disable or unplug.")
-            unused_ports.append(iface["dn"])
+            self.logger.log(f"{iface["readable_id"]} is down since {down_days} days")
+            unused_ports.append(iface)
         
-        self.result.unused_ports(days, unused_ports)            
+        self.result.unused_ports(days, unused_ports)  
+        return unused_ports  
+
+
+    def _post_interfaceEntity(self, children):
+
+        headers = { "Content-Type": "application/json" }
+        payload = {
+            "interfaceEntity": {
+                "children": children
+            }
+        }
+
+        endpoint = self.api_url + "mo/sys.json"
+        self.logger.log(f"POST {endpoint}: {payload}")
+        res = requests.post(endpoint, cookies=self.auth_cookie, headers=headers, data=json.dumps(payload), verify=False)
+        if res.status_code != requests.codes.ok:
+            self.logger.log(f"Request failed: {res.text}")
+            return False
+        return True
+            
+
+
+    def down_ifaces(self, ifaces):
+
+        if len(ifaces) == 0:
+            return
+
+        children = [
+            {
+                "l1PhysIf": {
+                    "attributes": {
+                        "dn": iface["dn"].rstrip("/phys"),
+                        "adminSt": "down"
+                    }
+                }
+
+            }
+            for iface in ifaces
+        ] # Generating payload to post
+        success = self._post_interfaceEntity(children)
+        if success:
+            self.logger.log(f"Successfully disabled {[iface["readable_id"] for iface in ifaces]}")
+            self.result.output("Those ports are now administratively down. You will no longer be notified. Consider unplugging them.\n")
+        else:
+            self.result.output("Consider unplugging or disabling them to not be notified again.\n")
+        
+
+
+
 
     def _get_stp(self):
         return self._get("class/stpIf.json")

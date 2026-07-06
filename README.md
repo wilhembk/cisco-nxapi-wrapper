@@ -68,9 +68,9 @@ switch# copy run start
 
 Il faut s'assurer que http est bien en écoute et que le vrf est sur le port management
 ```
-conf t
-nxapi http port 80
-nxapi use-vrf management
+switch# conf t
+switch(config)# nxapi http port 80
+switch(config)# nxapi use-vrf management
 ```
 Si besoin, sauvegarder la configuration
 ```
@@ -84,8 +84,19 @@ Le switch autosigne un certificat par défaut pour permettre une connexion HTTPS
 Il est possible d'importer un certificat de confiance
 
 ```
-conf t
-nxapi certificate httpscrt certfile bootflash:certificate.crt
-nxapi certificate httpskey keyfile bootflash:privkey.key password pass123! 
-nxapi certificate enable
+switch# conf t
+switch(config)# nxapi certificate httpscrt certfile bootflash:certificate.crt
+switch(config)# nxapi certificate httpskey keyfile bootflash:privkey.key password pass123! 
+switch(config)# nxapi certificate enable
 ```
+
+
+## NXAPI
+
+Il existe deux types d'API:
+- NXCLI qui permet d'envoyer des commandes cli au switch et de recevoir la réponse.
+    > Mais cette API est lente et demande une authentification à chaque commande
+- NXREST une api REST qui permet de vérifier l'état du switch et de modifier certaines configuration
+    > Ces requêtes sont rapides et pratique pour le monitoring. **On utilise cette API en priorité**
+    > L'API REST ne permet pas de sauvegarder la running-config et de correctement évaluer les niveaux optiques.
+

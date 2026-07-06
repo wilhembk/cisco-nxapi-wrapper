@@ -100,5 +100,5 @@ class ResultFile:
         
         self.output(f"> The following ports are unused since {unused_since} days")
         for port in port_list:
-            self.output(f"\t- {port}")
-        self.output(f"Those ports are now administratively down. You will no longer be notified. Consider unplugging them.\n")
+            self.output(f"\t- {port["readable_id"]}")
+

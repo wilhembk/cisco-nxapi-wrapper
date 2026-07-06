@@ -1,6 +1,6 @@
 import argparse
 import os, sys
-from nxapi_requets import NXREST_API
+from SwitchConnection import SwitchConnection
 from utils import Logger, ResultFile
 
 from dotenv import load_dotenv
@@ -29,11 +29,13 @@ def main(args):
 
     for ip in f.readlines(): 
         ip = ip.strip()
-        sw = NXREST_API(switchuser, switchpassword, ip, logger, result)  
+        sw = SwitchConnection(switchuser, switchpassword, ip, logger, result)  
+        success = sw.login()
+        if not success:
+            continue
         if(args.unused_ports != None):
-            sw.get_ifaces_down_since(args.unused_ports)
-        sw.print_system_info()
-        sw.print_ifaces(filter_admin_down=True)
+            ifaces = sw.get_ifaces_down_since(args.unused_ports)
+            sw.down_ifaces(ifaces)
         sw.logout()
 
 
