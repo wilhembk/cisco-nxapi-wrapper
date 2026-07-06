@@ -1,7 +1,8 @@
 import argparse
 import os, sys
 from SwitchConnection import SwitchConnection
-from utils import Logger, ResultFile
+from utils import Logger
+from ResultFile import ResultFile
 
 from dotenv import load_dotenv
 
@@ -37,6 +38,8 @@ def main(args):
             ifaces = sw.get_ifaces_down_since(args.unused_ports)
             sw.down_ifaces(ifaces)
         sw.logout()
+        
+    result.commit()
 
 
 if __name__ == "__main__":

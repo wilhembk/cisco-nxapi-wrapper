@@ -2,8 +2,8 @@ import requests
 import json
 from glom import glom 
 import urllib3
-from utils import ANSI, Logger, ResultFile
-import sys
+from utils import ANSI, Logger
+from ResultFile import ResultFile
 from datetime import datetime
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -66,7 +66,7 @@ class NXCLI_API:
         transceivers = self.get_transceiver_details()
 
 
-        self.result.output("--- Transceivers alerts ---")
+        #self.result.output("--- Transceivers alerts ---")
         for tran in transceivers:
             iface = tran["interface"]
             if "TABLE_lane" not in tran.keys:
@@ -78,13 +78,13 @@ class NXCLI_API:
                 if "tx_alrm_hi" in lane.keys:
                     # This an optic cable
                     self.check_light_level_lane(iface, lane)
-        self.result.output("--------------------------")
+        #self.result.output("--------------------------")
 
     def check_light_level_lane(self, iface, lane):
 
         if "tx_pwr" not in lane.keys:
             self.logger.log(f"No cable connected for lane {lane["lane_number"]} in {iface} !")
-            self.result.output(f"!!! Lane {lane["lane_number"]} on {iface} has NO CABLE !!!")
+            #self.result.output(f"!!! Lane {lane["lane_number"]} on {iface} has NO CABLE !!!")
 
         tx_alrm_hi = lane["tx_pwr_alrm_hi"]
         tx_alrm_low = lane["tx_pwr_alrm_lo"]
@@ -102,6 +102,7 @@ class NXREST_API:
         self.user_id = user_id
         self.password = password
         self.switch_ip = switch_ip
+        self.hostname = None
         self.api_url = f"https://{self.switch_ip}/api/"
         self.logger = logger
         self.result = result
@@ -129,7 +130,6 @@ class NXREST_API:
             token = str(data['aaaLogin']['attributes']['token'])
             self.auth_cookie = {"APIC-cookie" : token}
             self.logger.log(f"Logged into {self.switch_ip} successfully.")
-            self.result.begin_switch_result(self.get_hostname())
             return True
               
         else:
@@ -152,7 +152,6 @@ class NXREST_API:
         endpoint = self.api_url+ "aaaLogout.json"
         requests.request("POST", endpoint, data=json.dumps(payload), cookies=self.auth_cookie, verify=False)
         self.auth_cookie = {}
-        self.result.end_switch_result()
 
 
     def _get(self, point: str):
@@ -172,8 +171,11 @@ class NXREST_API:
         return self._get("mo/sys.json")
 
     def get_hostname(self):
+        if self.hostname != None:
+            return self.hostname
         self.logger.log(f"Getting switch hostname")
-        return glom(self._get_system(), ("imdata", ["topSystem.attributes.name"]))[0]
+        self.hostname = glom(self._get_system(), ("imdata", ["topSystem.attributes.name"]))[0]
+        return self.hostname
 
 
     def _get_faults(self):
@@ -278,7 +280,7 @@ class NXREST_API:
             self.logger.log(f"{iface["readable_id"]} is down since {down_days} days")
             unused_ports.append(iface)
         
-        self.result.unused_ports(days, unused_ports)  
+        self.result.set_unused_ports(hostname=self.get_hostname(), port_list=unused_ports, unused_since=days)
         return unused_ports  
 
 
@@ -319,11 +321,10 @@ class NXREST_API:
             for iface in ifaces
         ] # Generating payload to post
         success = self._post_interfaceEntity(children)
+        self.result.set_unused_ports(hostname=self.get_hostname(), successful_down=success)
         if success:
             self.logger.log(f"Successfully disabled {[iface["readable_id"] for iface in ifaces]}")
-            self.result.output("Those ports are now administratively down. You will no longer be notified. Consider unplugging them.\n")
-        else:
-            self.result.output("Consider unplugging or disabling them to not be notified again.\n")
+
         
 
 

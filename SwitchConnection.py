@@ -1,5 +1,6 @@
 from nxapi_requets import NXCLI_API, NXREST_API
-from utils import Logger, ResultFile
+from utils import Logger
+from ResultFile import ResultFile
 
 
 class SwitchConnection:

@@ -1,3 +1,4 @@
+
 import sys
 import time
 
@@ -57,48 +58,4 @@ class Logger:
         with open(self.log_file_path, "a") as f:
             f.write(log_msg+"\n")
 
-
-class ResultFile: 
-
-
-    def __init__(self, path: str):
-        self.log_dir_path = path
-        lt = time.localtime()
-        self.log_file_path = \
-            f"{self.log_dir_path}/result_{lt.tm_year}_{lt.tm_mon}_{lt.tm_mday}_{lt.tm_hour}_{lt.tm_min}_{lt.tm_sec}.txt"
-        
-        f = None
-        try:
-           f = open(self.log_file_path, "w")
-        except:
-            print(f"{ANSI.COLOR_RED}[ERROR] Can't open result {self.log_file_path} file. Will output in stdout{ANSI.RESET_ALL}")
-            self.log_file_path = ""
-        if f: f.close()
-
-    def output(self, msg):
-        if self.log_file_path == "":
-            # No logs files. We print in stdout
-            print(msg)
-            return
-
-        with open(self.log_file_path, "a") as f:
-            f.write(msg+"\n")
-
-
-    def begin_switch_result(self, hostname):
-        self.output(f"=============[ Switch: {hostname} ]=============\n")
-
-
-    def end_switch_result(self):
-        self.output(f"================================================\n")
-
-
-    def unused_ports(self, unused_since, port_list):
-        if len(port_list) == 0:
-            self.output("Currently, there are no unused ports.\n")
-            return
-        
-        self.output(f"> The following ports are unused since {unused_since} days")
-        for port in port_list:
-            self.output(f"\t- {port["readable_id"]}")
 
