@@ -66,7 +66,6 @@ class NXCLI_API:
         transceivers = self.get_transceiver_details()
 
 
-        #self.result.output("--- Transceivers alerts ---")
         for tran in transceivers:
             iface = tran["interface"]
             if "TABLE_lane" not in tran.keys:
@@ -78,7 +77,6 @@ class NXCLI_API:
                 if "tx_alrm_hi" in lane.keys:
                     # This an optic cable
                     self.check_light_level_lane(iface, lane)
-        #self.result.output("--------------------------")
 
     def check_light_level_lane(self, iface, lane):
 
@@ -175,6 +173,7 @@ class NXREST_API:
             return self.hostname
         self.logger.log(f"Getting switch hostname")
         self.hostname = glom(self._get_system(), ("imdata", ["topSystem.attributes.name"]))[0]
+        self.result.set_hostinfo(ip_addr=self.switch_ip, hostname=self.hostname)
         return self.hostname
 
 
@@ -280,7 +279,7 @@ class NXREST_API:
             self.logger.log(f"{iface["readable_id"]} is down since {down_days} days")
             unused_ports.append(iface)
         
-        self.result.set_unused_ports(hostname=self.get_hostname(), port_list=unused_ports, unused_since=days)
+        self.result.set_unused_ports(ip_addr=self.switch_ip, port_list=unused_ports, unused_since=days)
         return unused_ports  
 
 
@@ -321,7 +320,7 @@ class NXREST_API:
             for iface in ifaces
         ] # Generating payload to post
         success = self._post_interfaceEntity(children)
-        self.result.set_unused_ports(hostname=self.get_hostname(), successful_down=success)
+        self.result.set_unused_ports(ip_addr=self.switch_ip, successful_down=success)
         if success:
             self.logger.log(f"Successfully disabled {[iface["readable_id"] for iface in ifaces]}")
 

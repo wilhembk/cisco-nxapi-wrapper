@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 from typing import Dict, cast
 
 class Label(Enum):
+    HOST_INFO = "host"
     UNUSED_PORTS = "unused"
 
 
@@ -13,6 +14,15 @@ class ResultOutput(ABC):
     @abstractmethod
     def write(self, output):
         pass
+
+
+class HostInfo(ResultOutput):
+    def __init__(self, ip_addr: str, hostname: str):
+        self.ip_addr = ip_addr
+        self.hostname = hostname
+    
+    def write(self, output):
+        output(f"=============[ Switch: {self.hostname} ({self.ip_addr}) ]=============\n\n") 
 
 
 class UnusedPorts(ResultOutput):
@@ -44,7 +54,7 @@ class ResultFile:
     def __init__(self, path: str):
 
         self.switch_outputs: Dict[str, Dict[Label, ResultOutput]] = {}
-        # The first key is the switch hostname
+        # The first key is the switch ip_addr
         # The values is a dict where:
         #   - The key is the "output_type" on wich:
         #       - UNUSED_PORTS is a tuple: (port_list, unused_since, successful_down)
@@ -65,9 +75,9 @@ class ResultFile:
         if self.f: self.f.close()
 
 
-    def _init_dict(self, hostname: str):
-        if hostname not in self.switch_outputs.keys():
-            self.switch_outputs[hostname] = {}
+    def _init_dict(self, ip_addr: str):
+        if ip_addr not in self.switch_outputs.keys():
+            self.switch_outputs[ip_addr] = {}
 
 
     def _output(self, s: str):
@@ -89,9 +99,18 @@ class ResultFile:
         Writes the ResultFile fully.
         """
 
-        for hostname, output in self.switch_outputs.items():
-            self._output(f"=============[ Switch: {hostname} ]=============\n\n")        
+        for ip_addr, output in self.switch_outputs.items():
+            
+            if Label.HOST_INFO in output.keys():
+                output[Label.HOST_INFO].write(self._output)
+            else:
+                self._output(f"=============[ Switch: {ip_addr} ]=============\n\n")
+
             for label in output.keys():
+                if label == Label.HOST_INFO:
+                    # We don't print the host info again
+                    continue
+
                 output[label].write(self._output)
                         
             self._output(f"================================================\n")
@@ -99,16 +118,16 @@ class ResultFile:
         self._end()
 
 
-    def set_unused_ports(self, hostname, port_list = None, unused_since = None, successful_down = None):
+    def set_unused_ports(self, ip_addr, port_list = None, unused_since = None, successful_down = None):
 
-        self._init_dict(hostname)
+        self._init_dict(ip_addr)
 
-        if Label.UNUSED_PORTS not in self.switch_outputs[hostname].keys():
-            self.switch_outputs[hostname][Label.UNUSED_PORTS] = UnusedPorts(port_list, unused_since, successful_down)  
+        if Label.UNUSED_PORTS not in self.switch_outputs[ip_addr].keys():
+            self.switch_outputs[ip_addr][Label.UNUSED_PORTS] = UnusedPorts(port_list, unused_since, successful_down)  
             return 
         
         
-        unused_ports = cast(UnusedPorts, self.switch_outputs[hostname][Label.UNUSED_PORTS])
+        unused_ports = cast(UnusedPorts, self.switch_outputs[ip_addr][Label.UNUSED_PORTS])
 
         if port_list != None:
             unused_ports.port_list = port_list
@@ -116,4 +135,7 @@ class ResultFile:
             unused_ports.unused_since = unused_since
         if successful_down != None:
             unused_ports.successful_down = successful_down
+
+    def set_hostinfo(self, ip_addr: str, hostname: str):
+        self.switch_outputs[ip_addr][Label.HOST_INFO] = HostInfo(ip_addr, hostname)
 

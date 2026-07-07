@@ -11,6 +11,8 @@ class SwitchConnection:
         self.cli = NXCLI_API(user_id, password, switch_ip, logger, result)
         self.rest = NXREST_API(user_id, password, switch_ip, logger, result)
 
+        self.hostname = self.rest.get_hostname() # Getting hostname by default so it appears in the result file
+
     def login(self):
         return self.rest.login()
     
