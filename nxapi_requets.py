@@ -15,6 +15,7 @@ class NXCLI_API:
         self.user_id = user_id
         self.password = password
         self.logger = logger
+        self.switch_ip = switch_ip
         self.result = result
         self.endpoint = f"https://{switch_ip}/ins"
 
@@ -65,7 +66,6 @@ class NXCLI_API:
         # Check for duplex
         transceivers = self.get_transceiver_details()
 
-
         for tran in transceivers:
             iface = tran["interface"]
             if "TABLE_lane" not in tran.keys:
@@ -82,7 +82,8 @@ class NXCLI_API:
 
         if "tx_pwr" not in lane.keys:
             self.logger.log(f"No cable connected for lane {lane["lane_number"]} in {iface} !")
-            #self.result.output(f"!!! Lane {lane["lane_number"]} on {iface} has NO CABLE !!!")
+            self.result.set_lane_connected(self.switch_ip, iface, lane, False)
+            return
 
         tx_alrm_hi = lane["tx_pwr_alrm_hi"]
         tx_alrm_low = lane["tx_pwr_alrm_lo"]
@@ -90,7 +91,40 @@ class NXCLI_API:
         tx_warn_low = lane["tx_pwr_warn_lo"]
         tx = lane["tx_pwr"]
 
+        if not (tx_alrm_low <= tx <= tx_alrm_hi):
+            if tx <= tx_alrm_low:
+                self.result.set_lane_tx(self.switch_ip, iface, lane, tx, tx_alrm_low, is_alert=True)
+            else:
+                self.result.set_lane_tx(self.switch_ip, iface, lane, tx, tx_alrm_hi, is_alert=True)
+            return
+        
+        if not (tx_warn_low <= tx <= tx_warn_hi):
+            if tx <= tx_warn_low:
+                self.result.set_lane_tx(self.switch_ip, iface, lane, tx, tx_warn_low, is_alert=True)
+            else:
+                self.result.set_lane_tx(self.switch_ip, iface, lane, tx, tx_warn_hi, is_alert=True)
+            return
 
+
+        rx_alrm_hi = lane["rx_pwr_alrm_hi"]
+        rx_alrm_low = lane["rx_pwr_alrm_lo"]
+        rx_warn_hi = lane["rx_pwr_warn_hi"]
+        rx_warn_low = lane["rx_pwr_warn_lo"]
+        rx = lane["rx_pwr"]
+
+        if not (rx_alrm_low <= rx <= rx_alrm_hi):
+            if rx <= rx_alrm_low:
+                self.result.set_lane_rx(self.switch_ip, iface, lane, rx, rx_alrm_low, is_alert=True)
+            else:
+                self.result.set_lane_rx(self.switch_ip, iface, lane, rx, rx_alrm_hi, is_alert=True)
+            return
+        
+        if not (rx_warn_low <= rx <= rx_warn_hi):
+            if rx <= rx_warn_low:
+                self.result.set_lane_rx(self.switch_ip, iface, lane, rx, rx_warn_low, is_alert=True)
+            else:
+                self.result.set_lane_rx(self.switch_ip, iface, lane, rx, rx_warn_hi, is_alert=True)
+            return
 
 
 class NXREST_API:
@@ -264,7 +298,7 @@ class NXREST_API:
 
     def get_ifaces_down_since(self, days):
         self.logger.log(f"Looking for unused interface since {days} days...")
-        data = self.get_ifaces_states(filter_admin_down=True, filter_absent=True)
+        data = self.get_ifaces_states(filter_admin_down=True)
         
         today = datetime.today()
 

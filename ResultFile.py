@@ -3,12 +3,18 @@ import time
 from enum import Enum
 from utils import ANSI
 from abc import ABC, abstractmethod
-from typing import Dict, cast
+from typing import Dict, cast, Any
 
 class Label(Enum):
     HOST_INFO = "host"
     UNUSED_PORTS = "unused"
+    LIGHT_LEVEL = "light_level"
 
+class NotificationLevel(Enum):
+    NO_CABLE = "no_cable"
+    INFO = "info"
+    WARN = "warn"
+    ALERT = "alert"
 
 class ResultOutput(ABC):
     @abstractmethod
@@ -33,7 +39,7 @@ class UnusedPorts(ResultOutput):
 
     def write(self, output):
         if len(self.port_list) == 0:
-            output("Currently, there are no unused ports.\n")
+            output("Currently, there are no unused ports.\n\n")
             return
         
         output(f"> The following ports are unused since {self.unused_since} days")
@@ -46,6 +52,72 @@ class UnusedPorts(ResultOutput):
             output("Consider unplugging or disabling them to not be notified again.\n")
         output("\n")
 
+class LightLevel(ResultOutput):
+
+    def __init__(self):
+        self.notification: Dict[str, Dict[str, Dict[str, Any]]] = {}
+        # Key 1: ifaces
+        # Key 2: lane
+        # Key 3: 
+        #   connected: True/False
+        #   status_tx: WARN, ALERT
+        #   tx: <value>
+        #   tx_threshold: <value exceeded>
+        #   status_rx: WARN, ALERT
+        #   rx: <value>
+        #   rx_threshold: <value exceeded>
+
+
+    def init_interface_lane(self, iface: str, lane_number: str):
+        if iface not in self.notification.keys():
+            self.notification[iface] = {lane_number: {}}
+            return
+        
+        if lane_number in self.notification[iface].keys():
+            return
+        
+        self.notification[iface][lane_number] = {}
+        
+
+
+    def write(self, output):
+
+        if(len(self.notification) == 0):
+            output("There are no issues with light levels in optical cables.\n\n")
+            return
+
+
+        output(f"> The following interfaces shows optical hardware issues")
+        for ifaces, lanes in self.notification.items():
+            output(f"\t- Interface: {ifaces}\n")
+            for lane_number, status in lanes.items():
+                if not status.get("connected", True):
+                    output(f"\t\t+ CRITICAL: Lane {lane_number} is not plugged in !!!\n")
+                    continue
+
+                if status.get("tx", None) != None:
+                    tx = status["tx"]
+                    tx_threshold = status["tx_threshold"]
+                    hi = (tx >= tx_threshold) # Check if the high threshold is reached, or if it's the low threshold
+
+                    if status["status_tx"] == "WARN":
+                        output(f"\t\t+ WARN: Lane {lane_number} transfer power has exceeded the threshold ! ({tx} {">" if hi else "<"} {tx_threshold})\n") 
+                    
+                    if status["status_tx"] == "ALERT":
+                        output(f"\t\t+ ALERT: Lane {lane_number} transfer power has exceeded the threshold ! ({tx} {">" if hi else "<"} {tx_threshold})\n") 
+
+                if status.get("rx", None) != None:
+                    rx = status["rx"]
+                    rx_threshold = status["rx_threshold"]
+                    hi = (rx >= rx_threshold) # Check if the high threshold is reached, or if it's the low threshold
+
+                    if status["status_rx"] == "WARN":
+                        output(f"\t\t+ WARN: Lane {lane_number} receive power has exceeded the threshold ! ({rx} {">" if hi else "<"} {rx_threshold})\n") 
+                    
+                    if status["status_rx"] == "ALERT":
+                        output(f"\t\t+ ALERT: Lane {lane_number} receive power has exceeded the threshold ! ({rx} {">" if hi else "<"} {rx_threshold})\n") 
+            output("\n")
+        output("\n")
 
 
 class ResultFile: 
@@ -137,5 +209,39 @@ class ResultFile:
             unused_ports.successful_down = successful_down
 
     def set_hostinfo(self, ip_addr: str, hostname: str):
+        self._init_dict(ip_addr)
         self.switch_outputs[ip_addr][Label.HOST_INFO] = HostInfo(ip_addr, hostname)
+
+
+    def _init_set_lane(self, ip_addr, iface, lane_number):
+        self._init_dict(ip_addr)
+        if Label.LIGHT_LEVEL not in self.switch_outputs[ip_addr].keys():
+            self.switch_outputs[ip_addr][Label.LIGHT_LEVEL] = LightLevel()
+
+        light_level = cast(LightLevel, self.switch_outputs[ip_addr][Label.LIGHT_LEVEL])
+
+        light_level.init_interface_lane(iface, lane_number)
+        return light_level
+
+    def set_lane_connected(self, ip_addr, iface, lane_number, connected: bool):
+
+        light_level = self._init_set_lane(self, ip_addr, lane_number)
+        light_level.notification[iface][lane_number]["connected"] = connected
+
+
+    def set_lane_tx(self, ip_addr, iface, lane_number, tx_pwr, tx_threshold, is_alert=False):
+        
+        light_level = self._init_set_lane(self, ip_addr, lane_number)
+        light_level.notification[iface][lane_number]["tx"] = tx_pwr
+        light_level.notification[iface][lane_number]["tx_threshold"] = tx_threshold
+        light_level.notification[iface][lane_number]["status_tx"] = "WARN" if not is_alert else "ALERT"
+
+
+    def set_lane_rx(self, ip_addr, iface, lane_number, rx_pwr, rx_threshold, is_alert=False):
+        
+        light_level = self._init_set_lane(self, ip_addr, lane_number)
+        light_level.notification[iface][lane_number]["rx"] = rx_pwr
+        light_level.notification[iface][lane_number]["rx_threshold"] = rx_threshold
+        light_level.notification[iface][lane_number]["status_rx"] = "WARN" if not is_alert else "ALERT"
+
 
