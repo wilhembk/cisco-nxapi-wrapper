@@ -25,5 +25,11 @@ class SwitchConnection:
     def down_ifaces(self, ifaces):
         return self.rest.down_ifaces(ifaces)
     
+    def get_half_duplex(self):
+        return self.rest.get_half_duplex()
+    
+    def get_cRCAlignErrors(self, critical_delta, ref_file_path):
+        return self.rest.get_cRCAlignErrors(critical_delta, ref_file_path)
+    
     def check_for_tranceiver_alerts(self, filter_warn=False):
         return self.cli.check_for_tranceiver_alerts(filter_warn)

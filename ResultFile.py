@@ -3,18 +3,15 @@ import time
 from enum import Enum
 from utils import ANSI
 from abc import ABC, abstractmethod
-from typing import Dict, cast, Any
+from typing import Dict, Tuple, cast, Any
 
 class Label(Enum):
     HOST_INFO = "host"
     UNUSED_PORTS = "unused"
     LIGHT_LEVEL = "light_level"
+    HALF_DUPLEX = "half_duplex"
+    CRC_ALIGN = "crc_align"
 
-class NotificationLevel(Enum):
-    NO_CABLE = "no_cable"
-    INFO = "info"
-    WARN = "warn"
-    ALERT = "alert"
 
 class ResultOutput(ABC):
     @abstractmethod
@@ -39,7 +36,7 @@ class UnusedPorts(ResultOutput):
 
     def write(self, output):
         if len(self.port_list) == 0:
-            output("Currently, there are no unused ports.\n\n")
+            output("There are no unused ports.\n\n")
             return
         
         output(f"> The following ports are unused since {self.unused_since} days")
@@ -50,6 +47,20 @@ class UnusedPorts(ResultOutput):
             output("Those ports are now administratively down. You will no longer be notified. Consider unplugging them.\n")
         else:
             output("Consider unplugging or disabling them to not be notified again.\n")
+        output("\n")
+
+class HalfDuplexIfaces(ResultOutput):
+    def __init__(self, port_list):
+        self.port_list = port_list
+
+    def write(self, output):
+        if len(self.port_list) == 0:
+            output("There are no interfaces running in half duplex.\n\n")
+            return
+        
+        output(f"> CRITICAL: The following interfaces are running in half duplex")
+        for port in self.port_list:
+            output(f"\t- {port["readable_id"]}")
         output("\n")
 
 class LightLevel(ResultOutput):
@@ -120,6 +131,34 @@ class LightLevel(ResultOutput):
             output("\n")
         output("\n")
 
+
+class cRCCounter(ResultOutput):
+
+    def __init__(self, critical_delta: int):
+        self.deltas: Dict[str, Tuple[int, int, int]] = {} # dn -> (delta, current_cRC, reference_cRC)
+        self.critical_delta = critical_delta
+
+    def write(self, output):
+
+        if len(self.deltas) == 0:
+            output("There are no additional cRC or Align errors compared to the last check\n\n")
+            return
+        
+        output("> The following interfaces shows additional cRC or Align errors compared to the last check\n")
+        for dn, values in self.deltas.items():
+            delta, curr, ref = values
+
+            if delta >= self.critical_delta:
+                output(f"\t- CRITICAL: {dn} shows {delta} new errors ")
+            else:
+                output(f"\t- {dn} shows {delta} new errors ")
+            
+            if curr == delta and ref != 0:
+                # The counter has been reseted between checks
+                output(f"(now {curr}, was {ref} and reset since)\n")
+            else:
+                output(f"(now {curr}, was {ref})\n")
+        output("\n")
 
 class ResultFile: 
 
@@ -209,6 +248,12 @@ class ResultFile:
         if successful_down != None:
             unused_ports.successful_down = successful_down
 
+
+    def set_half_duplex_ifaces(self, ip_addr, port_list):
+        self._init_dict(ip_addr)
+        self.switch_outputs[ip_addr][Label.HALF_DUPLEX] = HalfDuplexIfaces(port_list)   
+        
+
     def set_hostinfo(self, ip_addr: str, hostname: str):
         self._init_dict(ip_addr)
         self.switch_outputs[ip_addr][Label.HOST_INFO] = HostInfo(ip_addr, hostname)
@@ -250,3 +295,21 @@ class ResultFile:
         light_level.notification[iface][lane_number]["status_rx"] = "WARN" if not is_alert else "ALERT"
 
 
+    def init_cRC_delta(self, ip_addr: str, critical_delta: int):
+        self._init_dict(ip_addr)
+        if Label.CRC_ALIGN not in self.switch_outputs[ip_addr].keys():
+            self.switch_outputs[ip_addr][Label.CRC_ALIGN] = cRCCounter(critical_delta)
+
+    def set_cRC_delta(self, ip_addr: str, critical_delta: int, dn: str, delta: int, current_cRC: int, reference_cRC: int):
+        """
+        dn is parsed as "sys/intf/phys-[iface]/dbgEtherStats" where iface is extracted
+        """
+        if delta <= 0:
+            return
+        
+        self.init_cRC_delta(ip_addr, critical_delta)
+
+        iface = dn.lstrip("sys/intf/phys-[").rstrip("]/dbgEtherStats")
+        
+        cRC_counter = cast(cRCCounter, self.switch_outputs[ip_addr][Label.CRC_ALIGN])
+        cRC_counter.deltas[iface] = (delta, current_cRC, reference_cRC)

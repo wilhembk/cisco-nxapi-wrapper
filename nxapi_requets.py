@@ -1,6 +1,7 @@
 import requests
 import json
 from glom import glom 
+from typing import Dict
 import urllib3
 from utils import ANSI, Logger
 from ResultFile import ResultFile
@@ -65,6 +66,7 @@ class NXCLI_API:
     
     def check_for_tranceiver_alerts(self, filter_warn=False):
         # Check for duplex
+        self.logger.log(f"Checking for alerts in transceiver status...")
         transceivers = self.get_transceiver_details()
 
         self.result.init_light_level(self.switch_ip) # Checking for light levels ? Adding it to results
@@ -236,6 +238,7 @@ class NXREST_API:
                     "lastLinkStChg": "ethpmPhysIf.attributes.lastLinkStChg",
                     "operSt": "ethpmPhysIf.attributes.operSt",
                     "operStQual": "ethpmPhysIf.attributes.operStQual",
+                    "operDuplex": "ethpmPhysIf.attributes.operDuplex"
                 }]
                 )
         
@@ -321,6 +324,19 @@ class NXREST_API:
         
         self.result.set_unused_ports(ip_addr=self.switch_ip, port_list=unused_ports, unused_since=days)
         return unused_ports  
+    
+    def get_half_duplex(self):
+        self.logger.log(f"Checking for interfaces in half duplex...")
+        data = self.get_ifaces_states(filter_admin_down=True, filter_absent=True)
+
+        half_duplex_ifaces = []
+        for iface in filter(lambda iface: iface["operSt"].upper() != "DOWN", data):
+            if iface["operDuplex"] == "half":
+                self.logger.log(f"{iface["readable_id"]} is in half duplex !!!")
+                half_duplex_ifaces.append(iface)
+
+        self.result.set_half_duplex_ifaces(self.switch_ip, half_duplex_ifaces)
+        return half_duplex_ifaces
 
 
     def _post_interfaceEntity(self, children):
@@ -364,8 +380,69 @@ class NXREST_API:
         if success:
             self.logger.log(f"Successfully disabled {[iface["readable_id"] for iface in ifaces]}")
 
-        
+    def _get_rmonEtherStats(self):
+        return self._get("class/rmonEtherStats.json")
 
+
+    def _get_parsed_rmonEtherStats(self) -> Dict[str, Dict[str, str]]:
+        """
+        Returns a nested dictionnary wich first key is the dn, and where the second key correspond to the all the stat associated to this interface.
+        """
+        rmonEtherStats = self._get_rmonEtherStats()
+        if rmonEtherStats["totalCount"] == '0':
+            return {}
+        
+        data = glom(rmonEtherStats, ("imdata", ["rmonEtherStats.attributes"]))
+        
+        return {
+            d["dn"]: {
+                k:v
+                for k, v in d.items() if k != "dn"
+            }
+            for d in data
+        }
+
+
+    def get_cRCAlignErrors(self, critical_delta, ref_dir_path):
+
+        data = self._get_parsed_rmonEtherStats()
+        if len(data) == 0:
+            return
+
+        self.result.init_cRC_delta(self.switch_ip, critical_delta) # Checking for cRC ? Adding it to results
+        ref_file_path = f"{ref_dir_path}{self.switch_ip.replace('.', '_')}.json"
+        f = None
+        try:
+            f = open(ref_file_path, "r")
+        except:
+            print(f"{ANSI.COLOR_RED}[ERROR] CRC Reference file {ref_file_path} is unreadable. Assuming no reference... {ANSI.RESET_ALL}")
+            f = None
+
+        ref_data = {}
+        if f: 
+            ref_data = json.load(f)
+
+        for dn in data.keys():
+            current_cRC = int(data[dn]["cRCAlignErrors"])
+            ref_cRC= int(ref_data.get(dn, {}).get("cRCAlignErrors", 0))
+            # We get with default value in case the reference data does not contain what we are looking for
+
+            # Two scenarios:
+            # If current >= ref then normal routine
+            # If ref > current, the counter has been reset, so assume current is the delta
+            delta = current_cRC - ref_cRC if current_cRC > ref_cRC else current_cRC
+
+            if delta > 0:
+                self.result.set_cRC_delta(self.switch_ip, critical_delta, dn, delta, current_cRC, ref_cRC)
+
+        if f:
+            f.close()
+        try:
+            f = open(ref_file_path, "w")
+            json.dump(data, f, indent="\t")
+            f.close()
+        except:
+            print(f"{ANSI.COLOR_RED}[ERROR] CRC Reference file {ref_file_path} is unwritable. Will not write references {ANSI.RESET_ALL}")
 
 
 
