@@ -38,7 +38,7 @@ def main(args):
             ifaces = sw.get_ifaces_down_since(args.unused_ports)
             sw.down_ifaces(ifaces)
         if args.check_optical != None:
-             sw.check_for_tranceiver_alerts(filter_warn=(args.check_optical == "ALERT"))
+            sw.check_for_tranceiver_alerts(filter_warn=(args.check_optical == "ALERT"))
         sw.logout()
         
     result.commit()
