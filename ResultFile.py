@@ -96,8 +96,6 @@ class TransceiverInfo(ResultOutput):
         if(len(self.notification) == 0):
             output("There are no issues with the transceivers' hardware.\n\n")
             return
-        
-        print(self.notification)
 
         output(f"> The following transceivers show hardware issues:\n")
         for ifaces, lanes in self.notification.items():
