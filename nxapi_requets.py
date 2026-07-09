@@ -60,16 +60,19 @@ class NXCLI_API:
     def get_transceiver_details(self):
         """Returns the details of the transceivers, filtered down to plugged ones"""
 
-        return list(filter(
-                lambda iface: iface["sfp"] == "present", 
-                glom(self._wrap_cmd("show interface transceiver details"), "result.body.TABLE_interface.ROW_interface")))
+        with open("example_transceiver_details.json", "r") as f:
+            return list(filter(
+                    lambda iface: iface["sfp"] == "present", 
+                    glom(json.load(f), "result.body.TABLE_interface.ROW_interface")))
+    
+    # self._wrap_cmd("show interface transceiver details")
     
     def check_for_tranceiver_alerts(self, filter_warn=False):
         # Check for duplex
         self.logger.log(f"Checking for alerts in transceiver status...")
         transceivers = self.get_transceiver_details()
 
-        self.result.init_light_level(self.switch_ip) # Checking for light levels ? Adding it to results
+        self.result.init_transceiver(self.switch_ip) # Checking for ltransceivers ? Adding it to results
 
         for tran in transceivers:
             iface = tran["interface"]
@@ -78,10 +81,16 @@ class NXCLI_API:
                 continue
 
             lanes = tran["TABLE_lane"]["ROW_lane"]
+            temp_set = False
             for lane in lanes:
                 if "tx_pwr_alrm_hi" in lane.keys():
                     # This an optic cable
                     self.check_light_level_lane(iface, lane, filter_warn)
+                if "temp_alrm_hi" in lane.keys() and not temp_set:
+                    temp_set = True
+                    self.check_temp(iface, lane, filter_warn)
+            temp_set = False
+
 
     def check_light_level_lane(self, iface, lane, filter_warn):
 
@@ -134,6 +143,31 @@ class NXCLI_API:
                 self.result.set_lane_rx(self.switch_ip, iface, lane_number, rx, rx_warn_hi)
             return
 
+    def check_temp(self, iface, lane, filter_warn) -> bool:
+
+
+        temp_alrm_hi = float(lane["temp_alrm_hi"])
+        temp_alrm_low = float(lane["temp_alrm_lo"])
+        temp_warn_hi = float(lane["temp_warn_hi"])
+        temp_warn_low = float(lane["temp_warn_lo"])
+        temp = float(lane["temperature"])
+
+
+        if not (temp_alrm_low <= temp <= temp_alrm_hi):
+            if temp <= temp_alrm_low:
+                self.result.set_temp(self.switch_ip, iface, temp, temp_alrm_low, is_alert=True)
+            else:
+                self.result.set_temp(self.switch_ip, iface, temp, temp_alrm_hi, is_alert=True)
+            return True
+        
+        if not filter_warn and not (temp_warn_low <= temp <= temp_warn_hi):
+            if temp <= temp_warn_low:
+                self.result.set_temp(self.switch_ip, iface, temp, temp_warn_low)
+            else:
+                self.result.set_temp(self.switch_ip, iface, temp, temp_warn_hi)
+            return True
+        
+        return False
 
 class NXREST_API:
 
@@ -410,7 +444,7 @@ class NXREST_API:
             return
 
         self.result.init_cRC_delta(self.switch_ip, critical_delta) # Checking for cRC ? Adding it to results
-        ref_file_path = f"{ref_dir_path}{self.switch_ip.replace('.', '_')}.json"
+        ref_file_path = f"{ref_dir_path}/{self.switch_ip.replace('.', '_')}.json"
         f = None
         try:
             f = open(ref_file_path, "r")

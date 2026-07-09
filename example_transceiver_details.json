@@ -182,7 +182,7 @@
               "ROW_lane": [
                 {
                   "lane_number": 1,
-                  "temperature": "29.47",
+                  "temperature": "67.00",
                   "temp_alrm_hi": "65.00",
                   "temp_alrm_lo": "5.00",
                   "temp_warn_hi": "60.00",
@@ -213,7 +213,7 @@
                 },
                 {
                   "lane_number": 2,
-                  "temperature": "29.47",
+                  "temperature": "67.00",
                   "temp_alrm_hi": "65.00",
                   "temp_alrm_lo": "5.00",
                   "temp_warn_hi": "60.00",
@@ -244,7 +244,7 @@
                 },
                 {
                   "lane_number": 3,
-                  "temperature": "29.47",
+                  "temperature": "67.00",
                   "temp_alrm_hi": "65.00",
                   "temp_alrm_lo": "5.00",
                   "temp_warn_hi": "60.00",
@@ -275,7 +275,7 @@
                 },
                 {
                   "lane_number": 4,
-                  "temperature": "29.47",
+                  "temperature": "67.00",
                   "temp_alrm_hi": "65.00",
                   "temp_alrm_lo": "5.00",
                   "temp_warn_hi": "60.00",

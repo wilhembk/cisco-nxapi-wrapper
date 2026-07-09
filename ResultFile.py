@@ -8,7 +8,7 @@ from typing import Dict, Tuple, cast, Any
 class Label(Enum):
     HOST_INFO = "host"
     UNUSED_PORTS = "unused"
-    LIGHT_LEVEL = "light_level"
+    TRANSCEIVER = "transceiver"
     HALF_DUPLEX = "half_duplex"
     CRC_ALIGN = "crc_align"
 
@@ -63,10 +63,10 @@ class HalfDuplexIfaces(ResultOutput):
             output(f"\t- {port["readable_id"]}")
         output("\n")
 
-class LightLevel(ResultOutput):
+class TransceiverInfo(ResultOutput):
 
     def __init__(self):
-        self.notification: Dict[str, Dict[str, Dict[str, Any]]] = {}
+        self.notification: Dict[str, Dict[str|int, Dict[str, Any]]] = {}
         # Key 1: ifaces
         # Key 2: lane
         # Key 3: 
@@ -94,15 +94,29 @@ class LightLevel(ResultOutput):
     def write(self, output):
 
         if(len(self.notification) == 0):
-            output("There are no issues with light levels in optical cables.\n\n")
+            output("There are no issues with the transceivers' hardware.\n\n")
             return
-
+        
         print(self.notification)
 
-        output(f"> The following interfaces show optical hardware issues:\n")
+        output(f"> The following transceivers show hardware issues:\n")
         for ifaces, lanes in self.notification.items():
             output(f"\t- Interface: {ifaces}\n")
+            temp_notified = False
             for lane_number, status in lanes.items():
+                
+                if status.get("temp", None) != None and not temp_notified:
+                    temp_notified = True # We want to notify the temperature once per interface
+                    temp = status["temp"]
+                    temp_threshold = status["temp_threshold"]
+                    hi = (temp >= temp_threshold) # Check if the high threshold is reached, or if it's the low threshold
+
+                    if status["status_temp"] == "WARN":
+                        output(f"\t\t+ WARN: Transceiver temperature exceeded the threshold ! ({temp}°C {">" if hi else "<"} {temp_threshold}°C)\n") 
+                    
+                    if status["status_temp"] == "ALERT":
+                        output(f"\t\t+ ALERT: Transceiver temperature exceeded the threshold ! ({temp}°C {">" if hi else "<"} {temp_threshold}°C)\n") 
+
                 if not status.get("connected", True):
                     output(f"\t\t+ CRITICAL: Lane {lane_number} is not plugged in !!!\n")
                     continue
@@ -128,9 +142,8 @@ class LightLevel(ResultOutput):
                     
                     if status["status_rx"] == "ALERT":
                         output(f"\t\t+ ALERT: Lane {lane_number} receive power has exceeded the threshold ! ({rx} {">" if hi else "<"} {rx_threshold})\n") 
+            temp_notified = False # reset for the next interface
             output("\n")
-        output("\n")
-
 
 class cRCCounter(ResultOutput):
 
@@ -259,40 +272,48 @@ class ResultFile:
         self.switch_outputs[ip_addr][Label.HOST_INFO] = HostInfo(ip_addr, hostname)
 
 
-    def init_light_level(self, ip_addr: str):
+    def init_transceiver(self, ip_addr: str):
         self._init_dict(ip_addr)
-        if Label.LIGHT_LEVEL not in self.switch_outputs[ip_addr].keys():
-            self.switch_outputs[ip_addr][Label.LIGHT_LEVEL] = LightLevel()
+        if Label.TRANSCEIVER not in self.switch_outputs[ip_addr].keys():
+            self.switch_outputs[ip_addr][Label.TRANSCEIVER] = TransceiverInfo()
 
-    def _init_set_lane(self, ip_addr: str, iface: str, lane_number: str):
+    def _init_set_lane(self, ip_addr: str, iface: str, lane_number):
 
-        self.init_light_level(ip_addr)
+        self.init_transceiver(ip_addr)
 
-        light_level = cast(LightLevel, self.switch_outputs[ip_addr][Label.LIGHT_LEVEL])
+        transceiver_info = cast(TransceiverInfo, self.switch_outputs[ip_addr][Label.TRANSCEIVER])
 
-        light_level.init_interface_lane(iface, lane_number)
-        return light_level
+        transceiver_info.init_interface_lane(iface, lane_number)
+        return transceiver_info
 
     def set_lane_connected(self, ip_addr: str, iface: str, lane_number: str, connected: bool):
 
-        light_level = self._init_set_lane(ip_addr, iface, lane_number)
-        light_level.notification[iface][lane_number]["connected"] = connected
+        transceiver_info = self._init_set_lane(ip_addr, iface, lane_number)
+        transceiver_info.notification[iface][lane_number]["connected"] = connected
 
 
     def set_lane_tx(self, ip_addr: str, iface: str, lane_number: str, tx_pwr: float, tx_threshold: float, is_alert=False):
         
-        light_level = self._init_set_lane(ip_addr, iface, lane_number)
-        light_level.notification[iface][lane_number]["tx"] = tx_pwr
-        light_level.notification[iface][lane_number]["tx_threshold"] = tx_threshold
-        light_level.notification[iface][lane_number]["status_tx"] = "WARN" if not is_alert else "ALERT"
+        transceiver_info = self._init_set_lane(ip_addr, iface, lane_number)
+        transceiver_info.notification[iface][lane_number]["tx"] = tx_pwr
+        transceiver_info.notification[iface][lane_number]["tx_threshold"] = tx_threshold
+        transceiver_info.notification[iface][lane_number]["status_tx"] = "WARN" if not is_alert else "ALERT"
 
 
     def set_lane_rx(self, ip_addr: str, iface: str, lane_number: str, rx_pwr: float, rx_threshold: float, is_alert=False):
         
-        light_level = self._init_set_lane(ip_addr, iface, lane_number)
-        light_level.notification[iface][lane_number]["rx"] = rx_pwr
-        light_level.notification[iface][lane_number]["rx_threshold"] = rx_threshold
-        light_level.notification[iface][lane_number]["status_rx"] = "WARN" if not is_alert else "ALERT"
+        transceiver_info = self._init_set_lane(ip_addr, iface, lane_number)
+        transceiver_info.notification[iface][lane_number]["rx"] = rx_pwr
+        transceiver_info.notification[iface][lane_number]["rx_threshold"] = rx_threshold
+        transceiver_info.notification[iface][lane_number]["status_rx"] = "WARN" if not is_alert else "ALERT"
+
+    def set_temp(self, ip_addr: str, iface: str, temp_pwr: float, temp_threshold: float, is_alert=False):
+        
+        transceiver_info = self._init_set_lane(ip_addr, iface, 1)
+        transceiver_info.notification[iface][1]["temp"] = temp_pwr
+        transceiver_info.notification[iface][1]["temp_threshold"] = temp_threshold
+        transceiver_info.notification[iface][1]["status_temp"] = "WARN" if not is_alert else "ALERT"
+
 
 
     def init_cRC_delta(self, ip_addr: str, critical_delta: int):
