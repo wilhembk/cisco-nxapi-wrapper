@@ -87,7 +87,7 @@ class LightLevel(ResultOutput):
             return
 
 
-        output(f"> The following interfaces shows optical hardware issues")
+        output(f"> The following interfaces show optical hardware issues:\n")
         for ifaces, lanes in self.notification.items():
             output(f"\t- Interface: {ifaces}\n")
             for lane_number, status in lanes.items():
@@ -185,7 +185,7 @@ class ResultFile:
 
                 output[label].write(self._output)
                         
-            self._output(f"================================================\n")
+            self._output(f"================================================\n\n")
 
         self._end()
 
@@ -213,7 +213,7 @@ class ResultFile:
         self.switch_outputs[ip_addr][Label.HOST_INFO] = HostInfo(ip_addr, hostname)
 
 
-    def _init_set_lane(self, ip_addr, iface, lane_number):
+    def _init_set_lane(self, ip_addr: str, iface: str, lane_number: str):
         self._init_dict(ip_addr)
         if Label.LIGHT_LEVEL not in self.switch_outputs[ip_addr].keys():
             self.switch_outputs[ip_addr][Label.LIGHT_LEVEL] = LightLevel()
@@ -223,23 +223,23 @@ class ResultFile:
         light_level.init_interface_lane(iface, lane_number)
         return light_level
 
-    def set_lane_connected(self, ip_addr, iface, lane_number, connected: bool):
+    def set_lane_connected(self, ip_addr: str, iface: str, lane_number: str, connected: bool):
 
-        light_level = self._init_set_lane(self, ip_addr, lane_number)
+        light_level = self._init_set_lane(ip_addr, iface, lane_number)
         light_level.notification[iface][lane_number]["connected"] = connected
 
 
-    def set_lane_tx(self, ip_addr, iface, lane_number, tx_pwr, tx_threshold, is_alert=False):
+    def set_lane_tx(self, ip_addr: str, iface: str, lane_number: str, tx_pwr: float, tx_threshold: float, is_alert=False):
         
-        light_level = self._init_set_lane(self, ip_addr, lane_number)
+        light_level = self._init_set_lane(ip_addr, iface, lane_number)
         light_level.notification[iface][lane_number]["tx"] = tx_pwr
         light_level.notification[iface][lane_number]["tx_threshold"] = tx_threshold
         light_level.notification[iface][lane_number]["status_tx"] = "WARN" if not is_alert else "ALERT"
 
 
-    def set_lane_rx(self, ip_addr, iface, lane_number, rx_pwr, rx_threshold, is_alert=False):
+    def set_lane_rx(self, ip_addr: str, iface: str, lane_number: str, rx_pwr: float, rx_threshold: float, is_alert=False):
         
-        light_level = self._init_set_lane(self, ip_addr, lane_number)
+        light_level = self._init_set_lane(ip_addr, iface, lane_number)
         light_level.notification[iface][lane_number]["rx"] = rx_pwr
         light_level.notification[iface][lane_number]["rx_threshold"] = rx_threshold
         light_level.notification[iface][lane_number]["status_rx"] = "WARN" if not is_alert else "ALERT"

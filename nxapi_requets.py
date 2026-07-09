@@ -58,72 +58,78 @@ class NXCLI_API:
 
     def get_transceiver_details(self):
         """Returns the details of the transceivers, filtered down to plugged ones"""
-        return list(filter(
-                lambda iface: iface["sfp"] == "present", 
-                glom(self._wrap_cmd("show interface transceiver details"), "result.body.TABLE_interface.ROW_interface")))
+        with open("example_transceiver_details.json", "r") as f:
+            return list(filter(
+                    lambda iface: iface["sfp"] == "present", 
+                    glom(json.load(f), "result.body.TABLE_interface.ROW_interface")))
     
-    def check_for_tranceiver_alerts(self):
+    # self._wrap_cmd("show interface transceiver details")
+    
+    def check_for_tranceiver_alerts(self, filter_warn=False):
         # Check for duplex
         transceivers = self.get_transceiver_details()
 
         for tran in transceivers:
             iface = tran["interface"]
-            if "TABLE_lane" not in tran.keys:
+            if "TABLE_lane" not in tran.keys():
                 # No data
                 continue
 
-            lanes = tran["TABLE_lane"]
+            lanes = tran["TABLE_lane"]["ROW_lane"]
             for lane in lanes:
-                if "tx_alrm_hi" in lane.keys:
+                if "tx_pwr_alrm_hi" in lane.keys():
                     # This an optic cable
-                    self.check_light_level_lane(iface, lane)
+                    self.check_light_level_lane(iface, lane, filter_warn)
 
-    def check_light_level_lane(self, iface, lane):
+    def check_light_level_lane(self, iface, lane, filter_warn):
 
-        if "tx_pwr" not in lane.keys:
-            self.logger.log(f"No cable connected for lane {lane["lane_number"]} in {iface} !")
-            self.result.set_lane_connected(self.switch_ip, iface, lane, False)
+        lane_number = lane["lane_number"]
+
+        if "tx_pwr" not in lane.keys():
+            self.logger.log(f"No cable connected for lane {lane_number} in {iface} !")
+            self.result.set_lane_connected(self.switch_ip, iface, lane_number, False)
             return
 
-        tx_alrm_hi = lane["tx_pwr_alrm_hi"]
-        tx_alrm_low = lane["tx_pwr_alrm_lo"]
-        tx_warn_hi = lane["tx_pwr_warn_hi"]
-        tx_warn_low = lane["tx_pwr_warn_lo"]
-        tx = lane["tx_pwr"]
+        tx_alrm_hi = float(lane["tx_pwr_alrm_hi"])
+        tx_alrm_low = float(lane["tx_pwr_alrm_lo"])
+        tx_warn_hi = float(lane["tx_pwr_warn_hi"])
+        tx_warn_low = float(lane["tx_pwr_warn_lo"])
+        tx = float(lane["tx_pwr"])
 
         if not (tx_alrm_low <= tx <= tx_alrm_hi):
             if tx <= tx_alrm_low:
-                self.result.set_lane_tx(self.switch_ip, iface, lane, tx, tx_alrm_low, is_alert=True)
+                self.result.set_lane_tx(self.switch_ip, iface, lane_number, tx, tx_alrm_low, is_alert=True)
             else:
-                self.result.set_lane_tx(self.switch_ip, iface, lane, tx, tx_alrm_hi, is_alert=True)
+                self.result.set_lane_tx(self.switch_ip, iface, lane_number, tx, tx_alrm_hi, is_alert=True)
             return
         
-        if not (tx_warn_low <= tx <= tx_warn_hi):
+        if not filter_warn and not (tx_warn_low <= tx <= tx_warn_hi):
             if tx <= tx_warn_low:
-                self.result.set_lane_tx(self.switch_ip, iface, lane, tx, tx_warn_low, is_alert=True)
+                self.result.set_lane_tx(self.switch_ip, iface, lane_number, tx, tx_warn_low)
             else:
-                self.result.set_lane_tx(self.switch_ip, iface, lane, tx, tx_warn_hi, is_alert=True)
+                self.result.set_lane_tx(self.switch_ip, iface, lane_number, tx, tx_warn_hi)
             return
 
+        
 
-        rx_alrm_hi = lane["rx_pwr_alrm_hi"]
-        rx_alrm_low = lane["rx_pwr_alrm_lo"]
-        rx_warn_hi = lane["rx_pwr_warn_hi"]
-        rx_warn_low = lane["rx_pwr_warn_lo"]
-        rx = lane["rx_pwr"]
+        rx_alrm_hi = float(lane["rx_pwr_alrm_hi"])
+        rx_alrm_low = float(lane["rx_pwr_alrm_lo"])
+        rx_warn_hi = float(lane["rx_pwr_warn_hi"])
+        rx_warn_low = float(lane["rx_pwr_warn_lo"])
+        rx = float(lane["rx_pwr"])
 
         if not (rx_alrm_low <= rx <= rx_alrm_hi):
             if rx <= rx_alrm_low:
-                self.result.set_lane_rx(self.switch_ip, iface, lane, rx, rx_alrm_low, is_alert=True)
+                self.result.set_lane_rx(self.switch_ip, iface, lane_number, rx, rx_alrm_low, is_alert=True)
             else:
-                self.result.set_lane_rx(self.switch_ip, iface, lane, rx, rx_alrm_hi, is_alert=True)
+                self.result.set_lane_rx(self.switch_ip, iface, lane_number, rx, rx_alrm_hi, is_alert=True)
             return
         
-        if not (rx_warn_low <= rx <= rx_warn_hi):
+        if not filter_warn and not (rx_warn_low <= rx <= rx_warn_hi):
             if rx <= rx_warn_low:
-                self.result.set_lane_rx(self.switch_ip, iface, lane, rx, rx_warn_low, is_alert=True)
+                self.result.set_lane_rx(self.switch_ip, iface, lane_number, rx, rx_warn_low)
             else:
-                self.result.set_lane_rx(self.switch_ip, iface, lane, rx, rx_warn_hi, is_alert=True)
+                self.result.set_lane_rx(self.switch_ip, iface, lane_number, rx, rx_warn_hi)
             return
 
 

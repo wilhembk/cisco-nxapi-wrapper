@@ -37,6 +37,8 @@ def main(args):
         if(args.unused_ports != None):
             ifaces = sw.get_ifaces_down_since(args.unused_ports)
             sw.down_ifaces(ifaces)
+        if args.check_optical != None:
+             sw.check_for_tranceiver_alerts(filter_warn=(args.check_optical == "ALERT"))
         sw.logout()
         
     result.commit()
@@ -49,6 +51,7 @@ if __name__ == "__main__":
     parser.add_argument("log_dir_path", help="The directory on where to store logs of the program")
     parser.add_argument("result_dir_path", help="The directory on where to store results of the program")
     parser.add_argument("--unused_ports", type=int, help="Check for DOWN ports unused since N days")
+    parser.add_argument("--check_optical", choices=["WARN", "ALERT"])
 
     args = parser.parse_args()
     main(args)

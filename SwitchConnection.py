@@ -24,3 +24,6 @@ class SwitchConnection:
     
     def down_ifaces(self, ifaces):
         return self.rest.down_ifaces(ifaces)
+    
+    def check_for_tranceiver_alerts(self, filter_warn=False):
+        return self.cli.check_for_tranceiver_alerts(filter_warn)
