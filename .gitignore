@@ -5,6 +5,7 @@ uv.lock
 .python-version
 switch_ips.txt
 outputs
+references_data
 
 
 # Remove .env
