@@ -58,16 +58,16 @@ class NXCLI_API:
 
     def get_transceiver_details(self):
         """Returns the details of the transceivers, filtered down to plugged ones"""
-        with open("example_transceiver_details.json", "r") as f:
-            return list(filter(
-                    lambda iface: iface["sfp"] == "present", 
-                    glom(json.load(f), "result.body.TABLE_interface.ROW_interface")))
-    
-    # self._wrap_cmd("show interface transceiver details")
+
+        return list(filter(
+                lambda iface: iface["sfp"] == "present", 
+                glom(self._wrap_cmd("show interface transceiver details"), "result.body.TABLE_interface.ROW_interface")))
     
     def check_for_tranceiver_alerts(self, filter_warn=False):
         # Check for duplex
         transceivers = self.get_transceiver_details()
+
+        self.result.init_light_level(self.switch_ip) # Checking for light levels ? Adding it to results
 
         for tran in transceivers:
             iface = tran["interface"]

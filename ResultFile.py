@@ -86,6 +86,7 @@ class LightLevel(ResultOutput):
             output("There are no issues with light levels in optical cables.\n\n")
             return
 
+        print(self.notification)
 
         output(f"> The following interfaces show optical hardware issues:\n")
         for ifaces, lanes in self.notification.items():
@@ -213,10 +214,14 @@ class ResultFile:
         self.switch_outputs[ip_addr][Label.HOST_INFO] = HostInfo(ip_addr, hostname)
 
 
-    def _init_set_lane(self, ip_addr: str, iface: str, lane_number: str):
+    def init_light_level(self, ip_addr: str):
         self._init_dict(ip_addr)
         if Label.LIGHT_LEVEL not in self.switch_outputs[ip_addr].keys():
             self.switch_outputs[ip_addr][Label.LIGHT_LEVEL] = LightLevel()
+
+    def _init_set_lane(self, ip_addr: str, iface: str, lane_number: str):
+
+        self.init_light_level(ip_addr)
 
         light_level = cast(LightLevel, self.switch_outputs[ip_addr][Label.LIGHT_LEVEL])
 
