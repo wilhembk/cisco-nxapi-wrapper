@@ -4,7 +4,7 @@ from glom import glom
 from typing import Dict
 import urllib3
 from utils import ANSI, Logger
-from ResultFile import ResultFile
+from result_file import ResultFile
 from datetime import datetime
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
