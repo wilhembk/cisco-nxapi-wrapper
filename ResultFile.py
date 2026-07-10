@@ -39,9 +39,9 @@ class UnusedPorts(ResultOutput):
             output("There are no unused ports.\n\n")
             return
         
-        output(f"> The following ports are unused since {self.unused_since} days")
+        output(f"> The following ports are unused since {self.unused_since} days\n")
         for port in self.port_list:
-            output(f"\t- {port["readable_id"]}")
+            output(f"\t- {port["readable_id"]}\n")
 
         if self.successful_down:
             output("Those ports are now administratively down. You will no longer be notified. Consider unplugging them.\n")
@@ -58,15 +58,15 @@ class HalfDuplexIfaces(ResultOutput):
             output("There are no interfaces running in half duplex.\n\n")
             return
         
-        output(f"> CRITICAL: The following interfaces are running in half duplex")
+        output(f"> CRITICAL: The following interfaces are running in half duplex\n")
         for port in self.port_list:
-            output(f"\t- {port["readable_id"]}")
+            output(f"\t- {port["readable_id"]}\n")
         output("\n")
 
 class TransceiverInfo(ResultOutput):
 
     def __init__(self):
-        self.notification: Dict[str, Dict[str|int, Dict[str, Any]]] = {}
+        self.notification: Dict[str, Dict[str, Dict[str, Any]]] = {}
         # Key 1: ifaces
         # Key 2: lane
         # Key 3: 
@@ -100,20 +100,52 @@ class TransceiverInfo(ResultOutput):
         output(f"> The following transceivers show hardware issues:\n")
         for ifaces, lanes in self.notification.items():
             output(f"\t- Interface: {ifaces}\n")
-            temp_notified = False
-            for lane_number, status in lanes.items():
-                
-                if status.get("temp", None) != None and not temp_notified:
-                    temp_notified = True # We want to notify the temperature once per interface
-                    temp = status["temp"]
-                    temp_threshold = status["temp_threshold"]
+            
+            if "all" in lanes.keys():
+                # In NXAPI temperature and voltage details are inside a lane_number
+                # But there are repeated (since they are note lane specific)
+                # So they are stored in "all" instead of a specific lane in this case.
+                if lanes["all"].get("temp", None) != None:
+                    temp = lanes["all"]["temp"]
+                    temp_threshold = lanes["all"]["temp_threshold"]
                     hi = (temp >= temp_threshold) # Check if the high threshold is reached, or if it's the low threshold
 
-                    if status["status_temp"] == "WARN":
+                    if lanes["all"]["status_temp"] == "WARN":
                         output(f"\t\t+ WARN: Transceiver temperature exceeded the threshold ! ({temp}°C {">" if hi else "<"} {temp_threshold}°C)\n") 
                     
-                    if status["status_temp"] == "ALERT":
-                        output(f"\t\t+ ALERT: Transceiver temperature exceeded the threshold ! ({temp}°C {">" if hi else "<"} {temp_threshold}°C)\n") 
+                    if lanes["all"]["status_temp"] == "ALERT":
+                        output(f"\t\t+ ALERT: Transceiver temperature exceeded the threshold ! ({temp}°C {">" if hi else "<"} {temp_threshold}°C)\n")
+
+                if lanes["all"].get("voltage", None) != None:
+                    voltage = lanes["all"]["voltage"]
+                    voltage_threshold = lanes["all"]["voltage_threshold"]
+                    hi = (voltage >= voltage_threshold) # Check if the high threshold is reached, or if it's the low threshold
+
+                    if lanes["all"]["status_voltage"] == "WARN":
+                        output(f"\t\t+ WARN: Transceiver voltage exceeded the threshold ! ({voltage} {">" if hi else "<"} {voltage_threshold})\n") 
+                    
+                    if lanes["all"]["status_voltage"] == "ALERT":
+                        output(f"\t\t+ ALERT: Transceiver voltage exceeded the threshold ! ({voltage} {">" if hi else "<"} {voltage_threshold})\n")
+
+
+                if lanes["all"].get("current", None) != None:
+                    current = lanes["all"]["current"]
+                    current_threshold = lanes["all"]["current_threshold"]
+                    hi = (current >= current_threshold) # Check if the high threshold is reached, or if it's the low threshold
+
+                    if lanes["all"]["status_current"] == "WARN":
+                        output(f"\t\t+ WARN: Transceiver current exceeded the threshold ! ({current} {">" if hi else "<"} {current_threshold})\n") 
+                    
+                    if lanes["all"]["status_current"] == "ALERT":
+                        output(f"\t\t+ ALERT: Transceiver current exceeded the threshold ! ({current} {">" if hi else "<"} {current_threshold})\n")
+
+            
+            for lane_number, status in lanes.items():
+                
+                if lane_number == "all":
+                    # Ignoring transceiver global details.
+                    continue
+
 
                 if not status.get("connected", True):
                     output(f"\t\t+ CRITICAL: Lane {lane_number} is not plugged in !!!\n")
@@ -140,7 +172,6 @@ class TransceiverInfo(ResultOutput):
                     
                     if status["status_rx"] == "ALERT":
                         output(f"\t\t+ ALERT: Lane {lane_number} receive power has exceeded the threshold ! ({rx} {">" if hi else "<"} {rx_threshold})\n") 
-            temp_notified = False # reset for the next interface
             output("\n")
 
 class cRCCounter(ResultOutput):
@@ -275,7 +306,7 @@ class ResultFile:
         if Label.TRANSCEIVER not in self.switch_outputs[ip_addr].keys():
             self.switch_outputs[ip_addr][Label.TRANSCEIVER] = TransceiverInfo()
 
-    def _init_set_lane(self, ip_addr: str, iface: str, lane_number):
+    def _init_set_lane(self, ip_addr: str, iface: str, lane_number: str):
 
         self.init_transceiver(ip_addr)
 
@@ -307,10 +338,26 @@ class ResultFile:
 
     def set_temp(self, ip_addr: str, iface: str, temp_pwr: float, temp_threshold: float, is_alert=False):
         
-        transceiver_info = self._init_set_lane(ip_addr, iface, 1)
-        transceiver_info.notification[iface][1]["temp"] = temp_pwr
-        transceiver_info.notification[iface][1]["temp_threshold"] = temp_threshold
-        transceiver_info.notification[iface][1]["status_temp"] = "WARN" if not is_alert else "ALERT"
+        transceiver_info = self._init_set_lane(ip_addr, iface, "all")
+        transceiver_info.notification[iface]["all"]["temp"] = temp_pwr
+        transceiver_info.notification[iface]["all"]["temp_threshold"] = temp_threshold
+        transceiver_info.notification[iface]["all"]["status_temp"] = "WARN" if not is_alert else "ALERT"
+
+    def set_voltage(self, ip_addr: str, iface: str, voltage_pwr: float, voltage_threshold: float, is_alert=False):
+        
+        transceiver_info = self._init_set_lane(ip_addr, iface, "all")
+        transceiver_info.notification[iface]["all"]["voltage"] = voltage_pwr
+        transceiver_info.notification[iface]["all"]["voltage_threshold"] = voltage_threshold
+        transceiver_info.notification[iface]["all"]["status_voltage"] = "WARN" if not is_alert else "ALERT"
+
+
+    def set_current(self, ip_addr: str, iface: str, current_pwr: float, current_threshold: float, is_alert=False):
+        
+        transceiver_info = self._init_set_lane(ip_addr, iface, "all")
+        transceiver_info.notification[iface]["all"]["current"] = current_pwr
+        transceiver_info.notification[iface]["all"]["current_threshold"] = current_threshold
+        transceiver_info.notification[iface]["all"]["status_current"] = "WARN" if not is_alert else "ALERT"
+
 
 
 

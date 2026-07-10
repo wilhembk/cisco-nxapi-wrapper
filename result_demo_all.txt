@@ -1,0 +1,78 @@
+=============[ Switch: demo_switch_NOT_REAL (10.10.10.1) ]=============
+
+> The following ports are unused since 90 days
+	- eth1/97
+Consider unplugging or disabling them to not be notified again.
+
+> CRITICAL: The following interfaces are running in half duplex
+	- eth1/107
+
+> The following transceivers show hardware issues:
+	- Interface: Ethernet1/2
+		+ ALERT: Transceiver current exceeded the threshold ! (0.0 < 2.0)
+		+ CRITICAL: Lane 1 is not plugged in !!!
+		+ CRITICAL: Lane 2 is not plugged in !!!
+		+ CRITICAL: Lane 3 is not plugged in !!!
+		+ CRITICAL: Lane 4 is not plugged in !!!
+
+	- Interface: Ethernet1/3
+		+ ALERT: Transceiver temperature exceeded the threshold ! (67.0°C > 65.0°C)
+		+ ALERT: Transceiver current exceeded the threshold ! (0.0 < 2.0)
+		+ CRITICAL: Lane 1 is not plugged in !!!
+		+ CRITICAL: Lane 2 is not plugged in !!!
+		+ CRITICAL: Lane 3 is not plugged in !!!
+		+ CRITICAL: Lane 4 is not plugged in !!!
+
+	- Interface: Ethernet1/23
+		+ WARN: Transceiver voltage exceeded the threshold ! (3.48 > 3.46)
+		+ ALERT: Transceiver current exceeded the threshold ! (11.0 > 10.0)
+		+ WARN: Lane 1 transfer power has exceeded the threshold ! (-7.02 < -6.0)
+		+ ALERT: Lane 2 receive power has exceeded the threshold ! (7.0 > 6.99)
+
+> The following interfaces shows additional cRC or Align errors compared to the last check
+	- eth1/97 shows 3 new errors (now 61, was 58)
+	- CRITICAL: eth1/99 shows 15 new errors (now 15, was 0)
+	- eth1/102 shows 2 new errors (now 4, was 2)
+	- CRITICAL: eth1/103 shows 20 new errors (now 20, was 34 and reset since)
+
+================================================
+
+=============[ Switch: demo_switch_NOT_REAL (10.10.10.2) ]=============
+
+> The following ports are unused since 90 days
+	- eth1/97
+Consider unplugging or disabling them to not be notified again.
+
+> CRITICAL: The following interfaces are running in half duplex
+	- eth1/107
+
+> The following transceivers show hardware issues:
+	- Interface: Ethernet1/2
+		+ ALERT: Transceiver current exceeded the threshold ! (0.0 < 2.0)
+		+ CRITICAL: Lane 1 is not plugged in !!!
+		+ CRITICAL: Lane 2 is not plugged in !!!
+		+ CRITICAL: Lane 3 is not plugged in !!!
+		+ CRITICAL: Lane 4 is not plugged in !!!
+
+	- Interface: Ethernet1/3
+		+ ALERT: Transceiver temperature exceeded the threshold ! (67.0°C > 65.0°C)
+		+ ALERT: Transceiver current exceeded the threshold ! (0.0 < 2.0)
+		+ CRITICAL: Lane 1 is not plugged in !!!
+		+ CRITICAL: Lane 2 is not plugged in !!!
+		+ CRITICAL: Lane 3 is not plugged in !!!
+		+ CRITICAL: Lane 4 is not plugged in !!!
+
+	- Interface: Ethernet1/23
+		+ WARN: Transceiver voltage exceeded the threshold ! (3.48 > 3.46)
+		+ ALERT: Transceiver current exceeded the threshold ! (11.0 > 10.0)
+		+ WARN: Lane 1 transfer power has exceeded the threshold ! (-7.02 < -6.0)
+		+ ALERT: Lane 2 receive power has exceeded the threshold ! (7.0 > 6.99)
+
+> The following interfaces shows additional cRC or Align errors compared to the last check
+	- eth1/97 shows 3 new errors (now 61, was 58)
+	- CRITICAL: eth1/99 shows 15 new errors (now 15, was 0)
+	- eth1/102 shows 2 new errors (now 4, was 2)
+	- CRITICAL: eth1/103 shows 20 new errors (now 20, was 34 and reset since)
+
+================================================
+

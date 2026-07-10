@@ -56,7 +56,7 @@
       "rmonEtherStats": {
         "attributes": {
           "broadcastPkts": "0",
-          "cRCAlignErrors": "0",
+          "cRCAlignErrors": "61",
           "clearTs": "never",
           "collisions": "0",
           "dn": "sys/intf/phys-[eth1/97]/dbgEtherStats",
@@ -158,7 +158,7 @@
       "rmonEtherStats": {
         "attributes": {
           "broadcastPkts": "0",
-          "cRCAlignErrors": "0",
+          "cRCAlignErrors": "15",
           "clearTs": "never",
           "collisions": "0",
           "dn": "sys/intf/phys-[eth1/99]/dbgEtherStats",
@@ -311,7 +311,7 @@
       "rmonEtherStats": {
         "attributes": {
           "broadcastPkts": "0",
-          "cRCAlignErrors": "0",
+          "cRCAlignErrors": "4",
           "clearTs": "never",
           "collisions": "0",
           "dn": "sys/intf/phys-[eth1/102]/dbgEtherStats",
@@ -362,7 +362,7 @@
       "rmonEtherStats": {
         "attributes": {
           "broadcastPkts": "0",
-          "cRCAlignErrors": "0",
+          "cRCAlignErrors": "20",
           "clearTs": "never",
           "collisions": "0",
           "dn": "sys/intf/phys-[eth1/103]/dbgEtherStats",

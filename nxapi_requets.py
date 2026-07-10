@@ -88,15 +88,16 @@ class NXCLI_API:
                 continue
 
             lanes = tran["TABLE_lane"]["ROW_lane"]
-            temp_set = False
             for lane in lanes:
                 if "tx_pwr_alrm_hi" in lane.keys():
                     # This an optic cable
                     self.check_light_level_lane(iface, lane, filter_warn)
-                if "temp_alrm_hi" in lane.keys() and not temp_set:
-                    temp_set = True
+                if "temp_alrm_hi" in lane.keys():
                     self.check_temp(iface, lane, filter_warn)
-            temp_set = False
+                if "volt_alrm_hi" in lane.keys():
+                    self.check_voltage(iface, lane, filter_warn)
+                if "current_alrm_hi" in lane.keys():
+                    self.check_current(iface, lane, filter_warn)
 
 
     def check_light_level_lane(self, iface, lane, filter_warn):
@@ -150,8 +151,7 @@ class NXCLI_API:
                 self.result.set_lane_rx(self.switch_ip, iface, lane_number, rx, rx_warn_hi)
             return
 
-    def check_temp(self, iface, lane, filter_warn) -> bool:
-
+    def check_temp(self, iface, lane, filter_warn):
 
         temp_alrm_hi = float(lane["temp_alrm_hi"])
         temp_alrm_low = float(lane["temp_alrm_lo"])
@@ -165,16 +165,62 @@ class NXCLI_API:
                 self.result.set_temp(self.switch_ip, iface, temp, temp_alrm_low, is_alert=True)
             else:
                 self.result.set_temp(self.switch_ip, iface, temp, temp_alrm_hi, is_alert=True)
-            return True
+            return
         
         if not filter_warn and not (temp_warn_low <= temp <= temp_warn_hi):
             if temp <= temp_warn_low:
                 self.result.set_temp(self.switch_ip, iface, temp, temp_warn_low)
             else:
                 self.result.set_temp(self.switch_ip, iface, temp, temp_warn_hi)
-            return True
+
         
-        return False
+    def check_current(self, iface, lane, filter_warn):
+
+        current_alrm_hi = float(lane["current_alrm_hi"])
+        current_alrm_low = float(lane["current_alrm_lo"])
+        current_warn_hi = float(lane["current_warn_hi"])
+        current_warn_low = float(lane["current_warn_lo"])
+        current = float(lane.get("current", 0))
+
+
+        if not (current_alrm_low <= current <= current_alrm_hi):
+            if current <= current_alrm_low:
+                self.result.set_current(self.switch_ip, iface, current, current_alrm_low, is_alert=True)
+            else:
+                self.result.set_current(self.switch_ip, iface, current, current_alrm_hi, is_alert=True)
+            return
+        
+        if not filter_warn and not (current_warn_low <= current <= current_warn_hi):
+            if current <= current_warn_low:
+                self.result.set_current(self.switch_ip, iface, current, current_warn_low)
+            else:
+                self.result.set_current(self.switch_ip, iface, current, current_warn_hi)
+
+    
+    
+    def check_voltage(self, iface, lane, filter_warn):
+
+        volt_alrm_hi = float(lane["volt_alrm_hi"])
+        volt_alrm_low = float(lane["volt_alrm_lo"])
+        volt_warn_hi = float(lane["volt_warn_hi"])
+        volt_warn_low = float(lane["volt_warn_lo"])
+        volt = float(lane["voltage"])
+
+
+        if not (volt_alrm_low <= volt <= volt_alrm_hi):
+            if volt <= volt_alrm_low:
+                self.result.set_voltage(self.switch_ip, iface, volt, volt_alrm_low, is_alert=True)
+            else:
+                self.result.set_voltage(self.switch_ip, iface, volt, volt_alrm_hi, is_alert=True)
+            return
+        
+        if not filter_warn and not (volt_warn_low <= volt <= volt_warn_hi):
+            if volt <= volt_warn_low:
+                self.result.set_voltage(self.switch_ip, iface, volt, volt_warn_low)
+            else:
+                self.result.set_voltage(self.switch_ip, iface, volt, volt_warn_hi)
+            
+        
 
 class NXREST_API:
 
@@ -489,7 +535,7 @@ class NXREST_API:
             # Two scenarios:
             # If current >= ref then normal routine
             # If ref > current, the counter has been reset, so assume current is the delta
-            delta = current_cRC - ref_cRC if current_cRC > ref_cRC else current_cRC
+            delta = current_cRC - ref_cRC if current_cRC >= ref_cRC else current_cRC
 
             if delta > 0:
                 self.result.set_cRC_delta(self.switch_ip, critical_delta, dn, delta, current_cRC, ref_cRC)
