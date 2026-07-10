@@ -2,6 +2,9 @@ from nxapi_requests import NXCLI_API, NXREST_API
 from utils import Logger
 from result_file import ResultFile
 
+# NOTE: `SwitchConnection` is the public facade used by `main.py`.
+# When you add a new monitoring method to `NXREST_API` or `NXCLI_API`, add a
+# corresponding method here that delegates to `self.rest` or `self.cli`.
 
 class SwitchConnection:
     """Wraps both API types for seemless calls"""

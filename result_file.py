@@ -12,6 +12,25 @@ class Label(Enum):
     HALF_DUPLEX = "half_duplex"
     CRC_ALIGN = "crc_align"
 
+# How to add a new type of monitoring output:
+
+# 1. Add a new `Label` entry above corresponding to your monitoring.
+
+# 2. Create a new class inheriting from `ResultOutput` implementing `write(self, output)`.
+#    `write` receives a callable `output` that writes strings to the result file.
+#    This callable is passed automatically by the commit function of the `ResultFile` class.
+   
+# 3. Add helper methods on `ResultFile` to initialise / update your object (see existing set_* methods)
+#    Use `_init_dict(ip_addr)` to ensure the dict entry exists before assigning your output class:
+#    `self.switch_outputs[ip_addr][<Label>] = YourOutputClass(...)`.
+
+# 4. From your monitoring code (in `nxapi_requests.py`) call those `ResultFile`
+#    helper methods to populate the result object as data is discovered.
+
+# NOTE: As long as your output class is defined in the switch_output dictionary, the `commit()`` method 
+# in `ResultFile` will write your output in the result file accordiing to your `write` method defined in step 2.
+# This method is called by `main.py` at the end of all checks.
+
 
 class ResultOutput(ABC):
     @abstractmethod
@@ -291,6 +310,7 @@ class ResultFile:
             unused_ports.successful_down = successful_down
 
 
+    # NOTE: Those are the simplest helper methods to populate your class output
     def set_half_duplex_ifaces(self, ip_addr, port_list):
         self._init_dict(ip_addr)
         self.switch_outputs[ip_addr][Label.HALF_DUPLEX] = HalfDuplexIfaces(port_list)   

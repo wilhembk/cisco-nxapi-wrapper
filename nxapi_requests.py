@@ -7,7 +7,28 @@ from utils import ANSI, Logger
 from result_file import ResultFile
 from datetime import datetime
 
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+# The certificate is self-signed. So we disable warnings.
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) 
+
+
+
+# How to add a new monitoring endpoint or CLI-based check ?
+
+# - Prefer using NXCLI_REST as those calls are much quicker than CLI ones.
+#   For a GET request, add a method on `NX_REST` that uses `self._get(<point>)` (it wraps the request neatly)
+#   Parse the returned JSON (use glom for concise extraction)
+#   Push results to `self.result` using an appropriate `ResultFile` setter (see `result_file.py`).
+
+# - If you must run a CLI command:
+#   Add a method on `NXCLI_API` that uses `self._wrap_cmd("<cli command>")` (it wraps the request neatly)
+#   Parse the returned JSON (use glom for concise extraction)
+#   Push results to `self.result` using an appropriate `ResultFile` setter (see `result_file.py`).
+
+# - After adding the method here, expose it on `SwitchConnection` (see `switch_connection.py`) 
+#   That way, `main.py` can call it
+
+# - For offline testing, `--demo_path` expects a directory structure mirroring
+#   the API paths used by the code (an example lives in `demo_json/`).
 
 
 class NXCLI_API:

@@ -35,7 +35,7 @@ switch(config)# exit
 switch# copy run start
 ```
 
-### Réinitailisation complète
+### Réinitialisation complète
 
 Une fois l'accès au switch obtenu. On le réinitialise comme suit
 ```
@@ -46,11 +46,11 @@ switch(config)# exit
 switch# reload 
 ```
 
-Au redémarrage, le switch va se charger sur le loader. Il faut démarrer sur une image de nixos en utilisant la commande `boot` (les versions disponibles sont visibles via `dir`)
+Au redémarrage, le switch va se charger sur le loader. Il faut démarrer sur une image de nxos en utilisant la commande `boot` (les versions disponibles sont visibles via `dir`)
 
-Une fois fait, le switch va boucler sur son processus POAP (POwer On Auto Provisioning), il cherche une configuration accesisble sur le réseau. Il faut taper `yes` pour passer en configuration manuelle.
+Une fois fait, le switch va boucler sur son processus POAP (POwer On Auto Provisioning), il cherche une configuration accessible sur le réseau. Il faut taper `yes` pour passer en configuration manuelle.
 
-Procéder ensuite aux configurations manuelles classique. **Ne pas oublier l'adresse IP du port management et l'accès via ssh.**
+Procéder ensuite aux configurations manuelles classiques. **Ne pas oublier l'adresse IP du port management et l'accès via ssh.**
 
 Une fois le switch configuré. IL faut lui indiquer l'image de boot. **Sinon, le switch redémarre en loader**
 ```
@@ -64,7 +64,7 @@ switch# copy run start
 
 ## Premier démarrage (Connexion HTTP sur Management)
 
-**A NOTER**: Il est aussi possible d'immadiatemment utiliser la configuration de base en HTTPS autosigné.
+**A NOTER**: Il est aussi possible d'immédiatement utiliser la configuration de base en HTTPS autosigné.
 
 Il faut s'assurer que http est bien en écoute et que le vrf est sur le port management
 ```
@@ -94,13 +94,13 @@ switch(config)# nxapi certificate enable
 ## NXAPI
 
 NXAPI est une **feature** a activer sur les switchs. Une fois cette feature activée, il est possible de la manipuler dans *Developer SandBox*. Dessus, il est possible de générer du code dans le langage que l'on souhaite pour scripter ses demandes d'API.  
-Il faut se connecter au Switch en HTTPS sur le navigatuer pour y accéder.  
+Il faut se connecter au Switch en HTTPS sur le navigateur pour y accéder.  
 
 Il existe deux types d'API:
 - NXCLI qui permet d'envoyer des commandes cli au switch et de recevoir la réponse.
     > Mais cette API est lente et demande une authentification à chaque commande
-- NXREST une api REST qui permet de vérifier l'état du switch et de modifier certaines configuration
-    > Ces requêtes sont rapides et pratique pour le monitoring. **On utilise cette API en priorité**
+- NXREST une API REST qui permet de vérifier l'état du switch et de modifier certaines configurations
+    > Ces requêtes sont rapides et pratiques pour le monitoring. **On utilise cette API en priorité**
     > L'API REST ne permet pas de sauvegarder la running-config et de correctement évaluer les niveaux optiques.
 
 
@@ -109,7 +109,7 @@ Il existe deux types d'API:
 L'API dispose de plusieurs endpoints donnant des informations différentes
 - `https://<ip_switch>/api/ins` est l'endpoint de **NXAPI-CLI**. Elle permet d'envoyer des commandes CLI au switch avec `POST`. Et renvoie un json de résultat. Une réponse peut mettre **3 à 5 secondes** avant d'arriver.
 
-La requête contient donc les identfiants d'authentification et son payload:
+La requête contient donc les identifiants d'authentification et son payload:
 ```json
 {
     "jsonrpc": "2.0",
@@ -135,7 +135,7 @@ Le script a pour vocation d'être un cronjob. Il prends en entrée les tests à 
 
 ## Premier démarrage
 
-Le script est écrit en Python 3. Assurez-vous d'avoir `pip` d'installé.
+Le script est écrit en Python 3.14. Assurez-vous d'avoir `pip` d'installé.
 1. Placez vous à la racine du projet
 2. Initialisez un environnement virtuel
 ```bash
@@ -154,14 +154,14 @@ source .venv/activate
 
 4. Installez les dépendances
 ```bash
-python -m pip install -e
+python -m pip install -e .
 ```
 
 ## Utilisation courante
 
-<u>**Assurez-vous:**</u>
+- `log_dir_path` Le chemin d'accès du repertoire dans lequel stocker les fichiers de logs
 1. D'avoir **démarré votre environnement virtuel python**
-2. D'avoir un fichier `.env` à la racine du projet contenant les identifiants des siwthcs à contacter:
+2. D'avoir un fichier `.env` à la racine du projet contenant les identifiants des switchs à contacter:
 ```env
 SWITCH_USER_ID="nom_d_utilisateur"
 SWITCH_PASSWORD="mot_de_passe"
@@ -191,7 +191,7 @@ options:
   -h, --help            show this help message and exit
   --unused_ports N      Check for DOWN ports unused since N days
   --half_duplex         Check for interfaces running in half duplex mode
-  --check_transceiver {WARN,ALERT}
+  --check_transceivers {WARN,ALERT}
                         Check transceivers hardware and notify for issues
                         higher or equal to specified level
   --CRC critical_delta reference_directory_path
@@ -206,17 +206,19 @@ options:
 
 #### Obligatoires
 
-- `switch_ip_list` La liste des adresses IP des switchs à monitorer, séparé par une nouvelle ligne  
-- `log_dir_path` Le chemin d'accès du repertoire dans lequel stoquer les fichiers de logs
+- `switch_ip_list` La liste des adresses IP des switchs à monitorer, séparée par une nouvelle ligne  
+- `log_dir_path` Le chemin d'accès du repertoire dans lequel stocker les fichiers de logs
 - `result_dir_path` Le chemin du repertoire dans lequel stocker les fichiers de résultats pour les interventions.
 
 #### Optionnels
 
 - `--unused_ports N` Vérifie l'existence de port **DOWN** qui ne sont pas administrativement down depuis plus de `N` jours.
 - `--half_duplex` Vérifie l'existence d'interface **UP** qui fonctionne en half-duplex (au lieu de full-duplex)
-- `--check_transceiver {WARN, ALERT}` Vérifie l'état hardware des transceivers et renvoie les erreurs satisfaisant au moins le niveau spécifié (`WARN` ou `ALERT`)
+- `--check_transceivers {WARN, ALERT}` Vérifie l'état hardware des transceivers et renvoie les erreurs satisfaisant au moins le niveau spécifié (`WARN` ou `ALERT`)
 - `--CRC critical_delta reference_directory_path` Contrôle les satistiques cRC des interfaces par rapport au dossier de référence `reference_directory_path` spécifié. Affiche des erreurs **CRITICAL** si les compteurs ont augmenté d'au moins `critical_delta`
 - `--demo_path demo_directory_path` Pour réaliser des tests, vérifie les valeurs renseigné dans le `demo_directory_path` plutôt que de s'adresser aux switchs.
+
+Note d'utilisation: le dossier `references_data/` est utilisé pour le contrôle CRC et **est généré / mis à jour automatiquement** par le script lorsque vous exécutez le contrôle avec `--CRC`. Il contient des fichiers JSON de référence nommés par adresse IP (les points remplacés par des underscore), par exemple `10_10_10_1.json`. Vous pouvez aussi fournir un dossier existant contenant vos bases de référence.
 
 
 ### Exemple d'output
@@ -235,7 +237,7 @@ Consider unplugging or disabling them to not be notified again.
 > CRITICAL: The following interfaces are running in half duplex
 	- eth1/107
 
-> The following transceivers show hahttps://github.com/mahmoud/glomrdware issues:
+> The following transceivers show hardware issues:
 	- Interface: Ethernet1/2
 		+ ALERT: Transceiver current exceeded the threshold ! (0.0 < 2.0)
 		+ CRITICAL: Lane 1 is not plugged in !!!
@@ -271,7 +273,7 @@ Consider unplugging or disabling them to not be notified again.
 
 # Pour les développeurs
 
-Le programme suit une logique de programmation objet qui le rend modulable:
+Le programme est développé en Python 3.14 et suit une logique de programmation objet qui le rend modulable:
 
 ![Vu d'ensemble du programme](program_overview.svg)
 
@@ -294,6 +296,11 @@ Pour ajouter un point de contacter à endpoint. On procède en 5 étapes
 
 On vérifie le format de retour du endpoint avec la sandbox de NXAPI (trouver l'ip d'un switch et s'y connecter via le navigateur)
 
+Le répertoire `demo_json/` contient des JSON qui représente les endpoints de NXAPI.  
+Le dossier reproduit aisni la structure des endpoints NXAPI.   
+Si vous avez besoin d'accéder à de nouveaux endpoints, vous pouvez copier le résultat de la sandbox de NXAPI et les ajouter à `demo_json/` en respectant le chemin d'URL (par ex. `api/mo/sys.json` se transforme en `demo_json/mo/sys.json`).  
+Ainsi, vous pourrez tester des cas de monitoring spéicifique en changeant ce fichier.
+
 
 ### Etape 2: Ecriture dans le fichier de Résultat
 
@@ -303,19 +310,19 @@ Dans le fichier `result_file.py`
 2. Créez un nouvel objet qui hérite de la classe abstraite `ResultOutput`. Utilisez la structure de donnée la plus propice pour récupérer les données de monitoring
 3. Créez la fonction `write` de votre objet qui prend la fonction `output` en paramètre. Considérez cette fonction comme la fonction `print` qui renverra tout dans le fichier de résultat.
 > Votre objet sera géré dans la classe ResultFile. La fonction d'output qui est passé en paramètre y est définie par `_output`. Vous n'avez pas besoin de la modifier.
-4. Ajoutez votre objet dans la gestion du ResultFile dans le dictionaire `switch_ouputs[<ip_du_switch>][<Label du monitoring>]`. Votre objet sera automatiquement géré par `ResultFile` une fois fait.
-> Il est recommandé d'utiliser la fonction `_init_dict(ip_addr)` où `ip_addr` est l'ip du switch, pour être sûr que le dictionnaire dispose bien d'une entrée correspondant au switch.
+4. Ajoutez votre objet dans la gestion du ResultFile dans le dictionnaire `switch_outputs[<ip_du_switch>][<Label du monitoring>]`. Votre objet sera automatiquement géré par `ResultFile` une fois fait.
+> Il est recommandé d'utiliser la fonction `_init_dict(ip_addr)` où `ip_addr` est l'IP du switch, pour être sûr que le dictionnaire dispose bien d'une entrée correspondant au switch.
 5. Si besoin, créez des méthodes pour alimenter votre objet au fur et à mesure de votre monitoring
 
 
 ### Etape 3: Formatage de la réponse
 
-La réponse dun `GET` sur l'API REST est **toujours** composée d'un `"total_count"` à la racine qui contient le nombre de résultat renvoyé par le switch. S'il vaut `0`, alors il n'y a rien à traîter, et on devrait s'arrêter immédiatemment pour éviter tout plantage.
+La réponse d'un `GET` sur l'API REST est **toujours** composée d'un `"total_count"` à la racine qui contient le nombre de résultats renvoyé par le switch. S'il vaut `0`, alors il n'y a rien à traiter, et on devrait s'arrêter immédiatement pour éviter tout plantage.
 
 Avec [glom](https://glom.readthedocs.io/en/latest/tutorial.html) il est possible de rapidement récupérer des données formatées en `json`. Des exemples sont disponibles dans le code et sur le manuel de `glom`
 
 Une fois la réponse correctement formaté, on peut commencer à réaliser des tests de monitoring
-> Si des données utilisateurs sont nécéssaires pour pouvoir réaliser ces tests, ajourtez ces variables dans la fonction qui s'occupe de faire le monitoring
+> Si des données utilisateurs sont nécessaires pour pouvoir réaliser ces tests, ajoutez ces variables dans la fonction qui s'occupe de faire le monitoring
 
 
 - Utiliser la variable `result` pour communiquer avec le `ResultFile` et envoyer vos résultats à l'objet de Monitoring que vous avez précédemment créé.
@@ -326,9 +333,9 @@ Une fois la réponse correctement formaté, on peut commencer à réaliser des t
 
 Comme l'objet `SwitchConnection` fait le lien entre l'API REST ou CLI, il faut que la fonction de monitoring soit accessible via cet objet.
 
-- Si votre méthode de monitoring via de l'API REST, utilisez la variable `rest` pour faire appelle à votre fonciton
-- Si votre méthode de monitoring via de l'API CLI, utilisez la variable `cli` pour faire appelle à votre fonction
-> Il est recommandé d'utiliser le même nom de fonction dans SwitchConnection par rapport à celui que vous avez choisit dans les objets NXAPI pour éviter les confusions.
+- Si votre méthode de monitoring via de l'API REST, utilisez la variable `rest` pour faire appel à votre fonction
+- Si votre méthode de monitoring via de l'API CLI, utilisez la variable `cli` pour faire appel à votre fonction
+> Il est recommandé d'utiliser le même nom de fonction dans `SwitchConnection` par rapport à celui que vous avez choisi dans les objets NXAPI pour éviter les confusions.
 
 ### Etape 5: Parser les inputs utilisateurs dans `main.py`
 
@@ -336,4 +343,69 @@ La librairie Python native [argparse](https://docs.python.org/3/library/argparse
 
 - Ajouter une option avec `parser.add_argument` (dans le `if __name__ == "__main__"` en bas du fichier)
   - Renseignez une section help pour documenter ce que fait votre monitoring
-- Dans la fonction `main` définie en haut du fichier, utiliser `args` pour récupérer les données de votre argument, et faites appelle à la méthode de `SwitchConnection` précdemment définie
+- Dans la fonction `main` définie en haut du fichier, utiliser `args` pour récupérer les données de votre argument, et faites appel à la méthode de `SwitchConnection` précédemment définie
+
+
+### Exemple complet: ajouter un monitoring "example_check"
+
+Voici un petit exemple concret montrant comment ajouter le monitoring `example_check` qui récupère un endpoint REST et écrit le résultat dans le fichier de résultat.
+
+1. `result_file.py`: Ajoutez un `Label` et un `ResultOutput`:
+
+```python
+# result_file.py
+class Label(Enum):
+  ...
+  EXAMPLE_CHECK = "example"
+
+class ExampleCheck(ResultOutput):
+    def __init__(self, data):
+        self.data = data
+
+    def write(self, output):
+        output(f"> Example check:\n")
+        output(f"\t- value: {self.data}\n\n")
+
+class ResultFile:
+    ...
+    def set_example_check(self, ip_addr: str, data):
+        self._init_dict(ip_addr)
+        self.switch_outputs[ip_addr][Label.EXAMPLE_CHECK] = ExampleCheck(data)
+```
+
+2. `nxapi_requests.py`: Ajoutez la méthode de monitoring et envoyez les données à `result`:
+
+```python
+class NXAPI_REST:
+    ...
+    def get_example_metric(self):
+        data = self._get("class/myExample.json")
+        value = glom(data, ("imdata", ["myExample.attributes.value"]))[0]
+        self.result.set_example_check(self.switch_ip, value)
+        return value
+```
+
+3. `switch_connection.py`: Ajoutez la méthode de monitoring à `SwitchConnection` pour y faire appel dans `main.py`
+
+```python
+class SwitchConnection:
+    ...
+    def get_example_metric(self):
+        return self.rest.get_example_metric()
+```
+
+4. `main.py`: Ajouter une nouvelle option au programme avec argparse et appellez votre méthode de monitoring
+
+```python
+
+def main(args)
+    ...
+    if args.example_check != None:
+        sw.get_example_metric()
+    ...
+
+if __name__ == "__main__":
+    ...
+    parser.add_argument("--example_check", action="store_true", help="Run example check")
+    ...
+```
