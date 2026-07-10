@@ -1,0 +1,3205 @@
+{
+  "totalCount": "128",
+  "imdata": [
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/98]",
+          "guard": "default",
+          "id": "eth1/98",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/98",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/99]",
+          "guard": "default",
+          "id": "eth1/99",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/99",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/100]",
+          "guard": "default",
+          "id": "eth1/100",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/100",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/101]",
+          "guard": "default",
+          "id": "eth1/101",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/101",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/102]",
+          "guard": "default",
+          "id": "eth1/102",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/102",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/103]",
+          "guard": "default",
+          "id": "eth1/103",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/103",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/104]",
+          "guard": "default",
+          "id": "eth1/104",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/104",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/105]",
+          "guard": "default",
+          "id": "eth1/105",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/105",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/106]",
+          "guard": "default",
+          "id": "eth1/106",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/106",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/107]",
+          "guard": "default",
+          "id": "eth1/107",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/107",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/108]",
+          "guard": "default",
+          "id": "eth1/108",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/108",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/109]",
+          "guard": "default",
+          "id": "eth1/109",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/109",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/110]",
+          "guard": "default",
+          "id": "eth1/110",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/110",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/111]",
+          "guard": "default",
+          "id": "eth1/111",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/111",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/112]",
+          "guard": "default",
+          "id": "eth1/112",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/112",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/113]",
+          "guard": "default",
+          "id": "eth1/113",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/113",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/114]",
+          "guard": "default",
+          "id": "eth1/114",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/114",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/115]",
+          "guard": "default",
+          "id": "eth1/115",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/115",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/116]",
+          "guard": "default",
+          "id": "eth1/116",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/116",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/117]",
+          "guard": "default",
+          "id": "eth1/117",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/117",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/118]",
+          "guard": "default",
+          "id": "eth1/118",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/118",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/119]",
+          "guard": "default",
+          "id": "eth1/119",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/119",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/120]",
+          "guard": "default",
+          "id": "eth1/120",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/120",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/121]",
+          "guard": "default",
+          "id": "eth1/121",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/121",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/122]",
+          "guard": "default",
+          "id": "eth1/122",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/122",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/123]",
+          "guard": "default",
+          "id": "eth1/123",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/123",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/124]",
+          "guard": "default",
+          "id": "eth1/124",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/124",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/125]",
+          "guard": "default",
+          "id": "eth1/125",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/125",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/126]",
+          "guard": "default",
+          "id": "eth1/126",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/126",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/127]",
+          "guard": "default",
+          "id": "eth1/127",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/127",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/128]",
+          "guard": "default",
+          "id": "eth1/128",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/128",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "enabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/1]",
+          "guard": "default",
+          "id": "eth1/1",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-03T13:12:04.704+00:00",
+          "mode": "default",
+          "name": "eth1/1",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/2]",
+          "guard": "default",
+          "id": "eth1/2",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/2",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/3]",
+          "guard": "default",
+          "id": "eth1/3",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/3",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/4]",
+          "guard": "default",
+          "id": "eth1/4",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/4",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/5]",
+          "guard": "default",
+          "id": "eth1/5",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/5",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/6]",
+          "guard": "default",
+          "id": "eth1/6",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/6",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/7]",
+          "guard": "default",
+          "id": "eth1/7",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/7",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/8]",
+          "guard": "default",
+          "id": "eth1/8",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/8",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/9]",
+          "guard": "default",
+          "id": "eth1/9",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/9",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/10]",
+          "guard": "default",
+          "id": "eth1/10",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/10",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/11]",
+          "guard": "default",
+          "id": "eth1/11",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/11",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/12]",
+          "guard": "default",
+          "id": "eth1/12",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/12",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/13]",
+          "guard": "default",
+          "id": "eth1/13",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/13",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/14]",
+          "guard": "default",
+          "id": "eth1/14",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/14",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/15]",
+          "guard": "default",
+          "id": "eth1/15",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/15",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/16]",
+          "guard": "default",
+          "id": "eth1/16",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/16",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/17]",
+          "guard": "default",
+          "id": "eth1/17",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/17",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/18]",
+          "guard": "default",
+          "id": "eth1/18",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/18",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/19]",
+          "guard": "default",
+          "id": "eth1/19",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/19",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/20]",
+          "guard": "default",
+          "id": "eth1/20",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/20",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/21]",
+          "guard": "default",
+          "id": "eth1/21",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/21",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/22]",
+          "guard": "default",
+          "id": "eth1/22",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/22",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/23]",
+          "guard": "default",
+          "id": "eth1/23",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/23",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/24]",
+          "guard": "default",
+          "id": "eth1/24",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/24",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/25]",
+          "guard": "default",
+          "id": "eth1/25",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/25",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/26]",
+          "guard": "default",
+          "id": "eth1/26",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/26",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/27]",
+          "guard": "default",
+          "id": "eth1/27",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/27",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/28]",
+          "guard": "default",
+          "id": "eth1/28",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/28",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/29]",
+          "guard": "default",
+          "id": "eth1/29",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/29",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/30]",
+          "guard": "default",
+          "id": "eth1/30",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/30",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/31]",
+          "guard": "default",
+          "id": "eth1/31",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/31",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/32]",
+          "guard": "default",
+          "id": "eth1/32",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/32",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/33]",
+          "guard": "default",
+          "id": "eth1/33",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/33",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/34]",
+          "guard": "default",
+          "id": "eth1/34",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/34",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/35]",
+          "guard": "default",
+          "id": "eth1/35",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/35",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/36]",
+          "guard": "default",
+          "id": "eth1/36",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/36",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/37]",
+          "guard": "default",
+          "id": "eth1/37",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/37",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/38]",
+          "guard": "default",
+          "id": "eth1/38",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/38",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/39]",
+          "guard": "default",
+          "id": "eth1/39",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/39",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/40]",
+          "guard": "default",
+          "id": "eth1/40",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/40",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/41]",
+          "guard": "default",
+          "id": "eth1/41",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/41",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/42]",
+          "guard": "default",
+          "id": "eth1/42",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/42",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/43]",
+          "guard": "default",
+          "id": "eth1/43",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/43",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/44]",
+          "guard": "default",
+          "id": "eth1/44",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/44",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/45]",
+          "guard": "default",
+          "id": "eth1/45",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/45",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/46]",
+          "guard": "default",
+          "id": "eth1/46",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/46",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/47]",
+          "guard": "default",
+          "id": "eth1/47",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/47",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/48]",
+          "guard": "default",
+          "id": "eth1/48",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/48",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/49]",
+          "guard": "default",
+          "id": "eth1/49",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/49",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/50]",
+          "guard": "default",
+          "id": "eth1/50",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/50",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/51]",
+          "guard": "default",
+          "id": "eth1/51",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/51",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/52]",
+          "guard": "default",
+          "id": "eth1/52",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/52",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/53]",
+          "guard": "default",
+          "id": "eth1/53",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/53",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/54]",
+          "guard": "default",
+          "id": "eth1/54",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/54",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/55]",
+          "guard": "default",
+          "id": "eth1/55",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/55",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/56]",
+          "guard": "default",
+          "id": "eth1/56",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/56",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/57]",
+          "guard": "default",
+          "id": "eth1/57",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/57",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/58]",
+          "guard": "default",
+          "id": "eth1/58",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/58",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/59]",
+          "guard": "default",
+          "id": "eth1/59",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/59",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/60]",
+          "guard": "default",
+          "id": "eth1/60",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/60",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/61]",
+          "guard": "default",
+          "id": "eth1/61",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/61",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/62]",
+          "guard": "default",
+          "id": "eth1/62",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/62",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/63]",
+          "guard": "default",
+          "id": "eth1/63",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/63",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/64]",
+          "guard": "default",
+          "id": "eth1/64",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/64",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/65]",
+          "guard": "default",
+          "id": "eth1/65",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/65",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/66]",
+          "guard": "default",
+          "id": "eth1/66",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/66",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/67]",
+          "guard": "default",
+          "id": "eth1/67",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/67",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/68]",
+          "guard": "default",
+          "id": "eth1/68",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/68",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/69]",
+          "guard": "default",
+          "id": "eth1/69",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/69",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/70]",
+          "guard": "default",
+          "id": "eth1/70",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/70",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/71]",
+          "guard": "default",
+          "id": "eth1/71",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/71",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/72]",
+          "guard": "default",
+          "id": "eth1/72",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/72",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/73]",
+          "guard": "default",
+          "id": "eth1/73",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/73",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/74]",
+          "guard": "default",
+          "id": "eth1/74",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/74",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/75]",
+          "guard": "default",
+          "id": "eth1/75",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/75",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/76]",
+          "guard": "default",
+          "id": "eth1/76",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/76",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/77]",
+          "guard": "default",
+          "id": "eth1/77",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/77",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/78]",
+          "guard": "default",
+          "id": "eth1/78",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/78",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/79]",
+          "guard": "default",
+          "id": "eth1/79",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/79",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/80]",
+          "guard": "default",
+          "id": "eth1/80",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/80",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/81]",
+          "guard": "default",
+          "id": "eth1/81",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/81",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/82]",
+          "guard": "default",
+          "id": "eth1/82",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/82",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/83]",
+          "guard": "default",
+          "id": "eth1/83",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/83",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/84]",
+          "guard": "default",
+          "id": "eth1/84",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/84",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/85]",
+          "guard": "default",
+          "id": "eth1/85",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/85",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/86]",
+          "guard": "default",
+          "id": "eth1/86",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/86",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/87]",
+          "guard": "default",
+          "id": "eth1/87",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/87",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/88]",
+          "guard": "default",
+          "id": "eth1/88",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/88",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/89]",
+          "guard": "default",
+          "id": "eth1/89",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/89",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/90]",
+          "guard": "default",
+          "id": "eth1/90",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/90",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/91]",
+          "guard": "default",
+          "id": "eth1/91",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/91",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/92]",
+          "guard": "default",
+          "id": "eth1/92",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/92",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/93]",
+          "guard": "default",
+          "id": "eth1/93",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/93",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/94]",
+          "guard": "default",
+          "id": "eth1/94",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/94",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/95]",
+          "guard": "default",
+          "id": "eth1/95",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/95",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/96]",
+          "guard": "default",
+          "id": "eth1/96",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/96",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    },
+    {
+      "stpIf": {
+        "attributes": {
+          "adminSt": "disabled",
+          "bpdufilter": "default",
+          "bpduguard": "default",
+          "childAction": "",
+          "cost": "0",
+          "ctrl": "",
+          "descr": "",
+          "dn": "sys/stp/inst/if-[eth1/97]",
+          "guard": "default",
+          "id": "eth1/97",
+          "lcIssu": "default",
+          "linkType": "auto",
+          "modTs": "2026-07-02T22:59:16.641+00:00",
+          "mode": "default",
+          "name": "eth1/97",
+          "prestdCfg": "disabled",
+          "priority": "128",
+          "simulatePvst": "default",
+          "status": ""
+        }
+      }
+    }
+  ]
+}

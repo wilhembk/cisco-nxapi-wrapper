@@ -31,7 +31,7 @@ def main(args):
 
     for ip in f.readlines(): 
         ip = ip.strip()
-        sw = SwitchConnection(switchuser, switchpassword, ip, logger, result)  
+        sw = SwitchConnection(switchuser, switchpassword, ip, logger, result, args.demo_path)  
         success = sw.login()
         if not success:
             continue
@@ -81,6 +81,7 @@ if __name__ == "__main__":
     parser.add_argument("--half_duplex", action="store_true", help="Check for interfaces running in half duplex mode")
     parser.add_argument("--check_optical", choices=["WARN", "ALERT"], help="Check optical hardware and notify for issues higher or equal to specified level")
     parser.add_argument("--CRC", nargs=2, type=critical_delta, metavar=("critical_delta","reference_directory_path"), help="Check for additional cRC and Align errors according to the reference directory")
+    parser.add_argument("--demo_path", metavar="demo_directory_path", help="Enable demo and read local files instead of switch API. For testing purposes only.")
 
     args = parser.parse_args()
     main(args)

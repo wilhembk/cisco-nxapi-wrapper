@@ -7,9 +7,9 @@ class SwitchConnection:
     """Wraps both API types for seemless calls"""
 
 
-    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile):
-        self.cli = NXCLI_API(user_id, password, switch_ip, logger, result)
-        self.rest = NXREST_API(user_id, password, switch_ip, logger, result)
+    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None):
+        self.cli = NXCLI_API(user_id, password, switch_ip, logger, result, demo_path)
+        self.rest = NXREST_API(user_id, password, switch_ip, logger, result, demo_path)
 
         self.hostname = self.rest.get_hostname() # Getting hostname by default so it appears in the result file
 

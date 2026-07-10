@@ -12,9 +12,10 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class NXCLI_API:
 
-    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile):
+    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None):
         self.user_id = user_id
         self.password = password
+        self.demo_path = demo_path
         self.logger = logger
         self.switch_ip = switch_ip
         self.result = result
@@ -25,6 +26,14 @@ class NXCLI_API:
         Wrap the cmd inside the payload to send to the switch.
         The cmd requires authentication on the switch for it to work
         """
+
+        if self.demo_path != None:
+            self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/ins/{cmd.replace(" ", "_")}.json")
+            with open(f"{self.demo_path}/ins/{cmd.replace(" ", "_")}.json", "r") as f:
+                return json.load(f)
+            self.logger.log(f"Demo file {self.demo_path}/ins/{cmd.replace(" ", "_")}.json is not readable")
+            return {}
+
         myheaders={'content-type':'application/json-rpc'}
         payload=[
             {
@@ -60,12 +69,10 @@ class NXCLI_API:
     def get_transceiver_details(self):
         """Returns the details of the transceivers, filtered down to plugged ones"""
 
-        with open("example_transceiver_details.json", "r") as f:
-            return list(filter(
-                    lambda iface: iface["sfp"] == "present", 
-                    glom(json.load(f), "result.body.TABLE_interface.ROW_interface")))
-    
-    # self._wrap_cmd("show interface transceiver details")
+        return list(filter(
+                lambda iface: iface["sfp"] == "present", 
+                glom(self._wrap_cmd("show interface transceiver details"), "result.body.TABLE_interface.ROW_interface")))
+
     
     def check_for_tranceiver_alerts(self, filter_warn=False):
         # Check for duplex
@@ -171,11 +178,12 @@ class NXCLI_API:
 
 class NXREST_API:
 
-    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile):
+    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None):
         """Call login to initialise the object auth cookies and start making requests"""
         self.user_id = user_id
         self.password = password
         self.switch_ip = switch_ip
+        self.demo_path = demo_path
         self.hostname = None
         self.api_url = f"https://{self.switch_ip}/api/"
         self.logger = logger
@@ -184,14 +192,17 @@ class NXREST_API:
 
 
     def login(self):
+        if self.demo_path != None:
+            return True
+            
         payload = {
-        'aaaUser' : {
-            'attributes' : {
-                'name' : self.user_id,
-                'pwd' : self.password,
+            'aaaUser' : {
+                'attributes' : {
+                    'name' : self.user_id,
+                    'pwd' : self.password,
+                    }
                 }
             }
-        }
 
 
         endpoint = self.api_url+"aaaLogin.json"
@@ -216,6 +227,10 @@ class NXREST_API:
         """
         Close the connection gracefully
         """
+
+        if self.demo_path != None:
+            return
+
         payload = {
         'aaaUser' : {
             'attributes' : {
@@ -229,6 +244,13 @@ class NXREST_API:
 
 
     def _get(self, point: str):
+
+        if self.demo_path:
+            self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/{point}")
+            with open(f"{self.demo_path}/{point}", "r") as f:
+                return json.load(f)
+            self.logger.log(f"The file {self.demo_path}/{point} is unreadable")
+            return {}
         
         if self.auth_cookie == {}:
             self.login()
@@ -374,6 +396,9 @@ class NXREST_API:
 
 
     def _post_interfaceEntity(self, children):
+
+        if self.demo_path != None:
+            return False
 
         headers = { "Content-Type": "application/json" }
         payload = {
