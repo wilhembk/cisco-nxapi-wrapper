@@ -121,7 +121,7 @@ La requête contient donc les identifiants d'authentification et son payload :
 Il existe également des endpoints de type `GET` accessibles via NXAPI-REST, permettant de récupérer des données du switch :
 - `https://<ip_switch>/api/mo/sys.json` renvoie les informations du switch, notamment son nom, son uptime, etc.
 - `https://<ip_switch>/api/class/ethpmPhysIf.json` renvoie l'état des interfaces, notamment si elles sont **UP** ou **DOWN** administrativement et opérationnellement. On peut aussi voir si les interfaces sont en full ou half-duplex.
-- `https://<ip_switch>/api/class/rmonEtherStats.json` renvoie les statistiques des interfaces. Il s'agit de tous les compteurs : CRC, paquets perdus, etc.
+- `https://<ip_switch>/api/class/rmonEtherStats.json` renvoie les statistiques des interfaces. Il s'agit de tous les compteurs: CRC, paquets perdus, etc.
 
 # Utilisation du script
 
@@ -200,20 +200,20 @@ options:
 
 #### Obligatoires
 
-- `switch_ip_list` : La liste des adresses IP des switchs à monitorer, séparée par une nouvelle ligne.
-- `log_dir_path` : Le chemin d'accès du répertoire dans lequel stocker les fichiers de logs.
-- `result_dir_path` : Le chemin du répertoire dans lequel stocker les fichiers de résultats pour les interventions.
+- `switch_ip_list`: La liste des adresses IP des switchs à monitorer, séparée par une nouvelle ligne.
+- `log_dir_path`: Le chemin d'accès du répertoire dans lequel stocker les fichiers de logs.
+- `result_dir_path`: Le chemin du répertoire dans lequel stocker les fichiers de résultats pour les interventions.
 
 
 #### Optionnels
 
-- `--unused_ports N` : Vérifie l'existence de ports **DOWN** qui ne sont pas administrativement down depuis plus de `N` jours.
-- `--half_duplex` : Vérifie l'existence d'interfaces **UP** qui fonctionnent en half-duplex (au lieu de full-duplex).
-- `--check_transceivers {WARN, ALERT}` : Vérifie l'état matériel des transceivers et renvoie les erreurs satisfaisant au moins le niveau spécifié (`WARN` ou `ALERT`).
-- `--CRC critical_delta reference_directory_path` : Contrôle les statistiques CRC des interfaces par rapport au dossier de référence `reference_directory_path` spécifié. Affiche des erreurs **CRITICAL** si les compteurs ont augmenté d'au moins `critical_delta`.
-- `--demo_path demo_directory_path` : Pour réaliser des tests, vérifie les valeurs renseignées dans le `demo_directory_path` plutôt que de s'adresser aux switchs.
+- `--unused_ports N`: Vérifie l'existence de ports **DOWN** qui ne sont pas administrativement down depuis plus de `N` jours.
+- `--half_duplex`: Vérifie l'existence d'interfaces **UP** qui fonctionnent en half-duplex (au lieu de full-duplex).
+- `--check_transceivers {WARN, ALERT}`: Vérifie l'état matériel des transceivers et renvoie les erreurs satisfaisant au moins le niveau spécifié (`WARN` ou `ALERT`).
+- `--CRC critical_delta reference_directory_path`: Contrôle les statistiques CRC des interfaces par rapport au dossier de référence `reference_directory_path` spécifié. Affiche des erreurs **CRITICAL** si les compteurs ont augmenté d'au moins `critical_delta`.
+- `--demo_path demo_directory_path`: Pour réaliser des tests, vérifie les valeurs renseignées dans le `demo_directory_path` plutôt que de s'adresser aux switchs.
 
-Note d'utilisation : le dossier `references_data/` est utilisé pour le contrôle CRC et **est généré et mis à jour automatiquement** par le script lorsque vous exécutez le contrôle avec `--CRC`. Il contient des fichiers JSON de référence nommés par adresse IP de switch.
+Note d'utilisation: le dossier `references_data/` est utilisé pour le contrôle CRC et **est généré et mis à jour automatiquement** par le script lorsque vous exécutez le contrôle avec `--CRC`. Il contient des fichiers JSON de référence nommés par adresse IP de switch.
 
 
 ### Exemple d'output
@@ -277,7 +277,7 @@ Le programme est développé en Python 3.14 et suit une logique de programmation
 
 Pour ajouter un point de contacter à endpoint. On procède en 5 étapes
 
-### Étape 1 : Identification du besoin
+### Étape 1: Identification du besoin
 
 **Questions** :
 - Est-ce qu'on peut utiliser l'API REST, ou est-ce qu'on doit plutôt utiliser l'API CLI ?
@@ -296,7 +296,7 @@ Si vous avez besoin d'accéder à de nouveaux endpoints, vous pouvez copier le r
 Ainsi, vous pourrez tester des cas de monitoring spécifique en changeant ce fichier.
 
 
-### Étape 2 : Écriture dans le fichier de résultat
+### Étape 2: Écriture dans le fichier de résultat
 
 Dans le fichier `result_file.py` :
 
@@ -309,7 +309,7 @@ Dans le fichier `result_file.py` :
 5. Si besoin, créez des méthodes pour alimenter votre objet au fur et à mesure de votre monitoring.
 
 
-### Étape 3 : Formatage de la réponse
+### Étape 3: Formatage de la réponse
 
 La réponse d'un `GET` sur l'API REST est **toujours** composée d'un `"total_count"` à la racine qui contient le nombre de résultats renvoyés par le switch. S'il vaut `0`, alors il n'y a rien à traiter, et on devrait s'arrêter immédiatement pour éviter tout plantage.
 
@@ -322,7 +322,7 @@ Une fois la réponse correctement formatée, on peut commencer à réaliser des 
 - Utilisez la variable `logger` pour communiquer avec le `Logger` (défini dans `utils.py`) et la méthode `log` pour journaliser vos actions dans le fichier de log.
 > Ces objets sont créés dans `main.py` en fonction de l'entrée utilisateur et passés dans les objets de connexion à NXAPI via `switch_connection.py`. Vous n'avez pas besoin de les modifier.
 
-### Étape 4 : Ajout de la fonction de monitoring à `switch_connection.py`
+### Étape 4: Ajout de la fonction de monitoring à `switch_connection.py`
 
 Comme l'objet `SwitchConnection` fait le lien entre l'API REST et l'API CLI, la fonction de monitoring doit être accessible via cet objet.
 
@@ -331,7 +331,7 @@ Comme l'objet `SwitchConnection` fait le lien entre l'API REST et l'API CLI, la 
 > Il est recommandé d'utiliser le même nom de fonction dans `SwitchConnection` que celui choisi dans les objets NXAPI pour éviter les confusions.
 
 
-### Étape 5 : Parsing des entrées utilisateurs dans `main.py`
+### Étape 5: Parsing des entrées utilisateurs dans `main.py`
 
 La bibliothèque Python native [argparse](https://docs.python.org/3/library/argparse.html) rend cette partie très facile :
 
