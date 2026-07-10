@@ -303,7 +303,7 @@ Dans le fichier `result_file.py`
 2. Créez un nouvel objet qui hérite de la classe abstraite `ResultOutput`. Utilisez la structure de donnée la plus propice pour récupérer les données de monitoring
 3. Créez la fonction `write` de votre objet qui prend la fonction `output` en paramètre. Considérez cette fonction comme la fonction `print` qui renverra tout dans le fichier de résultat.
 > Votre objet sera géré dans la classe ResultFile. La fonction d'output qui est passé en paramètre y est définie par `_output`. Vous n'avez pas besoin de la modifier.
-4. Ajoutez votre objet dans la gestion du ResultFile dans le dictionaire `switch_ouputs[<ip_du_switch>][<Label du monitoring>]`.
+4. Ajoutez votre objet dans la gestion du ResultFile dans le dictionaire `switch_ouputs[<ip_du_switch>][<Label du monitoring>]`. Votre objet sera automatiquement géré par `ResultFile` une fois fait.
 > Il est recommandé d'utiliser la fonction `_init_dict(ip_addr)` où `ip_addr` est l'ip du switch, pour être sûr que le dictionnaire dispose bien d'une entrée correspondant au switch.
 5. Si besoin, créez des méthodes pour alimenter votre objet au fur et à mesure de votre monitoring
 
