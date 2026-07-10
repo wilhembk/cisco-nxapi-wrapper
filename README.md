@@ -390,7 +390,7 @@ class SwitchConnection:
         return self.rest.get_example_metric()
 ```
 
-4. `main.py`: Ajouter une nouvelle option au programme avec argparse et appelez votre méthode de monitoring
+4. `main.py`: Ajoutez une nouvelle option au programme avec argparse et appelez votre méthode de monitoring
 
 ```python
 # main.py
