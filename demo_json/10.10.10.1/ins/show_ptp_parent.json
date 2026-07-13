@@ -1,0 +1,18 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "body": {
+      "clock-id": "40:f0:78:ff:fe:93:2d:3d",
+      "port-num": "0",
+      "obs-parent-offset": "N/A",
+      "obs-parent-clk-phase-chg": "N/A",
+      "gm-id": "40:f0:78:ff:fe:93:2d:3d",
+      "gm-class": "248",
+      "gm-accuracy": "254",
+      "gm-scaled-log-variance": "65535",
+      "gm-priority1": "255",
+      "gm-priority2": "255"
+    }
+  },
+  "id": 1
+}

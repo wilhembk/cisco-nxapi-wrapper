@@ -1,0 +1,10 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "body": {
+      "ptp-header": "PTP-START",
+      "ptp-end": "PTP-END"
+    }
+  },
+  "id": 1
+}

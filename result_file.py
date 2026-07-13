@@ -221,6 +221,24 @@ class cRCCounter(ResultOutput):
                 output(f"(now {curr}, was {ref})\n")
         output("\n")
 
+
+class ptpInfoGlobal(ResultOutput):
+    def __init__(self):
+        pass
+
+
+class ptpInfoLocal(ResultOutput):
+    def __init__(self, is_gm: bool, gm_ip: str, critical_correction: int):
+        self.is_gm = is_gm
+        self.gm_ip = gm_ip
+        self.critical_correction: int
+    
+
+    def write(self, output):
+        output("PTP: This switch is a grandmaster clock\n\n") # Need to specify ?
+
+
+
 class ResultFile: 
 
 

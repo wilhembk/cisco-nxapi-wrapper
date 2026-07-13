@@ -1,0 +1,614 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "body": {
+      "ptp-header": "PTP-START",
+      "ptp-end": "PTP-END",
+      "TABLE_ptp": {
+        "ROW_ptp": [
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:07 2026 271549",
+            "correction-val": "0",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:07 2026  23458",
+            "correction-val": "16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:06 2026 769255",
+            "correction-val": "-16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:06 2026 517316",
+            "correction-val": "16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:06 2026 267998",
+            "correction-val": "-8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:06 2026  19693",
+            "correction-val": "8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:05 2026 764315",
+            "correction-val": "8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:05 2026 514931",
+            "correction-val": "-4",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:05 2026 265183",
+            "correction-val": "16",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:05 2026  15874",
+            "correction-val": "16",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:04 2026 761736",
+            "correction-val": "-8",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:04 2026 513636",
+            "correction-val": "12",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:04 2026 259240",
+            "correction-val": "16",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:04 2026  11389",
+            "correction-val": "0",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:03 2026 756848",
+            "correction-val": "0",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:03 2026 510159",
+            "correction-val": "36",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:03 2026 254657",
+            "correction-val": "-24",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:03 2026   4389",
+            "correction-val": "24",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:02 2026 754675",
+            "correction-val": "0",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:02 2026 505728",
+            "correction-val": "-4",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:02 2026 255761",
+            "correction-val": "24",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:02 2026   1845",
+            "correction-val": "-8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:01 2026 753687",
+            "correction-val": "16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:01 2026 499630",
+            "correction-val": "0",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:01 2026 250842",
+            "correction-val": "8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:00 2026 997278",
+            "correction-val": "8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:00 2026 747532",
+            "correction-val": "8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:00 2026 499192",
+            "correction-val": "4",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:54:00 2026 244687",
+            "correction-val": "8",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:59 2026 995811",
+            "correction-val": "16",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:59 2026 742344",
+            "correction-val": "-8",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:59 2026 492516",
+            "correction-val": "16",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:59 2026 242403",
+            "correction-val": "8",
+            "mean-path-delay": "472"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:58 2026 992933",
+            "correction-val": "0",
+            "mean-path-delay": "472"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:58 2026 741468",
+            "correction-val": "16",
+            "mean-path-delay": "472"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:58 2026 491847",
+            "correction-val": "-28",
+            "mean-path-delay": "472"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:58 2026 237401",
+            "correction-val": "24",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:57 2026 989125",
+            "correction-val": "0",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:57 2026 734756",
+            "correction-val": "16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:57 2026 486142",
+            "correction-val": "-8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:57 2026 231303",
+            "correction-val": "8",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:56 2026 982744",
+            "correction-val": "0",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:56 2026 730660",
+            "correction-val": "16",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:56 2026 478243",
+            "correction-val": "12",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:56 2026 229182",
+            "correction-val": "8",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:55 2026 979969",
+            "correction-val": "8",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:55 2026 725652",
+            "correction-val": "-8",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:55 2026 476435",
+            "correction-val": "20",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:55 2026 227194",
+            "correction-val": "16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:54 2026 972222",
+            "correction-val": "-8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:54 2026 722707",
+            "correction-val": "0",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:54 2026 474478",
+            "correction-val": "8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:54 2026 219446",
+            "correction-val": "0",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:53 2026 969768",
+            "correction-val": "16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:53 2026 720724",
+            "correction-val": "16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:53 2026 465324",
+            "correction-val": "-4",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:53 2026 216253",
+            "correction-val": "8",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:52 2026 967334",
+            "correction-val": "16",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:52 2026 718767",
+            "correction-val": "-8",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:52 2026 463084",
+            "correction-val": "-4",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:52 2026 213775",
+            "correction-val": "16",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:51 2026 959118",
+            "correction-val": "0",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:51 2026 717725",
+            "correction-val": "16",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:51 2026 461372",
+            "correction-val": "16",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:51 2026 206550",
+            "correction-val": "8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:50 2026 956905",
+            "correction-val": "-16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:50 2026 708405",
+            "correction-val": "16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:50 2026 454404",
+            "correction-val": "12",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:50 2026 206435",
+            "correction-val": "8",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:49 2026 957300",
+            "correction-val": "0",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:49 2026 702126",
+            "correction-val": "0",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:49 2026 452845",
+            "correction-val": "4",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:49 2026 203857",
+            "correction-val": "16",
+            "mean-path-delay": "476"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:48 2026 948891",
+            "correction-val": "-40",
+            "mean-path-delay": "476"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:48 2026 700056",
+            "correction-val": "32",
+            "mean-path-delay": "476"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:48 2026 450370",
+            "correction-val": "-36",
+            "mean-path-delay": "476"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:48 2026 195943",
+            "correction-val": "24",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:47 2026 947313",
+            "correction-val": "0",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:47 2026 698382",
+            "correction-val": "-8",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:47 2026 444008",
+            "correction-val": "24",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:47 2026 194533",
+            "correction-val": "-32",
+            "mean-path-delay": "472"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:46 2026 940407",
+            "correction-val": "40",
+            "mean-path-delay": "472"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:46 2026 691570",
+            "correction-val": "-24",
+            "mean-path-delay": "472"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:46 2026 437381",
+            "correction-val": "-8",
+            "mean-path-delay": "472"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:46 2026 189056",
+            "correction-val": "8",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:45 2026 935788",
+            "correction-val": "16",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:45 2026 688308",
+            "correction-val": "0",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:45 2026 433372",
+            "correction-val": "16",
+            "mean-path-delay": "488"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:45 2026 185067",
+            "correction-val": "16",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:44 2026 935537",
+            "correction-val": "0",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:44 2026 681629",
+            "correction-val": "8",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:44 2026 432431",
+            "correction-val": "-12",
+            "mean-path-delay": "480"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:44 2026 177773",
+            "correction-val": "16",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:43 2026 928989",
+            "correction-val": "8",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:43 2026 675081",
+            "correction-val": "0",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:43 2026 427355",
+            "correction-val": "0",
+            "mean-path-delay": "484"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:43 2026 172760",
+            "correction-val": "8",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:42 2026 923029",
+            "correction-val": "0",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:42 2026 673552",
+            "correction-val": "0",
+            "mean-path-delay": "492"
+          },
+          {
+            "intf-name": "Eth1/23",
+            "sup-time": "Mon Jul 13 12:53:42 2026 419557",
+            "correction-val": "32",
+            "mean-path-delay": "492"
+          }
+        ]
+      }
+    }
+  },
+  "id": 1
+}

@@ -152,7 +152,7 @@ Une fois que vous avez trouvez les données que vous cherchez, vous pouvez ident
 
 - **Par classe:** Le nom d'une classe est indiqué dans le carré orange. Ainsi, l'endpoint à adresser est `https://<ip_switch>/api/class/<nom_de_classe>.json` (C'est cette méthode que le script utilise couramment)
 
-- **Par DN:** Le nom de DN est indiqué dans la section prévue à cette effet dans le tableau. Ainsi l'endpoint à adresser est `https://<ip_switch>/api/mo/<nom_de_dn>.json`
+- **Par DN:** Le nom de DN est indiqué dans la section prévue à cet effet dans le tableau. Ainsi l'endpoint à adresser est `https://<ip_switch>/api/mo/<nom_de_dn>.json`
 
 Ces deux méthodes sont stictement équivalentes. Cela signifie par exemple que, dans l'image précédente, les réponses de
 - `GET https://<ip_switch>/api/class/topSystem.json`
@@ -329,8 +329,8 @@ Pour ajouter un point de contacter à endpoint. On procède en 5 étapes
 On vérifie le format de retour de l'endpoint avec le sandbox de NXAPI (trouver l'IP d'un switch et s'y connecter via le navigateur).
 
 Le répertoire `demo_json/` contient des JSON qui représentent les endpoints de NXAPI.  
-Le dossier reproduit ainsi la structure des endpoints NXAPI.   
-Si vous avez besoin d'accéder à de nouveaux endpoints, vous pouvez copier le résultat de la sandbox de NXAPI et les ajouter à `demo_json/` en respectant le chemin d'URL (par ex. `api/mo/sys.json` se transforme en `demo_json/mo/sys.json`).  
+A l'intérieur, les sous-dossiers décrivent des ip de switchs, et dans ces sous-dossiers est retranscrit larborescence de NXAPI.   
+Si vous avez besoin d'accéder à de nouveaux endpoints, vous pouvez copier le résultat de la sandbox de NXAPI et les ajouter à `demo_json/` en respectant le chemin d'URL (par ex. `https://<switch_ip>/api/mo/sys.json` se transforme en `demo_json/<switch_ip>/mo/sys.json`).  
 Ainsi, vous pourrez tester des cas de monitoring spécifique en changeant ce fichier.
 
 

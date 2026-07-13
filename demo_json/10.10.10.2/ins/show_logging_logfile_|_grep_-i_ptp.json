@@ -1,0 +1,7 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "msg": "2026 Jul 13 09:00:59 switch %PTP-2-PTP_STATE_CHANGE: PTP state of interface Eth1/23 is changing from 'PTP_BMC_STATE_LISTENING' to 'PTP_BMC_STATE_PRE_MASTER'\n2026 Jul 13 09:01:01 switch %PTP-2-PTP_STATE_CHANGE: PTP state of interface Eth1/23 is changing from 'PTP_BMC_STATE_PRE_MASTER' to 'PTP_BMC_STATE_MASTER'\n2026 Jul 13 09:03:20 switch %PTP-2-PTP_GM_CHANGE: Grandmaster clock has changed from 40:f0:78:ff:fe:ea:75:eb to 40:f0:78:ff:fe:93:2d:3d for the PTP protocol\n2026 Jul 13 09:03:20 switch %PTP-2-PTP_STATE_CHANGE: PTP state of interface Eth1/23 is changing from 'PTP_BMC_STATE_MASTER' to 'PTP_BMC_STATE_UNCALIBRATED'\n2026 Jul 13 09:03:20 switch %PTP-2-PTP_STATE_CHANGE: PTP state of interface Eth1/23 is changing from 'PTP_BMC_STATE_UNCALIBRATED' to 'PTP_BMC_STATE_SLAVE'\n"
+  },
+  "id": 1
+}

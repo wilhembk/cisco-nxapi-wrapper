@@ -1,5 +1,6 @@
 import requests
 import json
+import re
 from glom import glom 
 from typing import Dict
 import urllib3
@@ -42,24 +43,24 @@ class NXCLI_API:
         self.result = result
         self.endpoint = f"https://{switch_ip}/ins"
 
-    def _wrap_cmd(self, cmd: str):
+    def _wrap_cmd(self, cmd: str, method: str = "cli"):
         """
         Wrap the cmd inside the payload to send to the switch.
         The cmd requires authentication on the switch for it to work
         """
 
         if self.demo_path != None:
-            self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/ins/{cmd.replace(" ", "_")}.json")
-            with open(f"{self.demo_path}/ins/{cmd.replace(" ", "_")}.json", "r") as f:
+            self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json")
+            with open(f"{self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json", "r") as f:
                 return json.load(f)
-            self.logger.log(f"Demo file {self.demo_path}/ins/{cmd.replace(" ", "_")}.json is not readable")
+            self.logger.log(f"Demo file {self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json is not readable")
             return {}
 
         myheaders={'content-type':'application/json-rpc'}
         payload=[
             {
                 "jsonrpc": "2.0",
-                "method": "cli",
+                "method": method,
                 "params": {
                 "cmd": cmd,
                 "version": 1
@@ -240,7 +241,46 @@ class NXCLI_API:
                 self.result.set_voltage(self.switch_ip, iface, volt, volt_warn_low)
             else:
                 self.result.set_voltage(self.switch_ip, iface, volt, volt_warn_hi)
-            
+
+    def get_ptp_corrections(self):
+        """Returns a list in chronological order showing ptp corrections"""
+        try:
+            res = glom(self._wrap_cmd("show ptp corrections"), "result.body.TABLE_ptp.ROW_ptp")
+        except:
+            res = []
+        return res
+    
+    def get_ptp_parent(self):
+        return glom(self._wrap_cmd("show ptp parent"), "result.body")
+
+
+    def get_ptp_logs(self):
+        return glom(self._wrap_cmd("show logging logfile | grep -i ptp"), "result.msg")
+
+
+    def get_gm_change(self, logs: str, since: int):
+        # Grandmaster clock has changed {MAC_1} to {MAC_2}
+
+        res = []
+
+        for line in logs.split("\n"):
+            pattern = re.compile(r"(?P<date>\d{4}\s+[A-Za-z]{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}).*?Grandmaster clock has changed from (?P<mac_init>[0-9a-fA-F:]+) to (?P<mac_dest>[0-9a-fA-F:]+)")
+            match = pattern.search(line)
+
+            if not match:
+                return
+
+            today = datetime.now()
+            date_str = match.group("date")
+            date = datetime.strptime(date_str, "%Y %b %d %H:%M:%S")
+
+            delta = today - date
+            if delta.days > since:
+                return
+        
+            res.append((date, match.group("mac_init"), match.group("mac_dest")))
+        
+
         
 
 class NXREST_API:
@@ -313,10 +353,10 @@ class NXREST_API:
     def _get(self, point: str):
 
         if self.demo_path:
-            self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/{point}")
-            with open(f"{self.demo_path}/{point}", "r") as f:
+            self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/{self.switch_ip}/{point}")
+            with open(f"{self.demo_path}/{self.switch_ip}/{point}", "r") as f:
                 return json.load(f)
-            self.logger.log(f"The file {self.demo_path}/{point} is unreadable")
+            self.logger.log(f"The file {self.demo_path}/{self.switch_ip}/{point} is unreadable")
             return {}
         
         if self.auth_cookie == {}:

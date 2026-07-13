@@ -1,0 +1,7 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "msg": "2026 Jul 13 09:03:35 switch2 %PTP-2-PTP_STATE_CHANGE: PTP state of interface Eth1/23 is changing from 'PTP_BMC_STATE_LISTENING' to 'PTP_BMC_STATE_PRE_MASTER'\n2026 Jul 13 09:03:37 switch2 %PTP-2-PTP_STATE_CHANGE: PTP state of interface Eth1/23 is changing from 'PTP_BMC_STATE_PRE_MASTER' to 'PTP_BMC_STATE_MASTER'\n"
+  },
+  "id": 1
+}
