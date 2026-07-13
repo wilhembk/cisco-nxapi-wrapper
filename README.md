@@ -123,6 +123,44 @@ Il existe également des endpoints de type `GET` accessibles via NXAPI-REST, per
 - `https://<ip_switch>/api/class/ethpmPhysIf.json` renvoie l'état des interfaces, notamment si elles sont **UP** ou **DOWN** administrativement et opérationnellement. On peut aussi voir si les interfaces sont en full ou half-duplex.
 - `https://<ip_switch>/api/class/rmonEtherStats.json` renvoie les statistiques des interfaces. Il s'agit de tous les compteurs: CRC, paquets perdus, etc.
 
+### Comment trouver de nouveaux endpoints ?
+
+Pour identifier les endpoints d'API à utiliser, il faut se connecter à la sandbox de NXAPI:  
+Sur le navigateur, entrez `https://<ip_switch>` et renseignez les identifiants de connexion.
+
+#### Pour l'API CLI
+
+Le endpoint est toujours `https://<ip_switch>/api/ins`, en revanche, les JSON de retour peuvent être vus sur la page "Command Reference" en haut à droite.
+
+
+#### Pour l'API REST
+Pour commencer, sélectionnez la méthode NXAPI-REST puis entrez dans le "Model Browser".  
+
+![Etape 1](STEP1.png)
+
+
+La version REST de NXAPI fonctionne comme une arborescence, avec différents niveau de précision. Elle donne des informations valables à l'instant de la requête.
+
+Vous entrez par défaut au niveau de la classe `topSystem`, qui donne des informations sur l'état du switch. Pour obtenir des informations plus abstraites, il faut aller au niveau antérieur au `topSystem`, vous pouvez faire cela en cherchant la classe `topRoot` dans le filtre "Class or DN" (ou en laissant le champ vide).
+
+![Etape 2](STEP2.png)
+
+A partir de là, vous pouvez faire `CTRL+F` et tapez des mots clés comme `eth` ou `ptp` pour trouver des endpoints ou des informations spécifiques.
+Si vous ne voyez pas ce que vous cherchez, descendez dans l'arboresecnce en cliquant sur les flèches au niveau des DN.
+
+Une fois que vous avez trouvez les données que vous cherchez, vous pouvez identifier l'endpoint de deux manières différentes:
+
+- **Par classe:** Le nom d'une classe est indiqué dans le carré orange. Ainsi, l'endpoint à adresser est `https://<ip_switch>/api/class/<nom_de_classe>.json` (C'est cette méthode que le script utilise couramment)
+
+- **Par DN:** Le nom de DN est indiqué dans la section prévue à cette effet dans le tableau. Ainsi l'endpoint à adresser est `https://<ip_switch>/api/mo/<nom_de_dn>.json`
+
+Ces deux méthodes sont stictement équivalentes. Cela signifie par exemple que, dans l'image précédente, les réponses de
+- `GET https://<ip_switch>/api/class/topSystem.json`
+- `GET https://<ip_switch>/api/mo/sys.json`  
+
+Sont strictement les mêmes.
+
+
 # Utilisation du script
 
 Le script a pour vocation d'être un cronjob. Il prend en entrée les tests à réaliser et renvoie en sortie un fichier de log et de résultats pour faciliter l'intervention.
