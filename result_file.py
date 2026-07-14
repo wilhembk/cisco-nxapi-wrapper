@@ -271,7 +271,7 @@ class PTPInfoLocal(ResultOutput):
 
     def write(self, output):
         if self.clock_mac == self.gm_mac:
-            output(f"> This switch's clock {self.clock_mac} is Gransmaster\n")
+            output(f"> This switch's clock {self.clock_mac} is Grandmaster\n")
         else:
             if self.parent_mac == self.gm_mac:
                 output(f"> This switch's clock {self.clock_mac} is synced to Grandmaster clock {self.gm_mac} (directly connected)\n")
