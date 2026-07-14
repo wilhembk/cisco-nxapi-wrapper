@@ -260,7 +260,7 @@ class PTPInfoLocal(ResultOutput):
         - 2 ALWAYS
         """
         self.log_ptp = 0
-        self.clock_mac = "00:00:00:00:00:00"
+        self.parent_mac = "00:00:00:00:00:00"
         self.gm_mac = "00:00:00:00:00:00"
         self.critical_correction = 0
         self.gm_changes = []
@@ -269,33 +269,37 @@ class PTPInfoLocal(ResultOutput):
     
 
     def write(self, output):
-        if self.clock_mac == self.gm_mac:
-            output(f"> This switch's clock {self.clock_mac} is currently a Grandmaster\n")
+        if self.parent_mac == self.gm_mac:
+            output(f"> This switch's clock is directly connected to the Grandmaster\n")
         else:
-            output(f"> This switch's clock {self.clock_mac} is synced to {self.gm_mac}\n")
-
-
-        gm_changed = False
-        for gm_change in self.gm_changes:
-            gm_changed = True
-            date, mac_init, mac_dest = gm_change
-            output(f"\t- {date.strftime("%a %d %b %Y, %I:%M")}: Changed GM from {mac_init} to {mac_dest}\n")
+            output(f"> This switch's clock is connected to {self.parent_mac} which is synced by the Grandmaster {self.gm_mac}\n")
         output("\n")
 
-        abnormal_correction = False
+        gm_changed = len(self.gm_changes) != 0
+        if gm_changed: 
+            output(f"> This switch has changed Grandmaster clock recently:\n")
+
+        for gm_change in self.gm_changes:
+            date, mac_init, mac_dest = gm_change
+            output(f"\t- {date.strftime("%a %d %b %Y, %I:%M")}: Changed GM from {mac_init} to {mac_dest}\n")
+        if gm_changed: output("\n")
+
+        abnormal_correction = len(self.high_corrections) != 0
+        if abnormal_correction:
+            output(f"> This switch reached abnormal correction times:\n")
         for hc in self.high_corrections:
             abnormal_correction = True
             iface = hc["intf-name"]
             suptime = hc["sup-time"]
             correction = hc["correction-val"]
             # Specify clock name !
-            output(f"\t- CRITICAL at {suptime}: While on {iface} reached correction of {correction} ns ! ({correction > {self.critical_correction}})\n")
-        output("\n")
+            output(f"\t- CRITICAL at {suptime}: While on {iface} reached correction of {correction} ns ! ({correction} >= {self.critical_correction})\n")
+        if abnormal_correction: output("\n")
 
         if self.log_ptp == 2 or (self.log_ptp == 1 and (gm_changed or abnormal_correction)):
-            output(f"---------- Full PTP log ----------\n")
+            output(f"---------- Full PTP log ----------\n\n")
             output(self.logs)
-            output(f"----------------------------------\n")
+            output(f"\n----------------------------------\n")
         output("\n")
 
 
@@ -489,7 +493,7 @@ class ResultFile:
         cRC_counter.deltas[iface] = (delta, current_cRC, reference_cRC)
 
 
-    def set_ptp(self, ip_addr: str, log_ptp: None | int = None, clock_and_gm: None | Tuple[str, str] = None,
+    def set_ptp(self, ip_addr: str, log_ptp: None | int = None, parent_and_gm: None | Tuple[str, str] = None,
                 critical_correction: None | int = None, gm_changes: None | List[Tuple[datetime, str, str]] = None,
                 high_corrections: None | List[Dict[str, str]] = None, logs: None | str = None):
 
@@ -508,12 +512,12 @@ class ResultFile:
         if log_ptp != None:
             local_info.log_ptp = log_ptp
 
-        if clock_and_gm != None:
-            clock, gm = clock_and_gm
-            local_info.clock_mac = clock
+        if parent_and_gm != None:
+            parent, gm = parent_and_gm
+            local_info.parent_mac = parent
             local_info.gm_mac = gm
 
-            global_info.add_clock(gm, clock)
+            global_info.add_clock(gm, parent)
 
         if critical_correction != None:
             local_info.critical_correction = critical_correction
@@ -526,15 +530,3 @@ class ResultFile:
 
         if logs != None:
             local_info.logs = logs
-
-
-"""
-    def __init__(self):
-
-        self.log_ptp = 0
-        self.clock_mac = "00:00:00:00:00:00"
-        self.gm_mac = "00:00:00:00:00:00"
-        self.critical_correction = 0
-        self.gm_changes = []
-        self.high_corrections = []
-        self.logs = """

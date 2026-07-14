@@ -242,7 +242,7 @@ class NXCLI_API:
             else:
                 self.result.set_voltage(self.switch_ip, iface, volt, volt_warn_hi)
 
-    def get_ptp_corrections(self):
+    def _get_ptp_corrections(self):
         """Returns a list in chronological order showing ptp corrections"""
         try:
             res = glom(self._wrap_cmd("show ptp corrections"), "result.body.TABLE_ptp.ROW_ptp")
@@ -250,11 +250,11 @@ class NXCLI_API:
             res = []
         return res
     
-    def get_ptp_parent(self):
+    def _get_ptp_parent(self):
         return glom(self._wrap_cmd("show ptp parent"), "result.body")
+    
 
-
-    def get_ptp_logs(self):
+    def _get_ptp_logs(self):
         return glom(self._wrap_cmd("show logging logfile | grep -i ptp"), "result.msg")
 
 
@@ -262,7 +262,7 @@ class NXCLI_API:
 
         self.result.set_ptp(self.switch_ip, critical_correction=critical_correction)
 
-        corrections = self.get_ptp_corrections()
+        corrections = self._get_ptp_corrections()
         if len(corrections) == 0:
             # Surely a grandmaster.
             return 
@@ -273,13 +273,19 @@ class NXCLI_API:
 
         return res
 
+    def get_ptp_gm(self):
+        clock_data = self._get_ptp_parent()
 
-    def get_gm_change(self,since: int):
+        parent_and_gm = clock_data["clock-id"], clock_data["gm-id"]
+        self.result.set_ptp(self.switch_ip ,parent_and_gm=parent_and_gm)
+        return parent_and_gm
+
+    def get_gm_change(self, log_level: int, since: int):
         # Grandmaster clock has changed {MAC_1} to {MAC_2}
 
 
-        logs = self.get_ptp_logs()
-        self.result.set_ptp(self.switch_ip, logs=logs)
+        logs = self._get_ptp_logs()
+        self.result.set_ptp(self.switch_ip, log_ptp=log_level, logs=logs)
 
         res = []    
 
@@ -288,7 +294,7 @@ class NXCLI_API:
             match = pattern.search(line)
 
             if not match:
-                return
+                continue
 
             today = datetime.now()
             date_str = match.group("date")
@@ -296,13 +302,18 @@ class NXCLI_API:
 
             delta = today - date
             if delta.days > since:
-                return
+                continue
         
             res.append((date, match.group("mac_init"), match.group("mac_dest")))
-        
+
         self.result.set_ptp(self.switch_ip, gm_changes=res)
         return res
-        
+    
+    def check_ptp(self, since: int, log_level: int, critical_correction: int):
+        self.get_ptp_gm()
+        self.get_critical_ptp_corrections(critical_correction)
+        self.get_gm_change(log_level, since)
+
 
 class NXREST_API:
 

@@ -36,3 +36,6 @@ class SwitchConnection:
     
     def check_for_tranceiver_alerts(self, filter_warn=False):
         return self.cli.check_for_tranceiver_alerts(filter_warn)
+    
+    def check_ptp(self, since: int, log_level: int, critical_correction: int):
+        return self.cli.check_ptp(since, log_level, critical_correction)

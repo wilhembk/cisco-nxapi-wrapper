@@ -59,6 +59,12 @@ def main(args):
             reference_directory_path = args.CRC[1]
             sw.get_cRCAlignErrors(critical_delta, reference_directory_path)
 
+        if args.PTP != None:
+            since = args.PTP[0]
+            log_level = args.PTP[1]
+            critical_correction = args.PTP[2]
+            sw.check_ptp(since, log_level, critical_correction)
+
         sw.logout()
         
     result.commit()
@@ -91,6 +97,7 @@ if __name__ == "__main__":
     parser.add_argument("-d","--half_duplex", action="store_true", help="Check for interfaces running in half duplex mode")
     parser.add_argument("-t","--check_transceivers", choices=["WARN", "ALERT"], help="Check transceivers hardware and notify for issues higher or equal to specified level")
     parser.add_argument("-c","--CRC", nargs=2, type=critical_delta, metavar=("critical_delta","reference_directory_path"), help="Check for additional cRC and Align errors according to the reference directory")
+    parser.add_argument("-p", "--PTP", nargs=3, type=int, metavar=("since","log_level", "critical_correction"), help="Check for abnormal PTP activity. Use log_level=0 to never output PTP logs, log_level=1 to output only on abnormal activity and log_level=2 to always output")
     parser.add_argument("--demo_path", metavar="demo_directory_path", help="Enable demo and read local files instead of switch API. For testing purposes only.")
 
     args = parser.parse_args()
