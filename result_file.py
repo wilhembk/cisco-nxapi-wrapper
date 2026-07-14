@@ -261,6 +261,7 @@ class PTPInfoLocal(ResultOutput):
         """
         self.log_ptp = 0
         self.parent_mac = "00:00:00:00:00:00"
+        self.clock_mac = "00:00:00:00:00:00"
         self.gm_mac = "00:00:00:00:00:00"
         self.critical_correction = 0
         self.gm_changes = []
@@ -269,10 +270,13 @@ class PTPInfoLocal(ResultOutput):
     
 
     def write(self, output):
-        if self.parent_mac == self.gm_mac:
-            output(f"> This switch's clock is directly connected to the Grandmaster\n")
+        if self.clock_mac == self.gm_mac:
+            output(f"> This switch's clock {self.clock_mac} is Gransmaster\n")
         else:
-            output(f"> This switch's clock is connected to {self.parent_mac} which is synced by the Grandmaster {self.gm_mac}\n")
+            if self.parent_mac == self.gm_mac:
+                output(f"> This switch's clock {self.clock_mac} is synced to Grandmaster clock {self.gm_mac} (directly connected)\n")
+            else:
+                output(f"> This switch's clock {self.clock_mac} is synced to Grandmaster clock {self.gm_mac} (via {self.parent_mac})\n")
         output("\n")
 
         gm_changed = len(self.gm_changes) != 0
@@ -493,7 +497,7 @@ class ResultFile:
         cRC_counter.deltas[iface] = (delta, current_cRC, reference_cRC)
 
 
-    def set_ptp(self, ip_addr: str, log_ptp: None | int = None, parent_and_gm: None | Tuple[str, str] = None,
+    def set_ptp(self, ip_addr: str, log_ptp: None | int = None, clock_parent_and_gm: None | Tuple[str, str, str] = None,
                 critical_correction: None | int = None, gm_changes: None | List[Tuple[datetime, str, str]] = None,
                 high_corrections: None | List[Dict[str, str]] = None, logs: None | str = None):
 
@@ -512,12 +516,12 @@ class ResultFile:
         if log_ptp != None:
             local_info.log_ptp = log_ptp
 
-        if parent_and_gm != None:
-            parent, gm = parent_and_gm
+        if clock_parent_and_gm != None:
+            clock, parent, gm = clock_parent_and_gm
+            local_info.clock_mac = clock
             local_info.parent_mac = parent
             local_info.gm_mac = gm
-
-            global_info.add_clock(gm, parent)
+            global_info.add_clock(gm, clock)
 
         if critical_correction != None:
             local_info.critical_correction = critical_correction

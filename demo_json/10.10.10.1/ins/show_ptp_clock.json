@@ -1,0 +1,29 @@
+{
+  "jsonrpc": "2.0",
+  "result": {
+    "body": {
+      "clock-id": "40:f0:78:ff:fe:93:2d:3d",
+      "domain-id": 0,
+      "num-ports": 0,
+      "priority1": 255,
+      "priority2": 255,
+      "class": 248,
+      "accuracy": 254,
+      "scaled-log-variance": 65535,
+      "offset-from-master": "0",
+      "mean-path-delay-to-master": 0,
+      "steps-removed": 0,
+      "device-type": "bc",
+      "encap": "l3",
+      "slave-clock-oper": "Unknown",
+      "master-clock-oper": "Two-step",
+      "src-ip": "192.168.1.1",
+      "slave-only": "disabled",
+      "correction-threshold": 100000,
+      "mean-path-delay-threshold": 1000000000,
+      "local-clock-time": "Tue Jul 14 21:15:13 2026",
+      "bs-status": "NA"
+    }
+  },
+  "id": 1
+}

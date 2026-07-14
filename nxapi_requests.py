@@ -253,6 +253,9 @@ class NXCLI_API:
     def _get_ptp_parent(self):
         return glom(self._wrap_cmd("show ptp parent"), "result.body")
     
+    def _get_clock_id(self):
+        return glom(self._wrap_cmd("show ptp clock"), "result.body.clock-id")
+    
 
     def _get_ptp_logs(self):
         return glom(self._wrap_cmd("show logging logfile | grep -i ptp"), "result.msg")
@@ -276,9 +279,10 @@ class NXCLI_API:
     def get_ptp_gm(self):
         clock_data = self._get_ptp_parent()
 
-        parent_and_gm = clock_data["clock-id"], clock_data["gm-id"]
-        self.result.set_ptp(self.switch_ip ,parent_and_gm=parent_and_gm)
-        return parent_and_gm
+        clock_parent_and_gm = self._get_clock_id(), clock_data["clock-id"], clock_data["gm-id"]
+        
+        self.result.set_ptp(self.switch_ip, clock_parent_and_gm=clock_parent_and_gm)
+        return clock_parent_and_gm
 
     def get_gm_change(self, log_level: int, since: int):
         # Grandmaster clock has changed {MAC_1} to {MAC_2}
