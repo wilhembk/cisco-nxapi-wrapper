@@ -258,10 +258,30 @@ class NXCLI_API:
         return glom(self._wrap_cmd("show logging logfile | grep -i ptp"), "result.msg")
 
 
-    def get_gm_change(self, logs: str, since: int):
+    def get_critical_ptp_corrections(self, critical_correction: int):
+
+        self.result.set_ptp(self.switch_ip, critical_correction=critical_correction)
+
+        corrections = self.get_ptp_corrections()
+        if len(corrections) == 0:
+            # Surely a grandmaster.
+            return 
+        
+        res = list(filter(lambda e: int(e["correction-val"]) >= critical_correction, corrections))
+        res.reverse()
+        self.result.set_ptp(self.switch_ip, high_corrections=res)
+
+        return res
+
+
+    def get_gm_change(self,since: int):
         # Grandmaster clock has changed {MAC_1} to {MAC_2}
 
-        res = []
+
+        logs = self.get_ptp_logs()
+        self.result.set_ptp(self.switch_ip, logs=logs)
+
+        res = []    
 
         for line in logs.split("\n"):
             pattern = re.compile(r"(?P<date>\d{4}\s+[A-Za-z]{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}).*?Grandmaster clock has changed from (?P<mac_init>[0-9a-fA-F:]+) to (?P<mac_dest>[0-9a-fA-F:]+)")
@@ -280,7 +300,8 @@ class NXCLI_API:
         
             res.append((date, match.group("mac_init"), match.group("mac_dest")))
         
-
+        self.result.set_ptp(self.switch_ip, gm_changes=res)
+        return res
         
 
 class NXREST_API:

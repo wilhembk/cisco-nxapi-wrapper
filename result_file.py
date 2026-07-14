@@ -3,7 +3,8 @@ import time
 from enum import Enum
 from utils import ANSI
 from abc import ABC, abstractmethod
-from typing import Dict, Tuple, cast, Any
+from typing import Dict, Tuple, cast, Any, List
+from datetime import datetime
 
 class Label(Enum):
     HOST_INFO = "host"
@@ -11,6 +12,7 @@ class Label(Enum):
     TRANSCEIVER = "transceiver"
     HALF_DUPLEX = "half_duplex"
     CRC_ALIGN = "crc_align"
+    PTP = "ptp"
 
 # How to add a new type of monitoring output:
 
@@ -222,21 +224,79 @@ class cRCCounter(ResultOutput):
         output("\n")
 
 
-class ptpInfoGlobal(ResultOutput):
+class PTPInfoGlobal(ResultOutput):
     def __init__(self):
-        pass
+        self.gm_used: Dict[str, List[str]] = {}
+
+    def add_clock(self, gm: str, clock: str):
+
+        if gm not in self.gm_used.keys():
+            self.gm_used[gm] = [clock]
+            return
+        
+        self.gm_used[gm].append(clock)
 
 
-class ptpInfoLocal(ResultOutput):
-    def __init__(self, is_gm: bool, gm_ip: str, critical_correction: int):
-        self.is_gm = is_gm
-        self.gm_ip = gm_ip
-        self.critical_correction: int
+    def write(self, output):
+        gm_clocks = list(self.gm_used.keys())
+        if len(gm_clocks) == 1:
+            output(f"PTP: All switches are synced with the same Grandmaster clock: {gm_clocks[0]}\n\n")
+            return
+        
+        output(f"> PTP: Switches have different Grandmaster clocks !\n")
+        for clock in gm_clocks:
+            output(f"\t- Grandmaster {clock} is synced with:\n")
+            for switch in self.gm_used[clock]:
+                output(f"\t\t+ {switch}\n")
+        output("\n")
+
+
+class PTPInfoLocal(ResultOutput):
+
+    def __init__(self):
+        """log_ptp :
+        - 0 NEVER
+        - 1 ONLY ON ERRORS
+        - 2 ALWAYS
+        """
+        self.log_ptp = 0
+        self.clock_mac = "00:00:00:00:00:00"
+        self.gm_mac = "00:00:00:00:00:00"
+        self.critical_correction = 0
+        self.gm_changes = []
+        self.high_corrections = []
+        self.logs = ""
     
 
     def write(self, output):
-        output("PTP: This switch is a grandmaster clock\n\n") # Need to specify ?
+        if self.clock_mac == self.gm_mac:
+            output(f"> This switch's clock {self.clock_mac} is currently a Grandmaster\n")
+        else:
+            output(f"> This switch's clock {self.clock_mac} is synced to {self.gm_mac}\n")
 
+
+        gm_changed = False
+        for gm_change in self.gm_changes:
+            gm_changed = True
+            date, mac_init, mac_dest = gm_change
+            output(f"\t- {date.strftime("%a %d %b %Y, %I:%M")}: Changed GM from {mac_init} to {mac_dest}\n")
+        output("\n")
+
+        abnormal_correction = False
+        for hc in self.high_corrections:
+            abnormal_correction = True
+            iface = hc["intf-name"]
+            suptime = hc["sup-time"]
+            correction = hc["correction-val"]
+            # Specify clock name !
+            output(f"\t- CRITICAL at {suptime}: While on {iface} reached correction of {correction} ns ! ({correction > {self.critical_correction}})\n")
+        output("\n")
+
+        if self.log_ptp == 2 or (self.log_ptp == 1 and (gm_changed or abnormal_correction)):
+            output(f"---------- Full PTP log ----------\n")
+            output(self.logs)
+            output(f"----------------------------------\n")
+        output("\n")
 
 
 class ResultFile: 
@@ -290,7 +350,20 @@ class ResultFile:
         Writes the ResultFile fully.
         """
 
+        if self.switch_outputs.get("all"):
+            self._output("********** GLOBAL NOTIFICATION **********\n")
+            for label in self.switch_outputs["all"].keys():
+                if label == Label.HOST_INFO:
+                    # We don't print the host info again
+                    continue
+
+                self.switch_outputs["all"][label].write(self._output)
+            self._output("*****************************************\n\n")
+
+
         for ip_addr, output in self.switch_outputs.items():
+            if ip_addr == "all":
+                continue
             
             if Label.HOST_INFO in output.keys():
                 output[Label.HOST_INFO].write(self._output)
@@ -396,9 +469,6 @@ class ResultFile:
         transceiver_info.notification[iface]["all"]["current_threshold"] = current_threshold
         transceiver_info.notification[iface]["all"]["status_current"] = "WARN" if not is_alert else "ALERT"
 
-
-
-
     def init_cRC_delta(self, ip_addr: str, critical_delta: int):
         self._init_dict(ip_addr)
         if Label.CRC_ALIGN not in self.switch_outputs[ip_addr].keys():
@@ -417,3 +487,54 @@ class ResultFile:
         
         cRC_counter = cast(cRCCounter, self.switch_outputs[ip_addr][Label.CRC_ALIGN])
         cRC_counter.deltas[iface] = (delta, current_cRC, reference_cRC)
+
+
+    def set_ptp(self, ip_addr: str, log_ptp: None | int = None, clock_and_gm: None | Tuple[str, str] = None,
+                critical_correction: None | int = None, gm_changes: None | List[Tuple[datetime, str, str]] = None,
+                high_corrections: None | List[Dict[str, str]] = None, logs: None | str = None):
+
+        self._init_dict(ip_addr)
+        self._init_dict("all") # For PTP global notification
+
+        if Label.PTP not in self.switch_outputs[ip_addr].keys():
+            self.switch_outputs[ip_addr][Label.PTP] = PTPInfoLocal()
+
+        if Label.PTP not in self.switch_outputs["all"].keys():
+            self.switch_outputs["all"][Label.PTP] = PTPInfoGlobal()
+
+        local_info = cast(PTPInfoLocal, self.switch_outputs[ip_addr][Label.PTP])
+        global_info = cast(PTPInfoGlobal, self.switch_outputs["all"][Label.PTP])
+
+        if log_ptp != None:
+            local_info.log_ptp = log_ptp
+
+        if clock_and_gm != None:
+            clock, gm = clock_and_gm
+            local_info.clock_mac = clock
+            local_info.gm_mac = gm
+
+            global_info.add_clock(gm, clock)
+
+        if critical_correction != None:
+            local_info.critical_correction = critical_correction
+
+        if gm_changes != None:
+            local_info.gm_changes = gm_changes
+        
+        if high_corrections != None:
+            local_info.high_corrections = high_corrections
+
+        if logs != None:
+            local_info.logs = logs
+
+
+"""
+    def __init__(self):
+
+        self.log_ptp = 0
+        self.clock_mac = "00:00:00:00:00:00"
+        self.gm_mac = "00:00:00:00:00:00"
+        self.critical_correction = 0
+        self.gm_changes = []
+        self.high_corrections = []
+        self.logs = """
