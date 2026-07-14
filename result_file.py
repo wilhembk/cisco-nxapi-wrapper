@@ -359,7 +359,7 @@ class ResultFile:
         """
 
         if self.switch_outputs.get("all"):
-            self._output("********** GLOBAL NOTIFICATION **********\n")
+            self._output("********** GLOBAL NOTIFICATION **********\n\n")
             for label in self.switch_outputs["all"].keys():
                 if label == Label.HOST_INFO:
                     # We don't print the host info again
