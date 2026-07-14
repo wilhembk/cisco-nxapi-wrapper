@@ -205,9 +205,9 @@ python main.py -h
 Vous aurez le manuel qui s'affiche, avec les différents arguments.
 
 ```
-usage: main.py [-h] [--unused_ports N] [--half_duplex]
-               [--check_transceiver {WARN,ALERT}]
-               [--CRC critical_delta reference_directory_path]
+usage: main.py [-h] [-u N] [-d] [-t {WARN,ALERT}]
+               [-c critical_delta reference_directory_path]
+               [-p since log_level critical_correction]
                [--demo_path demo_directory_path]
                switch_ip_list log_dir_path result_dir_path
 
@@ -221,14 +221,18 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  --unused_ports N      Check for DOWN ports unused since N days
-  --half_duplex         Check for interfaces running in half duplex mode
-  --check_transceivers {WARN,ALERT}
+  -u, --unused_ports N  Check for DOWN ports unused since N days
+  -d, --half_duplex     Check for interfaces running in half duplex mode
+  -t, --check_transceivers {WARN,ALERT}
                         Check transceivers hardware and notify for issues
                         higher or equal to specified level
-  --CRC critical_delta reference_directory_path
+  -c, --CRC critical_delta reference_directory_path
                         Check for additional cRC and Align errors according to
                         the reference directory
+  -p, --PTP since log_level critical_correction
+                        Check for abnormal PTP activity. Use log_level=0 to
+                        never output PTP logs, log_level=1 to output only on
+                        abnormal activity and log_level=2 to always output
   --demo_path demo_directory_path
                         Enable demo and read local files instead of switch
                         API. For testing purposes only.
@@ -249,6 +253,7 @@ options:
 - `--half_duplex`: Vérifie l'existence d'interfaces **UP** qui fonctionnent en half-duplex (au lieu de full-duplex).
 - `--check_transceivers {WARN, ALERT}`: Vérifie l'état matériel des transceivers et renvoie les erreurs satisfaisant au moins le niveau spécifié (`WARN` ou `ALERT`).
 - `--CRC critical_delta reference_directory_path`: Contrôle les statistiques CRC des interfaces par rapport au dossier de référence `reference_directory_path` spécifié. Affiche des erreurs **CRITICAL** si les compteurs ont augmenté d'au moins `critical_delta`.
+- `--PTP since log_level critical_correction`: Contrôle les corrections et les changements de Grandmaster et si tous les switchs sont synchronisés au même endroit. Vérifie que les corrections ne dépassent pas le seuil de `critical_correction` exprimé en nanosecondes. Vérifie les logs de changement jusqu'à `since` jour. Si `log_level=2` les logs PTP sont affichés dans le fichier résultats dans tous les cas, si `log_level=1` seulement en cas d'erreurs, et si `log_level=0` les logs ne sont jamais affichés.  
 - `--demo_path demo_directory_path`: Pour réaliser des tests, vérifie les valeurs renseignées dans le `demo_directory_path` plutôt que de s'adresser aux switchs.
 
 Note d'utilisation: le dossier `references_data/` est utilisé pour le contrôle CRC et **est généré et mis à jour automatiquement** par le script lorsque vous exécutez le contrôle avec `--CRC`. Il contient des fichiers JSON de référence nommés par adresse IP de switch.
