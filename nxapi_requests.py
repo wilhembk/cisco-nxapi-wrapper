@@ -575,7 +575,7 @@ class NXREST_API:
 
 
     def down_ifaces(self, ifaces):
-
+        return 
         if len(ifaces) == 0:
             return
 
