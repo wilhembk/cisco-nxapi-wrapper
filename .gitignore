@@ -4,6 +4,7 @@ __pycache__
 uv.lock
 .python-version
 switch_ips.txt
+switch_test_ips.txt
 outputs
 references_data
 

@@ -51,6 +51,9 @@ def main(args):
         if args.half_duplex:
             sw.get_half_duplex()
 
+        if args.err_disabled != None:
+            sw.get_ifaces_err_disabled()
+
         if args.check_transceivers != None:
             sw.check_for_tranceiver_alerts(filter_warn=(args.check_transceivers == "ALERT"))
 
@@ -64,6 +67,7 @@ def main(args):
             log_level = args.PTP[1]
             critical_correction = args.PTP[2]
             sw.check_ptp(since, log_level, critical_correction)
+
 
         sw.logout()
         
@@ -95,6 +99,7 @@ if __name__ == "__main__":
     parser.add_argument("result_dir_path", help="The directory on where to store results of the program")
     parser.add_argument("-u", "--unused_ports", type=int, metavar="N", help="Check for DOWN ports unused since N days")
     parser.add_argument("-d","--half_duplex", action="store_true", help="Check for interfaces running in half duplex mode")
+    parser.add_argument("-e","--err_disabled", action="store_true", help="Check for interfaces that are disabled due to an error")
     parser.add_argument("-t","--check_transceivers", choices=["WARN", "ALERT"], help="Check transceivers hardware and notify for issues higher or equal to specified level")
     parser.add_argument("-c","--CRC", nargs=2, type=critical_delta, metavar=("critical_delta","reference_directory_path"), help="Check for additional cRC and Align errors according to the reference directory")
     parser.add_argument("-p", "--PTP", nargs=3, type=int, metavar=("since","log_level", "critical_correction"), help="Check for abnormal PTP activity. Use log_level=0 to never output PTP logs, log_level=1 to output only on abnormal activity and log_level=2 to always output")

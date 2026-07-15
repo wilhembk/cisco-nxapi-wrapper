@@ -13,6 +13,7 @@ class Label(Enum):
     HALF_DUPLEX = "half_duplex"
     CRC_ALIGN = "crc_align"
     PTP = "ptp"
+    ERR_DISABLED = "err_disabled"
 
 # How to add a new type of monitoring output:
 
@@ -82,6 +83,20 @@ class HalfDuplexIfaces(ResultOutput):
         output(f"> CRITICAL: The following interfaces are running in half duplex\n")
         for port in self.port_list:
             output(f"\t- {port["readable_id"]}\n")
+        output("\n")
+
+class ErrDisabledIfaces(ResultOutput):
+    def __init__(self):
+        self.ifaces: List[Tuple[str, str]] = [] # (readable-iface-name, error type)
+    
+    def write(self, output):
+        if len(self.ifaces) == 0:
+            output("There are no interfaces that are disabled due to an error\n\n")
+            return
+        
+        output(f"> The following interfaces were down because of an operational error:\n")
+        for iface, error in self.ifaces:
+            output(f"\t- {iface} is down due to {error}\n")
         output("\n")
 
 class TransceiverInfo(ResultOutput):
@@ -407,6 +422,19 @@ class ResultFile:
             unused_ports.unused_since = unused_since
         if successful_down != None:
             unused_ports.successful_down = successful_down
+
+
+    def init_err_disabled(self, ip_addr: str):
+        self._init_dict(ip_addr)
+        if Label.ERR_DISABLED not in self.switch_outputs[ip_addr].keys():
+            self.switch_outputs[ip_addr][Label.ERR_DISABLED] = ErrDisabledIfaces()
+
+
+    def add_err_disabled(self, ip_addr: str, iface: str, error: str):
+       
+        self.init_err_disabled(ip_addr)
+        err_disabled_ifaces = cast(ErrDisabledIfaces, self.switch_outputs[ip_addr][Label.ERR_DISABLED])
+        err_disabled_ifaces.ifaces.append((iface, error))
 
 
     # NOTE: Those are the simplest helper methods to populate your class output

@@ -258,7 +258,11 @@ class NXCLI_API:
     
 
     def _get_ptp_logs(self):
-        return glom(self._wrap_cmd("show logging logfile | grep -i ptp"), "result.msg")
+        try:
+            res = glom(self._wrap_cmd("show logging logfile | grep -i ptp", method="cli_ascii"), "result.msg")
+        except:
+            res = ""
+        return res
 
 
     def get_critical_ptp_corrections(self, critical_correction: int):
@@ -437,7 +441,8 @@ class NXREST_API:
                     "lastLinkStChg": "ethpmPhysIf.attributes.lastLinkStChg",
                     "operSt": "ethpmPhysIf.attributes.operSt",
                     "operStQual": "ethpmPhysIf.attributes.operStQual",
-                    "operDuplex": "ethpmPhysIf.attributes.operDuplex"
+                    "operDuplex": "ethpmPhysIf.attributes.operDuplex",
+                    "operErrDisQual": "ethpmPhysIf.attributes.operErrDisQual"
                 }]
                 )
         
@@ -537,6 +542,15 @@ class NXREST_API:
         self.result.set_half_duplex_ifaces(self.switch_ip, half_duplex_ifaces)
         return half_duplex_ifaces
 
+
+    def get_ifaces_err_disabled(self):
+        self.result.init_err_disabled(self.switch_ip)
+        data = self.get_ifaces_states(filter_admin_down=True, filter_absent=True)
+
+        err_disabled = list(filter(lambda iface: iface["operErrDisQual"].upper() != "UP", data))
+        for iface in err_disabled:
+            self.result.add_err_disabled(self.switch_ip, iface["readable_id"], iface["operErrDisQual"])
+        return err_disabled
 
     def _post_interfaceEntity(self, children):
 

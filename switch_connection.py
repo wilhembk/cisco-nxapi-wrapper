@@ -39,3 +39,6 @@ class SwitchConnection:
     
     def check_ptp(self, since: int, log_level: int, critical_correction: int):
         return self.cli.check_ptp(since, log_level, critical_correction)
+
+    def get_ifaces_err_disabled(self):
+        return self.rest.get_ifaces_err_disabled()

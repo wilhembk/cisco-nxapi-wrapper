@@ -136,6 +136,7 @@ Le endpoint est toujours `https://<ip_switch>/api/ins`, en revanche, les JSON de
 #### Pour l'API REST
 Pour commencer, sélectionnez la méthode NXAPI-REST puis entrez dans le "Model Browser".  
 
+
 ![Etape 1](STEP1.png)
 
 
@@ -159,6 +160,16 @@ Ces deux méthodes sont stictement équivalentes. Cela signifie par exemple que,
 - `GET https://<ip_switch>/api/mo/sys.json`  
 
 Sont strictement les mêmes.
+
+Pour compléter vos recherches, vous aurez probablement besoin de consulter l'[APIC Object Model Documentation](https://developer.cisco.com/docs/apic-mim-ref-321/) de Cisco pour savoir quels sont les retours possibles de chaque éléments du JSON.
+
+Dans le menu de gauche, sélectionnez "All packages" pour fair eune recherche sur l'intégralité des paquets disponibles sur l'API. 
+
+**Exemple**: Si on souhaite en savoir plus sur les retours possibles du JSON de la classe `ethpmIfPhys`:
+- On clique sur All Packages à gauche
+- On recherche `ethpm`
+- On clique sur `Class (ethpm)` à gauche
+- On cherche `ethpm:PhysIf`
 
 
 # Utilisation du script
@@ -205,7 +216,7 @@ python main.py -h
 Vous aurez le manuel qui s'affiche, avec les différents arguments.
 
 ```
-usage: main.py [-h] [-u N] [-d] [-t {WARN,ALERT}]
+usage: main.py [-h] [-u N] [-d] [-e] [-t {WARN,ALERT}]
                [-c critical_delta reference_directory_path]
                [-p since log_level critical_correction]
                [--demo_path demo_directory_path]
@@ -223,6 +234,7 @@ options:
   -h, --help            show this help message and exit
   -u, --unused_ports N  Check for DOWN ports unused since N days
   -d, --half_duplex     Check for interfaces running in half duplex mode
+  -e, --err_disabled    Check for interfaces that are disabled due to an error
   -t, --check_transceivers {WARN,ALERT}
                         Check transceivers hardware and notify for issues
                         higher or equal to specified level
@@ -251,6 +263,7 @@ options:
 
 - `--unused_ports N`: Vérifie l'existence de ports **DOWN** qui ne sont pas administrativement down depuis plus de `N` jours.
 - `--half_duplex`: Vérifie l'existence d'interfaces **UP** qui fonctionnent en half-duplex (au lieu de full-duplex).
+- `--err-disabled`: Vérifie les interfaces qui ont été désactivées à cause d'une erreur
 - `--check_transceivers {WARN, ALERT}`: Vérifie l'état matériel des transceivers et renvoie les erreurs satisfaisant au moins le niveau spécifié (`WARN` ou `ALERT`).
 - `--CRC critical_delta reference_directory_path`: Contrôle les statistiques CRC des interfaces par rapport au dossier de référence `reference_directory_path` spécifié. Affiche des erreurs **CRITICAL** si les compteurs ont augmenté d'au moins `critical_delta`.
 - `--PTP since log_level critical_correction`: Contrôle les corrections et les changements de Grandmaster et si tous les switchs sont synchronisés au même endroit. Vérifie que les corrections ne dépassent pas le seuil de `critical_correction` exprimé en nanosecondes. Vérifie les logs de changement jusqu'à `since` jour. Si `log_level=2` les logs PTP sont affichés dans le fichier résultats dans tous les cas, si `log_level=1` seulement en cas d'erreurs, et si `log_level=0` les logs ne sont jamais affichés.  
