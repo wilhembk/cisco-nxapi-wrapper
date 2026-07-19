@@ -137,14 +137,14 @@ Le endpoint est toujours `https://<ip_switch>/api/ins`, en revanche, les JSON de
 Pour commencer, sélectionnez la méthode NXAPI-REST puis entrez dans le "Model Browser".  
 
 
-![Etape 1](STEP1.png)
+![Etape 1](ressources/STEP1.png)
 
 
 La version REST de NXAPI fonctionne comme une arborescence, avec différents niveau de précision. Elle donne des informations valables à l'instant de la requête.
 
 Vous entrez par défaut au niveau de la classe `topSystem`, qui donne des informations sur l'état du switch. Pour obtenir des informations plus abstraites, il faut aller au niveau antérieur au `topSystem`, vous pouvez faire cela en cherchant la classe `topRoot` dans le filtre "Class or DN" (ou en laissant le champ vide).
 
-![Etape 2](STEP2.png)
+![Etape 2](ressources/STEP2.png)
 
 A partir de là, vous pouvez faire `CTRL+F` et tapez des mots clés comme `eth` ou `ptp` pour trouver des endpoints ou des informations spécifiques.
 Si vous ne voyez pas ce que vous cherchez, descendez dans l'arboresecnce en cliquant sur les flèches au niveau des DN.
@@ -178,7 +178,7 @@ Le script a pour vocation d'être un cronjob. Il prend en entrée les tests à r
 
 ## Premier démarrage
 
-Le script est écrit en Python 3.14. Assurez-vous d'avoir `pip` installé.
+Le script est compatible avec Python 3.10+ (3.11 recommandé). Assurez-vous d'avoir `pip` installé.
 1. Placez-vous à la racine du projet.
 2. Initialisez un environnement virtuel :
 ```bash
@@ -197,7 +197,7 @@ source .venv/bin/activate
 
 4. Installez les dépendances :
 ```bash
-python -m pip install -e .
+pip install -r requirements.txt
 ```
 
 ## Utilisation courante
@@ -324,11 +324,12 @@ Consider unplugging or disabling them to not be notified again.
 
 # Pour les développeurs
 
-Le programme est développé en Python 3.14 et suit une logique de programmation objet qui le rend modulable:
+Le programme est développé pour Python 3.10+ (3.11 recommandé) et suit une logique de programmation objet qui le rend modulable:
 
-![Vu d'ensemble du programme](program_overview.svg)
+![Vu d'ensemble du programme](ressources/program_overview.svg)
 
-
+Pour développer, il est recommandé d'utiliser [uv](https://docs.astral.sh/uv/) pour gérer convenablement les dépendances et l'environnement virtuel.
+ 
 ## Contacter un endpoint 
 
 Pour ajouter un point de contacter à endpoint. On procède en 5 étapes

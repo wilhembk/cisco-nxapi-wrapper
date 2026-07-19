@@ -4,8 +4,8 @@ import re
 from glom import glom 
 from typing import Dict
 import urllib3
-from utils import ANSI, Logger
-from result_file import ResultFile
+from src.utils import ANSI, Logger
+from src.result_file import ResultFile
 from datetime import datetime
 
 # The certificate is self-signed. So we disable warnings.

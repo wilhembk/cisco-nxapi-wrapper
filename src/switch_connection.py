@@ -1,6 +1,6 @@
-from nxapi_requests import NXCLI_API, NXREST_API
-from utils import Logger
-from result_file import ResultFile
+from src.nxapi_requests import NXCLI_API, NXREST_API
+from src.utils import Logger
+from src.result_file import ResultFile
 
 # NOTE: `SwitchConnection` is the public facade used by `main.py`.
 # When you add a new monitoring method to `NXREST_API` or `NXCLI_API`, add a

@@ -1,9 +1,8 @@
 import argparse
-import os, sys
-from switch_connection import SwitchConnection
-from utils import Logger
-from result_file import ResultFile
-from typing import List
+import os
+from src.switch_connection import SwitchConnection
+from src.utils import Logger
+from src.result_file import ResultFile
 
 from dotenv import load_dotenv
 

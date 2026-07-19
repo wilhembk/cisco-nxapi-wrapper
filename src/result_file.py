@@ -1,7 +1,7 @@
 import time
 
 from enum import Enum
-from utils import ANSI
+from src.utils import ANSI
 from abc import ABC, abstractmethod
 from typing import Dict, Tuple, cast, Any, List
 from datetime import datetime
