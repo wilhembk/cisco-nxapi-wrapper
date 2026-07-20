@@ -315,7 +315,7 @@ options:
 ### Exemple d'output
 On exécute le programme avec
 ```bash
-python main.py switch_ips.txt outputs/logs/ outputs/results/ --unused_ports 90 --check_transceivers WARN --half_duplex --CRC 5 references_data/
+python main.py switch_ips.txt outputs/logs/ outputs/results/ --unused_ports 90 0 --check_transceivers WARN --half_duplex --CRC 5 references_data/
 ```
 On obtient le résultat suivant:
 ```
