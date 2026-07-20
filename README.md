@@ -317,7 +317,7 @@ On exécute le programme avec
 ```bash
 python main.py switch_ips.txt outputs/logs/ outputs/results/ --unused_ports 90 0 --check_transceivers WARN --half_duplex --CRC 5 references_data/
 ```
-On obtient le résultat suivant:
+On obtient, par exemple, le résultat suivant:
 ```
 =============[ Switch: spine (10.10.10.1 | SERIAL: 9XMBCLBQDFX) ]=============
 
@@ -327,8 +327,6 @@ Consider unplugging or disabling them to not be notified again.
 
 > CRITICAL: The following interfaces are running in half duplex
 	- eth1/107
-
-There are no interfaces that are disabled due to an error
 
 > The following transceivers show hardware issues:
 	- Interface: Ethernet1/2

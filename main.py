@@ -70,7 +70,7 @@ def main(args):
         if args.half_duplex:
             sw.get_half_duplex()
 
-        if args.err_disabled != None:
+        if args.err_disabled:
             sw.get_ifaces_err_disabled()
 
         if args.check_transceivers != None:
