@@ -10,15 +10,19 @@ class SwitchConnection:
     """Wraps both API types for seemless calls"""
 
 
-    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None):
-        self.cli = NXCLI_API(user_id, password, switch_ip, logger, result, demo_path)
-        self.rest = NXREST_API(user_id, password, switch_ip, logger, result, demo_path)
-
+    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None, timeout: int = 90):
+        self.cli = NXCLI_API(user_id, password, switch_ip, logger, result, demo_path, timeout)
+        self.rest = NXREST_API(user_id, password, switch_ip, logger, result, demo_path, timeout)
         self.switch_ip = switch_ip
-        self.hostname, self.serial = self.rest.get_hostname_and_serial() # Getting hostname by default so it appears in the result file
+        self.hostname, self.serial = None, None
 
     def login(self):
-        return self.rest.login()
+        res = self.rest.login()
+        if res:
+            # Getting hostname by default so it appears in the result file
+            self.hostname, self.serial = self.rest.get_hostname_and_serial()
+        return res
+            
     
     def logout(self):
         return self.rest.logout()

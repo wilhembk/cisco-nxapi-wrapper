@@ -250,6 +250,7 @@ Vous aurez le manuel qui s'affiche, avec les différents arguments.
 usage: main.py [-h] [-u N auto_down] [-d] [-e] [-t {WARN,ALERT}]
                [-c critical_delta reference_directory_path]
                [-p since log_level critical_correction]
+               [--timeout TIMEOUT]
                [--demo_path demo_directory_path]
                switch_ip_list log_dir_path result_dir_path
 
@@ -283,6 +284,7 @@ options:
                         Check for abnormal PTP activity. Use log_level=0 to
                         never output PTP logs, log_level=1 to output only on
                         abnormal activity and log_level=2 to always output
+  --timeout TIMEOUT     Timeout in seconds for each NX-API and NDFC request
   --demo_path demo_directory_path
                         Enable demo and read local files instead of switch
                         API. For testing purposes only.
@@ -309,6 +311,7 @@ options:
 - `--CRC critical_delta reference_directory_path`: Contrôle les statistiques CRC des interfaces par rapport au dossier de référence `reference_directory_path` spécifié. Affiche des erreurs **CRITICAL** si les compteurs ont augmenté d'au moins `critical_delta`.
 > Si le dossier de référence spécifié ne contient pas de référence, le programme va les générer automatiquement, et considère que les compteurs commencent à 0.
 - `--PTP since log_level critical_correction`: Contrôle les corrections et les changements de Grandmaster et si tous les switchs sont synchronisés au même endroit. Vérifie que les corrections ne dépassent pas le seuil de `critical_correction` exprimé en nanosecondes. Vérifie les logs de changement jusqu'à `since` jour. Si `log_level=2` les logs PTP sont affichés dans le fichier résultats dans tous les cas, si `log_level=1` seulement en cas d'erreurs, et si `log_level=0` les logs ne sont jamais affichés.  
+- `--timeout TIMEOUT`: Définit le délai maximum, en secondes, pour chaque requête NX-API et NDFC.
 - `--demo_path demo_directory_path`: Pour réaliser des tests, vérifie les valeurs renseignées dans le `demo_directory_path` plutôt que de s'adresser aux switchs.
 
 

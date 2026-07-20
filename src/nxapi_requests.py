@@ -34,10 +34,11 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 class NXCLI_API:
 
-    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None):
+    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None, timeout: int = 90):
         self.user_id = user_id
         self.password = password
         self.demo_path = demo_path
+        self.timeout = timeout
         self.logger = logger
         self.switch_ip = switch_ip
         self.result = result
@@ -81,8 +82,12 @@ class NXCLI_API:
                 data=json.dumps(payload), 
                 headers=myheaders,
                 auth=(self.user_id,self.password),
-                verify=False
+                verify=False,
+                timeout=self.timeout
             )
+        except requests.exceptions.Timeout:
+            self.logger.log(f"NXAPI-CLI timed out after {self.timeout} seconds at {self.endpoint}")
+            return {}
         except:
             self.logger.log(f"Could not reach NXAPI-CLI at {self.endpoint}")
             return {}
@@ -358,12 +363,13 @@ class NXCLI_API:
 
 class NXREST_API:
 
-    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None):
+    def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None, timeout: int = 90):
         """Call login to initialise the object auth cookies and start making requests"""
         self.user_id = user_id
         self.password = password
         self.switch_ip = switch_ip
         self.demo_path = demo_path
+        self.timeout = timeout
         self.hostname = None
         self.serial = None
         self.api_url = f"https://{self.switch_ip}/api/"
@@ -390,7 +396,16 @@ class NXREST_API:
 
         self.logger.log(f"Login into {self.switch_ip} with the provided credentials. (POST: {endpoint})")
 
-        response = requests.request("POST", endpoint, data=json.dumps(payload), verify=False)
+
+        try:
+            response = requests.request("POST", endpoint, data=json.dumps(payload), verify=False, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            self.logger.log(f"Login into {self.switch_ip} timed out after {self.timeout} seconds")
+            return False
+        except:
+            self.logger.log(f"The switch {self.switch_ip} is unreachable")
+            return  False
+        
         if response.status_code == requests.codes.ok:
             data = json.loads(response.text)['imdata'][0]
             token = str(data['aaaLogin']['attributes']['token'])
@@ -420,7 +435,14 @@ class NXREST_API:
             }
         }
         endpoint = self.api_url+ "aaaLogout.json"
-        requests.request("POST", endpoint, data=json.dumps(payload), cookies=self.auth_cookie, verify=False)
+        try:
+            requests.request("POST", endpoint, data=json.dumps(payload), cookies=self.auth_cookie, verify=False, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            self.logger.log(f"Logout from {self.switch_ip} timed out after {self.timeout} seconds")
+        except:
+            self.logger.log(f"Could not log out gracefully from {self.switch_ip}")
+
+        self.logger.log(f"Successfully logged out from the switch {self.switch_ip}")
         self.auth_cookie = {}
 
 
@@ -438,7 +460,14 @@ class NXREST_API:
         
         endpoint = f"{self.api_url}{point}"
         self.logger.log(f"GET {endpoint}")
-        response = requests.request("GET", endpoint, cookies=self.auth_cookie, verify=False)
+        try:
+            response = requests.request("GET", endpoint, cookies=self.auth_cookie, verify=False, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            self.logger.log(f"GET {endpoint} timed out after {self.timeout} seconds")
+            return {}
+        except:
+            self.logger.log(f"Could not reach {endpoint}")
+            return {}
         if response.status_code != requests.codes.ok:
             self.logger.log(f"The endpoint {endpoint} does not exist.")
             return {}
@@ -625,7 +654,14 @@ class NXREST_API:
 
         endpoint = self.api_url + "mo/sys.json"
         self.logger.log(f"POST {endpoint}: {payload}")
-        res = requests.post(endpoint, cookies=self.auth_cookie, headers=headers, data=json.dumps(payload), verify=False)
+        try:
+            res = requests.post(endpoint, cookies=self.auth_cookie, headers=headers, data=json.dumps(payload), verify=False, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            self.logger.log(f"POST {endpoint} timed out after {self.timeout} seconds")
+            return False
+        except:
+            self.logger.log(f"Could not reach {endpoint}")
+            return False
         if res.status_code != requests.codes.ok:
             self.logger.log(f"Request failed: {res.text}")
             return False

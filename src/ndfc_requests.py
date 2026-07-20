@@ -10,14 +10,17 @@ from typing import List
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) 
 
 class NDFC_API:
-    def __init__(self, domain: str, username: str, password: str, logger: Logger, result: ResultFile):
+    def __init__(self, domain: str, username: str, password: str, logger: Logger, result: ResultFile, timeout: int = 90):
         self.domain = domain
         self.username = username
         self.password = password
         self.logger = logger
         self.result = result
         self.ndfc_managed = dict()
+        self.timeout = timeout
         self.token = self._get_jwttoken()
+        if self.token == "":
+            raise Exception("NDFC can't connect")
         
 
 
@@ -32,7 +35,10 @@ class NDFC_API:
         self.logger.log("Logging into NDFC using the provided credentials.")
 
         try:
-            req = requests.post(self.domain+"/login", headers=headers, data=json.dumps(payload), verify=False)
+            req = requests.post(self.domain+"/login", headers=headers, data=json.dumps(payload), verify=False, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            self.logger.log(f"Could not reach NDFC at {self.domain} within {self.timeout} seconds")
+            return ""
         except:
             self.logger.log(f"Could not reach NDFC at {self.domain}")
             return ""
@@ -56,7 +62,10 @@ class NDFC_API:
         self.logger.log(f"GET {self.domain+endpoint}")
 
         try:
-            res = requests.get(self.domain+endpoint, headers=headers, verify=False)
+            res = requests.get(self.domain+endpoint, headers=headers, verify=False, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            self.logger.log(f"GET {self.domain+endpoint} timed out after {self.timeout} seconds")
+            return None
         except:
             self.logger.log(f"Could not fetch NDFC ressource at {self.domain+endpoint}")
             return None
@@ -76,7 +85,10 @@ class NDFC_API:
         self.logger.log(f"POST {self.domain+endpoint}")
 
         try:
-            res = requests.post(self.domain+endpoint, data=payload, headers=headers, verify=False)
+            res = requests.post(self.domain+endpoint, data=payload, headers=headers, verify=False, timeout=self.timeout)
+        except requests.exceptions.Timeout:
+            self.logger.log(f"POST {self.domain+endpoint} timed out after {self.timeout} seconds")
+            return None
         except:
             self.logger.log(f"Could not POST payload to NDFC {self.domain+endpoint}")
             return None

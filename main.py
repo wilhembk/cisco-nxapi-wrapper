@@ -46,22 +46,23 @@ def main(args):
 
     ndfc_conn = None
 
-    if ndfc_url != None or ndfc_user != None or ndfc_password != None:
+    if (ndfc_url != None or ndfc_user != None or ndfc_password != None) and args.unused_ports != None and args.unused_ports[1] in (2,3):
         if ndfc_url == None or ndfc_user == None or ndfc_password == None:
             print("Please pass all NDFC_URL, NDFC_USER and NDFC_PASSWORD in .env file (or don't pass any.)")
             return
+        
         try:
-            ndfc_conn = NDFC_API(ndfc_url, ndfc_user, ndfc_password, logger, result)
-        except Exception as exc:
-            logger.log(f"Failed to initialize NDFC connection: {exc}")
+            ndfc_conn = NDFC_API(ndfc_url, ndfc_user, ndfc_password, logger, result, args.timeout)
+        except:
             ndfc_conn = None
-
+        
     for ip in f.readlines(): 
         ip = ip.strip()
-        sw = SwitchConnection(switchuser, switchpassword, ip, logger, result, args.demo_path)  
+        sw = SwitchConnection(switchuser, switchpassword, ip, logger, result, args.demo_path, args.timeout)  
         success = sw.login()
         if not success:
             continue
+
         if args.unused_ports != None:
             ifaces = sw.get_ifaces_down_since(args.unused_ports[0])
             auto_down = args.unused_ports[1]
@@ -122,6 +123,7 @@ if __name__ == "__main__":
     parser.add_argument("-t","--check_transceivers", choices=["WARN", "ALERT"], help="Check transceivers hardware and notify for issues higher or equal to specified level")
     parser.add_argument("-c","--CRC", nargs=2, type=critical_delta, metavar=("critical_delta","reference_directory_path"), help="Check for additional cRC and Align errors according to the reference directory")
     parser.add_argument("-p", "--PTP", nargs=3, type=int, metavar=("since","log_level", "critical_correction"), help="Check for abnormal PTP activity. Use log_level=0 to never output PTP logs, log_level=1 to output only on abnormal activity and log_level=2 to always output")
+    parser.add_argument("--timeout", type=int, default=90, help="Timeout in seconds for each NX-API and NDFC request")
     parser.add_argument("--demo_path", metavar="demo_directory_path", help="Enable demo and read local files instead of switch API. For testing purposes only.")
 
     args = parser.parse_args()
