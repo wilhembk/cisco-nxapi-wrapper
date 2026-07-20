@@ -319,7 +319,7 @@ python main.py switch_ips.txt outputs/logs/ outputs/results/ --unused_ports 90 0
 ```
 On obtient le résultat suivant:
 ```
-=============[ Switch: hostname (10.10.10.1) ]=============
+=============[ Switch: spine (10.10.10.1 | SERIAL: 9XMBCLBQDFX) ]=============
 
 > The following ports are unused since 90 days
 	- eth1/97
@@ -327,6 +327,8 @@ Consider unplugging or disabling them to not be notified again.
 
 > CRITICAL: The following interfaces are running in half duplex
 	- eth1/107
+
+There are no interfaces that are disabled due to an error
 
 > The following transceivers show hardware issues:
 	- Interface: Ethernet1/2
@@ -358,7 +360,7 @@ Consider unplugging or disabling them to not be notified again.
 
 ================================================
 
-=============[ Switch: hostname (10.10.10.2) ]=============
+=============[ Switch: leaf (10.10.10.2 | SERIAL: 9XMBCLBLMPO) ]=============
 [...]
 ```
 
