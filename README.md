@@ -381,7 +381,7 @@ Pour ajouter un point de contacter à endpoint. On procède en 5 étapes
 - Est-ce un `POST` ou un `GET` ?
   - Si c'est un `GET`, on utilise la méthode `_get` et on renseigne l'endpoint (sans le `/api`).
   - Si c'est un `POST`, il faut regarder le résultat du sandbox NXAPI pour avoir une idée de la structure.
-- Si on modifie une configuration, est-ce que cela va avoir une incidence de synchronisation avec NDFC ?
+- Si on modifie une configuration, est-ce que cela va avoir une incidence de synchronisation avec NDFC ? On modifie autant que possible via l'API NDFC (définie dans `ndfc_requests.py`)
 
 On vérifie le format de retour de l'endpoint avec le sandbox de NXAPI (trouver l'IP d'un switch et s'y connecter via le navigateur).
 

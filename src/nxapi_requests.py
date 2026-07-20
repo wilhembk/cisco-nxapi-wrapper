@@ -51,10 +51,15 @@ class NXCLI_API:
 
         if self.demo_path != None:
             self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json")
-            with open(f"{self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json", "r") as f:
-                return json.load(f)
-            self.logger.log(f"Demo file {self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json is not readable")
-            return {}
+
+            try:
+                f = open(f"{self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json", "r")
+            except:
+                self.logger.log(f"Demo file {self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json is not readable")
+                return {}
+
+            return json.load(f)
+
 
         myheaders={'content-type':'application/json-rpc'}
         payload=[
@@ -70,34 +75,40 @@ class NXCLI_API:
         ]
 
         self.logger.log(f"Running command \"{cmd}\" via NXAPI-CLI")
-        response = requests.post(
-            self.endpoint,
-            data=json.dumps(payload), 
-            headers=myheaders,
-            auth=(self.user_id,self.password),
-            verify=False
-        ).json()
+        try:
+            req = requests.post(
+                self.endpoint,
+                data=json.dumps(payload), 
+                headers=myheaders,
+                auth=(self.user_id,self.password),
+                verify=False
+            )
+        except:
+            self.logger.log(f"Could not reach NXAPI-CLI at {self.endpoint}")
+            return {}
+        
+        response = req.json()
 
         return response
-    
-
-    def get_hostname(self):
-        return glom(self._wrap_cmd("show switchname"), "result.body.hostname")
-    
-    def save_config(self):
-        return self._wrap_cmd("copy running-config startup-config")
     
 
     def get_transceiver_details(self):
         """Returns the details of the transceivers, filtered down to plugged ones"""
 
-        return list(filter(
-                lambda iface: iface["sfp"] == "present", 
-                glom(self._wrap_cmd("show interface transceiver details"), "result.body.TABLE_interface.ROW_interface")))
+        data = self._wrap_cmd("show interface transceiver details")
+        if data == {}:
+            return []
+
+        try:
+            res = glom(data, "result.body.TABLE_interface.ROW_interface")
+        except:
+            self.logger.log("NXAPI returned incoherent results when checking for transceivers")
+            return []
+
+        return list(filter(lambda iface: iface["sfp"] == "present",  res))
 
     
     def check_for_tranceiver_alerts(self, filter_warn=False):
-        # Check for duplex
         self.logger.log(f"Checking for alerts in transceiver status...")
         transceivers = self.get_transceiver_details()
 
@@ -251,10 +262,26 @@ class NXCLI_API:
         return res
     
     def _get_ptp_parent(self):
-        return glom(self._wrap_cmd("show ptp parent"), "result.body")
+        data = self._wrap_cmd("show ptp parent")
+        if data == {}:
+            return {}
+
+        try:
+            return glom(data, "result.body")
+        except:
+            self.logger.log("NXAPI returned incoherent results when checking PTP parent")
+            return {}
     
     def _get_clock_id(self):
-        return glom(self._wrap_cmd("show ptp clock"), "result.body.clock-id")
+        data = self._wrap_cmd("show ptp clock")
+        if data == {}:
+            return ""
+
+        try:
+            return glom(data, "result.body.clock-id")
+        except:
+            self.logger.log("NXAPI returned incoherent results when checking PTP clock")
+            return ""
     
 
     def _get_ptp_logs(self):
@@ -282,8 +309,14 @@ class NXCLI_API:
 
     def get_ptp_gm(self):
         clock_data = self._get_ptp_parent()
+        if clock_data == {}:
+            return None
 
-        clock_parent_and_gm = self._get_clock_id(), clock_data["clock-id"], clock_data["gm-id"]
+        clock_id = self._get_clock_id()
+        if clock_id == "":
+            return None
+
+        clock_parent_and_gm = clock_id, clock_data["clock-id"], clock_data["gm-id"]
         
         self.result.set_ptp(self.switch_ip, clock_parent_and_gm=clock_parent_and_gm)
         return clock_parent_and_gm
@@ -420,9 +453,16 @@ class NXREST_API:
         self.logger.log(f"Getting switch hostname and serial number")
         
         data = self._get_system()
+        if data == {}:
+            self.logger.log(f"Could not fetch hostname and serial for {self.switch_ip}.")
+            return None, None
 
-        self.hostname = glom(data, ("imdata", ["topSystem.attributes.name"]))[0]
-        self.serial = glom(data, ("imdata", ["topSystem.attributes.serial"]))[0]
+        try:
+            self.hostname = glom(data, ("imdata", ["topSystem.attributes.name"]))[0]
+            self.serial = glom(data, ("imdata", ["topSystem.attributes.serial"]))[0]
+        except:
+            self.logger.log(f"Could not parse hostname and serial for {self.switch_ip}")
+            return None, None
         self.result.set_hostinfo(ip_addr=self.switch_ip, hostname=self.hostname, serial=self.serial)
         return self.hostname, self.serial
 
@@ -439,6 +479,8 @@ class NXREST_API:
     def get_ifaces_states(self, filter_admin_down=False, filter_absent=False) -> list:
 
         ifaces = self._get_ifaces()
+        if ifaces == {}:
+            return []
 
         keep = ("imdata",
                 [{
@@ -452,7 +494,11 @@ class NXREST_API:
                 }]
                 )
         
-        data = glom(ifaces, keep)
+        try:
+            data = glom(ifaces, keep)
+        except:
+            self.logger.log("NXAPI returned incoherent interface results")
+            return []
         if filter_admin_down:
             data = list(filter(lambda iface: iface["adminSt"].upper() != "DOWN", data))
 
@@ -502,6 +548,9 @@ class NXREST_API:
 
     def print_system_info(self):
         system = self._get_system()
+        if system == {}:
+            self.logger.log(f"Could not fetch system information for {self.switch_ip}.")
+            return
         
         keep = ("imdata",
                 [{
@@ -510,7 +559,11 @@ class NXREST_API:
                     "uptime": "topSystem.attributes.systemUpTime"
                 }])
         
-        data = glom(system, keep)[0]
+        try:
+            data = glom(system, keep)[0]
+        except:
+            self.logger.log(f"Could not parse system information for {self.switch_ip}.")
+            return
         print(f"Hostname {data["name"]} - Current Time: {data["currentTime"]} - Uptime: {data["uptime"]}")
 
 
@@ -610,10 +663,16 @@ class NXREST_API:
         Returns a nested dictionnary wich first key is the dn, and where the second key correspond to the all the stat associated to this interface.
         """
         rmonEtherStats = self._get_rmonEtherStats()
+        if rmonEtherStats == {}:
+            return {}
         if rmonEtherStats["totalCount"] == '0':
             return {}
         
-        data = glom(rmonEtherStats, ("imdata", ["rmonEtherStats.attributes"]))
+        try:
+            data = glom(rmonEtherStats, ("imdata", ["rmonEtherStats.attributes"]))
+        except:
+            self.logger.log("NXAPI returned incoherent results when checking RMON statistics")
+            return {}
         
         return {
             d["dn"]: {

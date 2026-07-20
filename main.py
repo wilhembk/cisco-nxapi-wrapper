@@ -50,7 +50,11 @@ def main(args):
         if ndfc_url == None or ndfc_user == None or ndfc_password == None:
             print("Please pass all NDFC_URL, NDFC_USER and NDFC_PASSWORD in .env file (or don't pass any.)")
             return
-        ndfc_conn = NDFC_API(ndfc_url, ndfc_user, ndfc_password, logger, result)
+        try:
+            ndfc_conn = NDFC_API(ndfc_url, ndfc_user, ndfc_password, logger, result)
+        except Exception as exc:
+            logger.log(f"Failed to initialize NDFC connection: {exc}")
+            ndfc_conn = None
 
     for ip in f.readlines(): 
         ip = ip.strip()
