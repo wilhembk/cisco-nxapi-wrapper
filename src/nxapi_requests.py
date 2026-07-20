@@ -332,6 +332,7 @@ class NXREST_API:
         self.switch_ip = switch_ip
         self.demo_path = demo_path
         self.hostname = None
+        self.serial = None
         self.api_url = f"https://{self.switch_ip}/api/"
         self.logger = logger
         self.result = result
@@ -413,13 +414,18 @@ class NXREST_API:
     def _get_system(self):
         return self._get("mo/sys.json")
 
-    def get_hostname(self):
+    def get_hostname_and_serial(self):
         if self.hostname != None:
             return self.hostname
-        self.logger.log(f"Getting switch hostname")
-        self.hostname = glom(self._get_system(), ("imdata", ["topSystem.attributes.name"]))[0]
-        self.result.set_hostinfo(ip_addr=self.switch_ip, hostname=self.hostname)
-        return self.hostname
+        self.logger.log(f"Getting switch hostname and serial number")
+        
+        data = self._get_system()
+
+        self.hostname = glom(data, ("imdata", ["topSystem.attributes.name"]))[0]
+        self.serial = glom(data, ("imdata", ["topSystem.attributes.serial"]))[0]
+        self.result.set_hostinfo(ip_addr=self.switch_ip, hostname=self.hostname, serial=self.serial)
+        return self.hostname, self.serial
+
 
 
     def _get_faults(self):
@@ -575,7 +581,6 @@ class NXREST_API:
 
 
     def down_ifaces(self, ifaces):
-        return 
         if len(ifaces) == 0:
             return
 

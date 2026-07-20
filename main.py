@@ -1,7 +1,8 @@
 import argparse
 import os
 from src.switch_connection import SwitchConnection
-from src.utils import Logger
+from src.ndfc_requests import NDFC_API
+from src.utils import Logger, down_ifaces
 from src.result_file import ResultFile
 
 from dotenv import load_dotenv
@@ -27,6 +28,8 @@ def main(args):
     if switchuser == None or switchpassword == None:
             print("Please pass SWITCH_USER_ID and SWITCH_PASSWORD in a .env file")
             return
+
+
     
     try:
         f = open(args.switch_ip_list, "r")
@@ -37,6 +40,18 @@ def main(args):
     logger = Logger(args.log_dir_path)
     result = ResultFile(args.result_dir_path)
 
+    ndfc_url = os.getenv("NDFC_URL")
+    ndfc_user = os.getenv("NDFC_USER")
+    ndfc_password = os.getenv("NDFC_PASSWORD")
+
+    ndfc_conn = None
+
+    if ndfc_url != None or ndfc_user != None or ndfc_password != None:
+        if ndfc_url == None or ndfc_user == None or ndfc_password == None:
+            print("Please pass all NDFC_URL, NDFC_USER and NDFC_PASSWORD in .env file (or don't pass any.)")
+            return
+        ndfc_conn = NDFC_API(ndfc_url, ndfc_user, ndfc_password, logger, result)
+
     for ip in f.readlines(): 
         ip = ip.strip()
         sw = SwitchConnection(switchuser, switchpassword, ip, logger, result, args.demo_path)  
@@ -44,8 +59,9 @@ def main(args):
         if not success:
             continue
         if args.unused_ports != None:
-            ifaces = sw.get_ifaces_down_since(args.unused_ports)
-            sw.down_ifaces(ifaces)
+            ifaces = sw.get_ifaces_down_since(args.unused_ports[0])
+            auto_down = args.unused_ports[1]
+            down_ifaces(ifaces, auto_down, sw, ndfc_conn, logger)
         
         if args.half_duplex:
             sw.get_half_duplex()
@@ -90,13 +106,13 @@ if __name__ == "__main__":
             return input
             
 
-    parser = argparse.ArgumentParser(description="A program to maintain Cisco switched through NX-API calls")
+    parser = argparse.ArgumentParser(description="A program to maintain Cisco switches through NX-API calls")
     # Add CLI flags here for new checks. Use descriptive names and document their behaviour on the documentation
     
     parser.add_argument("switch_ip_list", help="The file containing all the switch ips (separated by a newline)")
     parser.add_argument("log_dir_path", help="The directory on where to store logs of the program")
     parser.add_argument("result_dir_path", help="The directory on where to store results of the program")
-    parser.add_argument("-u", "--unused_ports", type=int, metavar="N", help="Check for DOWN ports unused since N days")
+    parser.add_argument("-u", "--unused_ports", nargs=2, type=int, metavar=("N", "auto_down"), help="Check for DOWN ports unused since N days. Use auto_down=0 to not automaticlly set the associated interfaces as admin_down, auto_down=1 to down the interfaces DIRECTLY on the switch, auto_down=2 to down the interfaces via NDFC only, and auto_down=3 to try to down the interfaces via NDFC and fallback to a down the interfaces DIRECTLY on the switch")
     parser.add_argument("-d","--half_duplex", action="store_true", help="Check for interfaces running in half duplex mode")
     parser.add_argument("-e","--err_disabled", action="store_true", help="Check for interfaces that are disabled due to an error")
     parser.add_argument("-t","--check_transceivers", choices=["WARN", "ALERT"], help="Check transceivers hardware and notify for issues higher or equal to specified level")

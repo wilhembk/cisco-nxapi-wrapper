@@ -42,12 +42,13 @@ class ResultOutput(ABC):
 
 
 class HostInfo(ResultOutput):
-    def __init__(self, ip_addr: str, hostname: str):
+    def __init__(self, ip_addr: str, hostname: str, serial_number: str):
         self.ip_addr = ip_addr
         self.hostname = hostname
+        self.serial_number = serial_number
     
     def write(self, output):
-        output(f"=============[ Switch: {self.hostname} ({self.ip_addr}) ]=============\n\n") 
+        output(f"=============[ Switch: {self.hostname} ({self.ip_addr} | SERIAL: {self.serial_number}) ]=============\n\n")
 
 
 class UnusedPorts(ResultOutput):
@@ -443,9 +444,9 @@ class ResultFile:
         self.switch_outputs[ip_addr][Label.HALF_DUPLEX] = HalfDuplexIfaces(port_list)   
         
 
-    def set_hostinfo(self, ip_addr: str, hostname: str):
+    def set_hostinfo(self, ip_addr: str, hostname: str, serial: str):
         self._init_dict(ip_addr)
-        self.switch_outputs[ip_addr][Label.HOST_INFO] = HostInfo(ip_addr, hostname)
+        self.switch_outputs[ip_addr][Label.HOST_INFO] = HostInfo(ip_addr, hostname, serial)
 
 
     def init_transceiver(self, ip_addr: str):

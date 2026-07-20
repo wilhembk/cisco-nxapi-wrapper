@@ -171,6 +171,33 @@ Dans le menu de gauche, sélectionnez "All packages" pour fair eune recherche su
 - On clique sur `Class (ethpm)` à gauche
 - On cherche `ethpm:PhysIf`
 
+## NDFC
+
+Pour modifier la configuration des switchs, comme certain sont gérés sur NDFC, il faut modifier la configuration directement sur celui-ci et donc utiliser l'API.  
+L'authentification se fait sur le endpoint `https://<ip_ndfc>/login`, où il faut envoyer le payload suivant en `POST`:
+
+```json
+{
+    "domain": "local",
+    "userName": "<nom_utilisateur_ndfc>",
+    "userPasswd": "<mot_de_passe_ndfc>"
+}
+```
+
+NDFC répondra avec un **jwttoken** qu'il faudra inclure à chaque requête dans un header de la forme
+```json
+{
+    "Authorization": "Bearer <jwttoken>"
+}
+```
+
+Pour faire un management switch par switch, il faut consulter la documentation legacy (l'API Swagger actuelle permet surtout le déploiement de configuration sur tout une fabrique plutôt qu'un seul switch)
+
+Pour consulter la documentation il faut aller dans `Help Center > Lan Fabric > Legacy LAN APIs`
+
+![STEP1](ressources/NDFC_STEP1.png)
+![STEP2](ressources/NDFC_STEP2.png)
+
 
 # Utilisation du script
 
@@ -216,13 +243,13 @@ python main.py -h
 Vous aurez le manuel qui s'affiche, avec les différents arguments.
 
 ```
-usage: main.py [-h] [-u N] [-d] [-e] [-t {WARN,ALERT}]
+usage: main.py [-h] [-u N auto_down] [-d] [-e] [-t {WARN,ALERT}]
                [-c critical_delta reference_directory_path]
                [-p since log_level critical_correction]
                [--demo_path demo_directory_path]
                switch_ip_list log_dir_path result_dir_path
 
-A program to maintain Cisco switched through NX-API calls
+A program to maintain Cisco switches through NX-API calls
 
 positional arguments:
   switch_ip_list        The file containing all the switch ips (separated by a
@@ -232,7 +259,14 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-  -u, --unused_ports N  Check for DOWN ports unused since N days
+  -u, --unused_ports N auto_down
+                        Check for DOWN ports unused since N days. Use
+                        auto_down=0 to not automaticlly set the associated
+                        interfaces as admin_down, auto_down=1 to down the
+                        interfaces DIRECTLY on the switch, auto_down=2 to down
+                        the interfaces via NDFC only, and auto_down=3 to try
+                        to down the interfaces via NDFC and fallback to a down
+                        the interfaces DIRECTLY on the switch
   -d, --half_duplex     Check for interfaces running in half duplex mode
   -e, --err_disabled    Check for interfaces that are disabled due to an error
   -t, --check_transceivers {WARN,ALERT}
@@ -261,15 +295,17 @@ options:
 
 #### Optionnels
 
-- `--unused_ports N`: Vérifie l'existence de ports **DOWN** qui ne sont pas administrativement down depuis plus de `N` jours.
+- `--unused_ports N auto_down`: Vérifie l'existence de ports **DOWN** qui ne sont pas administrativement down depuis plus de `N` jours. Si `auto_down=0` cette commande ne fait que vérifier l'existence de ports inutilisés, `auto_down=1` fera un shutdown sur le switch **directement**, `auto_down=2` le fera sur NDFC, et `auto_down=3` tentera de shutdown sur NDFC mais si le switch ***"n'est pas administré par NDFC"***, le shutdown se fera **directement** sur le switch.
+
+> **/!\\** Le programme considère qu'un switch ***"n'est pas administré par NDFC"*** lorsqu'il n'existe pas d'*intent-interface*. Il est possible que cette information soit eronnée. Le mieux est de bien séparer les switchs adminstrés par NDFC de ceux qui ne le sont pas et de sélectionner le type de shutdown automatique en conséquence.
+
 - `--half_duplex`: Vérifie l'existence d'interfaces **UP** qui fonctionnent en half-duplex (au lieu de full-duplex).
 - `--err-disabled`: Vérifie les interfaces qui ont été désactivées à cause d'une erreur
 - `--check_transceivers {WARN, ALERT}`: Vérifie l'état matériel des transceivers et renvoie les erreurs satisfaisant au moins le niveau spécifié (`WARN` ou `ALERT`).
 - `--CRC critical_delta reference_directory_path`: Contrôle les statistiques CRC des interfaces par rapport au dossier de référence `reference_directory_path` spécifié. Affiche des erreurs **CRITICAL** si les compteurs ont augmenté d'au moins `critical_delta`.
+> Si le dossier de référence spécifié ne contient pas de référence, le programme va les générer automatiquement, et considère que les compteurs commencent à 0.
 - `--PTP since log_level critical_correction`: Contrôle les corrections et les changements de Grandmaster et si tous les switchs sont synchronisés au même endroit. Vérifie que les corrections ne dépassent pas le seuil de `critical_correction` exprimé en nanosecondes. Vérifie les logs de changement jusqu'à `since` jour. Si `log_level=2` les logs PTP sont affichés dans le fichier résultats dans tous les cas, si `log_level=1` seulement en cas d'erreurs, et si `log_level=0` les logs ne sont jamais affichés.  
 - `--demo_path demo_directory_path`: Pour réaliser des tests, vérifie les valeurs renseignées dans le `demo_directory_path` plutôt que de s'adresser aux switchs.
-
-Note d'utilisation: le dossier `references_data/` est utilisé pour le contrôle CRC et **est généré et mis à jour automatiquement** par le script lorsque vous exécutez le contrôle avec `--CRC`. Il contient des fichiers JSON de référence nommés par adresse IP de switch.
 
 
 ### Exemple d'output
@@ -327,6 +363,8 @@ Consider unplugging or disabling them to not be notified again.
 Le programme est développé pour Python 3.10+ (3.11 recommandé) et suit une logique de programmation objet qui le rend modulable:
 
 ![Vu d'ensemble du programme](ressources/program_overview.svg)
+
+Il existe aussi la classe `NDFC_API` qui permets de modifier la config des switchs via NDFC. En particulier, elle est actuellement utilisée pour shutdown les ports inutilisés.
 
 Pour développer, il est recommandé d'utiliser [uv](https://docs.astral.sh/uv/) pour gérer convenablement les dépendances et l'environnement virtuel.
  

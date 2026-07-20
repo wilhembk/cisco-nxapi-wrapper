@@ -1,6 +1,7 @@
 
 import sys
 import time
+from glom import glom
 
 class ANSI():
     RESET_ALL = "\x1b[0m" if sys.stdout.isatty() else ""
@@ -59,3 +60,27 @@ class Logger:
             f.write(log_msg+"\n")
 
 
+def down_ifaces(ifaces, auto_down, sw, ndfc_conn, logger):
+                
+    if auto_down == 1:
+        sw.down_ifaces(ifaces)
+    
+    if auto_down == 2:
+        if ndfc_conn == None or not ndfc_conn.working_connection:
+            logger.log("Tried to down interfaces via NDFC, but connection was not established.")
+            return
+
+        ports = glom(ifaces, ["readable_id"])
+        ndfc_conn.shut_ports(sw.switch_ip, sw.serial, ports)
+
+    if auto_down == 3:
+        if ndfc_conn == None or not ndfc_conn.working_connection:
+            logger.log("Tried to down interfaces via NDFC, but connection was not established.")
+            return
+        
+        if not ndfc_conn.is_managed_by_ndfc(sw.serial):
+            sw.down_ifaces(ifaces)
+            return 
+
+        ports = glom(ifaces, ["readable_id"])
+        ndfc_conn.shut_ports(sw.switch_ip, sw.serial, ports)

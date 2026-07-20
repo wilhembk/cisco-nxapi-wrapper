@@ -14,7 +14,8 @@ class SwitchConnection:
         self.cli = NXCLI_API(user_id, password, switch_ip, logger, result, demo_path)
         self.rest = NXREST_API(user_id, password, switch_ip, logger, result, demo_path)
 
-        self.hostname = self.rest.get_hostname() # Getting hostname by default so it appears in the result file
+        self.switch_ip = switch_ip
+        self.hostname, self.serial = self.rest.get_hostname_and_serial() # Getting hostname by default so it appears in the result file
 
     def login(self):
         return self.rest.login()
@@ -26,6 +27,7 @@ class SwitchConnection:
         return self.rest.get_ifaces_down_since(days)
     
     def down_ifaces(self, ifaces):
+        """Admin down interfaces with REST API. BEWARE of NDFC compatibility issues."""
         return self.rest.down_ifaces(ifaces)
     
     def get_half_duplex(self):
