@@ -235,7 +235,11 @@ Avant toute chose, assurez-vous :
 ```env
 SWITCH_USER_ID="nom_d_utilisateur"
 SWITCH_PASSWORD="mot_de_passe"
+NDFC_URL="https://ip_ndfc"
+NDFC_USER="nom_NDFC"
+NDFC_PASSWORD="mot_de_passe_NDFC"
 ```
+Les sections NDFC sont facultatives.  
 Vous pourrez ensuite lancer le programme avec :
 ```
 python main.py -h
