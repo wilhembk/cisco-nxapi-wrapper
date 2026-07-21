@@ -233,11 +233,11 @@ Avant toute chose, assurez-vous :
 1. D'avoir **démarré votre environnement virtuel Python**.
 2. D'avoir un fichier `.env` à la racine du projet contenant les identifiants des switchs à contacter :
 ```env
-SWITCH_USER_ID="nom_d_utilisateur"
-SWITCH_PASSWORD="mot_de_passe"
-NDFC_URL="https://ip_ndfc"
-NDFC_USER="nom_NDFC"
-NDFC_PASSWORD="mot_de_passe_NDFC"
+SWITCH_USER_ID=nom_d_utilisateur
+SWITCH_PASSWORD=mot_de_passe
+NDFC_URL=https://ip_ndfc
+NDFC_USER=nom_NDFC
+NDFC_PASSWORD=mot_de_passe_NDFC
 ```
 Les sections NDFC sont facultatives.  
 Vous pourrez ensuite lancer le programme avec :
@@ -364,6 +364,83 @@ Consider unplugging or disabling them to not be notified again.
 =============[ Switch: leaf (10.10.10.2 | SERIAL: 9XMBCLBLMPO) ]=============
 [...]
 ```
+
+## Avec Docker
+
+## Avec Docker
+
+Le script est fourni avec un `Dockerfile` et peut donc être exécuté facilement dans un conteneur Docker. Ainsi, il peut être déployé sur plusieurs machines pour faire des analyses en parallèle.
+
+Récupérez ce conteneur directement depuis [Docker Hub](https://hub.docker.com/r/wilhembk/cisco-nxapi-wrapper):
+```bash
+docker pull wilhembk/cisco-nxapi-wrapper
+```
+Ou bien vous pouvez aussi le construire directement, en étant dans le dossier de travail:
+```bash
+docker build -t cisco-nxapi-wrapper .
+```
+
+### Configuration nécessaire
+
+Comme pour une utilisation normale, vous aurez besoin d'un fichier `.env` de la forme suivante :
+```env
+SWITCH_USER_ID=nom_d_utilisateur
+SWITCH_PASSWORD=mot_de_passe
+NDFC_URL=https://ip_ndfc
+NDFC_USER=nom_NDFC
+NDFC_PASSWORD=mot_de_passe_NDFC
+TZ=Europe/Paris
+```
+
+On rajoute la mention `TZ` pour que le conteneur **soit à la bonne heure**. Cela permet de générer des logs avec des timestamps cohérents, ainsi que d'assurer la cohérence des tests temporels (PTP, ports inutilisés, ...).
+
+Il nous faudra aussi **obligatoirement**:
+- un fichier contenant les adresses IP des switchs à contacter
+- le dossier dans lequel stocker les logs
+- le dossier dans lequel stocker les résultats
+
+Et **facultativement**:
+
+- le dossier de référence pour les erreurs CRC
+- un dossier de démo si l'on souhaite tester des fonctionnalités
+
+
+### Exécution
+
+#### Petit point sur les volumes
+
+Sur Docker, il faut créer des volumes pour pouvoir créer des dossiers partagés entre l'hôte et le conteneur. On peut les créer avec le paramètre `-v` de la commande `docker run`:
+
+```bash
+docker run -v "/chemin/sur/hote:/chemin/sur/container"
+```
+Ainsi, le fichier `/chemin/sur/hote` de la machine hôte est accessible sur le conteneur sous le nom de `chemin/sur/container`.
+**Ces fichiers sont partagés entre l'hôte et le conteneur.**
+
+> **/!\\** Il faut bien indiquer le chemin d'accès complet du fichier sur la machine hôte, ou bien utiliser le `.` pour préciser un chemin relatif. Docker considère par défaut que tous les fichiers viennent de la racine `/`.
+
+#### Exemple
+
+On utilise donc la commande `docker run`. On **ajoute le paramètre** `--rm` pour supprimer le conteneur à la sortie du programme (comme il s'agit juste d'une application CLI, conserver le conteneur ne sert à rien une fois que le travail est fini).
+
+Voici un exemple d'exécution avec tous les paramètres (sauf les paramètres de démo):
+
+```bash
+docker run --rm --env-file /chemin/du/.env \
+    -v "/chemin/switch_ips.txt:/data/switch_ips.txt" \
+    -v "/chemin/du/dossier/outputs:/outputs" \
+    -v "chemin/du/dossier/references/CRC:/data/references_data" \
+    cisco-nxapi-wrapper:latest \
+    /data/switch_ips.txt /outputs/logs /outputs/results \
+    --unused_ports 90 0 --half_duplex --err_disabled --check_transceivers WARN  \
+    --CRC 5 /data/references_data --PTP 2 1 500 --timeout 30
+```
+
+> Dans cette commande, il est possible de retirer le volume des valeurs de référence du CRC, si l'on ne souhaite pas tester le CRC.
+
+Ainsi, les arguments sont les mêmes que ceux à passer au programme Python de base, et les chemins d'accès des fichiers doivent correspondre au chemin d'accès sur le conteneur (et non pas à ceux de la machine hôte).
+
+Il est donc possible de remplacer ces chemins d'accès par d'autres et de permettre une parallélisation des tests de switchs.
 
 # Pour les développeurs
 

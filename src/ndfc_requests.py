@@ -39,8 +39,8 @@ class NDFC_API:
         except requests.exceptions.Timeout:
             self.logger.log(f"Could not reach NDFC at {self.domain} within {self.timeout} seconds")
             return ""
-        except:
-            self.logger.log(f"Could not reach NDFC at {self.domain}")
+        except Exception as err:
+            self.logger.log(f"Could not reach NDFC at {self.domain}: {err}")
             return ""
 
         if req.status_code != 200:
