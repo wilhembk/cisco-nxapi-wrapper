@@ -1,7 +1,7 @@
 [project]
 name = "cisco-nxapi-wrapper"
 version = "0.1.0"
-description = "Add your description here"
+description = "A program to maintain Cisco switches through NX-API calls"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
