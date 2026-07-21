@@ -78,7 +78,11 @@ def down_ifaces(ifaces, auto_down, sw, ndfc_conn, logger):
             logger.log("Tried to down interfaces via NDFC, but connection was not established.")
             return
         
-        if not ndfc_conn.is_managed_by_ndfc(sw.serial):
+        if ndfc_conn.is_managed_by_ndfc(sw.serial) == None:
+            logger.log(f"Could not determined if {sw.serial} is managed on NDFC. Doing nothing.")
+            return
+        
+        if ndfc_conn.is_managed_by_ndfc(sw.serial) == False:
             sw.down_ifaces(ifaces)
             return 
 
