@@ -6,6 +6,12 @@ from src.utils import Logger, down_ifaces
 from src.result_file import ResultFile
 
 from dotenv import load_dotenv
+import atexit
+
+def close_files(result, logger):
+    result.commit()
+    logger.end()
+
 
 load_dotenv() # Loading the .env file containing password and username for the switches
 
@@ -39,6 +45,8 @@ def main(args):
     
     logger = Logger(args.log_dir_path)
     result = ResultFile(args.result_dir_path)
+
+    atexit.register(close_files, result, logger)
 
     ndfc_url = os.getenv("NDFC_URL")
     ndfc_user = os.getenv("NDFC_USER")
@@ -92,6 +100,7 @@ def main(args):
         sw.logout()
         
     result.commit()
+    logger.end()
 
 
 

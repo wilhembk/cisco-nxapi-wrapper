@@ -39,25 +39,28 @@ class Logger:
         self.log_file_path = \
             f"{self.log_dir_path}/log_{lt.tm_year}_{lt.tm_mon}_{lt.tm_mday}_{lt.tm_hour}_{lt.tm_min}_{lt.tm_sec}.log"
         
-        f = None
+        self.f = None
         try:
-           f = open(self.log_file_path, "w")
+           self.f = open(self.log_file_path, "w")
         except:
             print(f"{ANSI.COLOR_RED}[ERROR] Can't open log {self.log_file_path} file. Will log in stdout{ANSI.RESET_ALL}")
             self.log_file_path = ""
-        if f: f.close()
 
 
     def log(self, msg):
 
         log_msg = f"{time.strftime('[%a, %d %b %Y %H:%M:%S]', time.localtime())} {msg}"
-        if self.log_file_path == "":
+        if self.log_file_path == "" or self.f == None:
             # No logs files. We print in stdout
             print(log_msg)
             return
+        
+        self.f.write(log_msg+"\n")
 
-        with open(self.log_file_path, "a") as f:
-            f.write(log_msg+"\n")
+    def end(self):
+        if not self.f:
+            return
+        self.f.close()
 
 
 def down_ifaces(ifaces, auto_down, sw, ndfc_conn, logger):
