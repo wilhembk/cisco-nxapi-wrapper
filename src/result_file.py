@@ -64,7 +64,7 @@ class UnusedPorts(ResultOutput):
         
         output(f"> The following ports are unused since {self.unused_since} days\n")
         for port in self.port_list:
-            output(f"\t- {port["readable_id"]}\n")
+            output(f"\t- {port['readable_id']}\n")
 
         if self.successful_down:
             output("Those ports are now administratively down. You will no longer be notified. Consider unplugging them.\n")
@@ -83,7 +83,7 @@ class HalfDuplexIfaces(ResultOutput):
         
         output(f"> CRITICAL: The following interfaces are running in half duplex\n")
         for port in self.port_list:
-            output(f"\t- {port["readable_id"]}\n")
+            output(f"\t- {port['readable_id']}\n")
         output("\n")
 
 class ErrDisabledIfaces(ResultOutput):
@@ -148,10 +148,10 @@ class TransceiverInfo(ResultOutput):
                     hi = (temp >= temp_threshold) # Check if the high threshold is reached, or if it's the low threshold
 
                     if lanes["all"]["status_temp"] == "WARN":
-                        output(f"\t\t+ WARN: Transceiver temperature exceeded the threshold ! ({temp}°C {">" if hi else "<"} {temp_threshold}°C)\n") 
+                        output(f"\t\t+ WARN: Transceiver temperature exceeded the threshold ! ({temp}°C {'>' if hi else '<'} {temp_threshold}°C)\n") 
                     
                     if lanes["all"]["status_temp"] == "ALERT":
-                        output(f"\t\t+ ALERT: Transceiver temperature exceeded the threshold ! ({temp}°C {">" if hi else "<"} {temp_threshold}°C)\n")
+                        output(f"\t\t+ ALERT: Transceiver temperature exceeded the threshold ! ({temp}°C {'>' if hi else '<'} {temp_threshold}°C)\n")
 
                 if lanes["all"].get("voltage", None) != None:
                     voltage = lanes["all"]["voltage"]
@@ -159,10 +159,10 @@ class TransceiverInfo(ResultOutput):
                     hi = (voltage >= voltage_threshold) # Check if the high threshold is reached, or if it's the low threshold
 
                     if lanes["all"]["status_voltage"] == "WARN":
-                        output(f"\t\t+ WARN: Transceiver voltage exceeded the threshold ! ({voltage} {">" if hi else "<"} {voltage_threshold})\n") 
+                        output(f"\t\t+ WARN: Transceiver voltage exceeded the threshold ! ({voltage} {'>' if hi else '<'} {voltage_threshold})\n") 
                     
                     if lanes["all"]["status_voltage"] == "ALERT":
-                        output(f"\t\t+ ALERT: Transceiver voltage exceeded the threshold ! ({voltage} {">" if hi else "<"} {voltage_threshold})\n")
+                        output(f"\t\t+ ALERT: Transceiver voltage exceeded the threshold ! ({voltage} {'>' if hi else '<'} {voltage_threshold})\n")
 
 
                 if lanes["all"].get("current", None) != None:
@@ -171,10 +171,10 @@ class TransceiverInfo(ResultOutput):
                     hi = (current >= current_threshold) # Check if the high threshold is reached, or if it's the low threshold
 
                     if lanes["all"]["status_current"] == "WARN":
-                        output(f"\t\t+ WARN: Transceiver current exceeded the threshold ! ({current} {">" if hi else "<"} {current_threshold})\n") 
+                        output(f"\t\t+ WARN: Transceiver current exceeded the threshold ! ({current} {'>' if hi else '<'} {current_threshold})\n") 
                     
                     if lanes["all"]["status_current"] == "ALERT":
-                        output(f"\t\t+ ALERT: Transceiver current exceeded the threshold ! ({current} {">" if hi else "<"} {current_threshold})\n")
+                        output(f"\t\t+ ALERT: Transceiver current exceeded the threshold ! ({current} {'>' if hi else '<'} {current_threshold})\n")
 
             
             for lane_number, status in lanes.items():
@@ -194,10 +194,10 @@ class TransceiverInfo(ResultOutput):
                     hi = (tx >= tx_threshold) # Check if the high threshold is reached, or if it's the low threshold
 
                     if status["status_tx"] == "WARN":
-                        output(f"\t\t+ WARN: Lane {lane_number} transfer power has exceeded the threshold ! ({tx} {">" if hi else "<"} {tx_threshold})\n") 
+                        output(f"\t\t+ WARN: Lane {lane_number} transfer power has exceeded the threshold ! ({tx} {'>' if hi else '<'} {tx_threshold})\n") 
                     
                     if status["status_tx"] == "ALERT":
-                        output(f"\t\t+ ALERT: Lane {lane_number} transfer power has exceeded the threshold ! ({tx} {">" if hi else "<"} {tx_threshold})\n") 
+                        output(f"\t\t+ ALERT: Lane {lane_number} transfer power has exceeded the threshold ! ({tx} {'>' if hi else '<'} {tx_threshold})\n") 
 
                 if status.get("rx", None) != None:
                     rx = status["rx"]
@@ -205,10 +205,10 @@ class TransceiverInfo(ResultOutput):
                     hi = (rx >= rx_threshold) # Check if the high threshold is reached, or if it's the low threshold
 
                     if status["status_rx"] == "WARN":
-                        output(f"\t\t+ WARN: Lane {lane_number} receive power has exceeded the threshold ! ({rx} {">" if hi else "<"} {rx_threshold})\n") 
+                        output(f"\t\t+ WARN: Lane {lane_number} receive power has exceeded the threshold ! ({rx} {'>' if hi else '<'} {rx_threshold})\n") 
                     
                     if status["status_rx"] == "ALERT":
-                        output(f"\t\t+ ALERT: Lane {lane_number} receive power has exceeded the threshold ! ({rx} {">" if hi else "<"} {rx_threshold})\n") 
+                        output(f"\t\t+ ALERT: Lane {lane_number} receive power has exceeded the threshold ! ({rx} {'>' if hi else '<'} {rx_threshold})\n") 
             output("\n")
 
 class cRCCounter(ResultOutput):
@@ -301,7 +301,7 @@ class PTPInfoLocal(ResultOutput):
 
         for gm_change in self.gm_changes:
             date, mac_init, mac_dest = gm_change
-            output(f"\t- {date.strftime("%a %d %b %Y, %I:%M")}: Changed GM from {mac_init} to {mac_dest}\n")
+            output(f"\t- {date.strftime('%a %d %b %Y, %I:%M')}: Changed GM from {mac_init} to {mac_dest}\n")
         if gm_changed: output("\n")
 
         abnormal_correction = len(self.high_corrections) != 0

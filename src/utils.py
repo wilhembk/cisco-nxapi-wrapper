@@ -50,7 +50,7 @@ class Logger:
 
     def log(self, msg):
 
-        log_msg = f"{time.strftime("[%a, %d %b %Y %H:%M:%S]", time.localtime())} {msg}"
+        log_msg = f"{time.strftime('[%a, %d %b %Y %H:%M:%S]', time.localtime())} {msg}"
         if self.log_file_path == "":
             # No logs files. We print in stdout
             print(log_msg)

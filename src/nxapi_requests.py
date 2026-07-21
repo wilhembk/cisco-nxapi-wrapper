@@ -51,12 +51,12 @@ class NXCLI_API:
         """
 
         if self.demo_path != None:
-            self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json")
+            self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/{self.switch_ip}/ins/{cmd.replace(' ', '_')}.json")
 
             try:
-                f = open(f"{self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json", "r")
+                f = open(f"{self.demo_path}/{self.switch_ip}/ins/{cmd.replace(' ', '_')}.json", "r")
             except:
-                self.logger.log(f"Demo file {self.demo_path}/{self.switch_ip}/ins/{cmd.replace(" ", "_")}.json is not readable")
+                self.logger.log(f"Demo file {self.demo_path}/{self.switch_ip}/ins/{cmd.replace(' ', '_')}.json is not readable")
                 return {}
 
             return json.load(f)
@@ -450,10 +450,13 @@ class NXREST_API:
 
         if self.demo_path:
             self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/{self.switch_ip}/{point}")
-            with open(f"{self.demo_path}/{self.switch_ip}/{point}", "r") as f:
-                return json.load(f)
-            self.logger.log(f"The file {self.demo_path}/{self.switch_ip}/{point} is unreadable")
-            return {}
+            try:
+                f = open(f"{self.demo_path}/{self.switch_ip}/{point}", "r")
+            except:
+                self.logger.log(f"The file {self.demo_path}/{self.switch_ip}/{point} is unreadable")
+                return {}
+            return json.load(f)
+            
         
         if self.auth_cookie == {}:
             self.login()
@@ -560,7 +563,7 @@ class NXREST_API:
                 s += f"\t{ANSI.COLOR_BLUE}{ANSI.STYLE_BOLD}plugged{ANSI.RESET_ALL}\t\tis"
 
             if iface["adminSt"].upper() == "DOWN":
-                print(f"{s} {ANSI.COLOR_RED}{ANSI.STYLE_BOLD}DOWN{ANSI.RESET_ALL} by admin\tsince {iface["lastLinkStChg"]}")
+                print(f"{s} {ANSI.COLOR_RED}{ANSI.STYLE_BOLD}DOWN{ANSI.RESET_ALL} by admin\tsince {iface['lastLinkStChg']}")
                 continue
 
             if iface["operSt"].upper() == "DOWN":
@@ -570,9 +573,9 @@ class NXREST_API:
                 s += f" {ANSI.COLOR_GREEN}{ANSI.STYLE_BOLD}UP{ANSI.RESET_ALL}\t\t\t"
 
             else:
-                s += f" {ANSI.COLOR_YELLOW}{ANSI.STYLE_BOLD}{iface["operSt"]}{ANSI.RESET_ALL}\t\t\t"
+                s += f" {ANSI.COLOR_YELLOW}{ANSI.STYLE_BOLD}{iface['operSt']}{ANSI.RESET_ALL}\t\t\t"
 
-            print(f"{s}since {iface["lastLinkStChg"]}")
+            print(f"{s}since {iface['lastLinkStChg']}")
 
 
     def print_system_info(self):
@@ -593,7 +596,7 @@ class NXREST_API:
         except:
             self.logger.log(f"Could not parse system information for {self.switch_ip}.")
             return
-        print(f"Hostname {data["name"]} - Current Time: {data["currentTime"]} - Uptime: {data["uptime"]}")
+        print(f"Hostname {data['name']} - Current Time: {data['currentTime']} - Uptime: {data['uptime']}")
 
 
 
@@ -611,7 +614,7 @@ class NXREST_API:
             down_days = (today - down_since).days
             if down_days < days:
                 continue
-            self.logger.log(f"{iface["readable_id"]} is down since {down_days} days")
+            self.logger.log(f"{iface['readable_id']} is down since {down_days} days")
             unused_ports.append(iface)
         
         self.result.set_unused_ports(ip_addr=self.switch_ip, port_list=unused_ports, unused_since=days)
@@ -624,7 +627,7 @@ class NXREST_API:
         half_duplex_ifaces = []
         for iface in filter(lambda iface: iface["operSt"].upper() != "DOWN", data):
             if iface["operDuplex"] == "half":
-                self.logger.log(f"{iface["readable_id"]} is in half duplex !!!")
+                self.logger.log(f"{iface['readable_id']} is in half duplex !!!")
                 half_duplex_ifaces.append(iface)
 
         self.result.set_half_duplex_ifaces(self.switch_ip, half_duplex_ifaces)
@@ -688,7 +691,7 @@ class NXREST_API:
         success = self._post_interfaceEntity(children)
         self.result.set_unused_ports(ip_addr=self.switch_ip, successful_down=success)
         if success:
-            self.logger.log(f"Successfully disabled {[iface["readable_id"] for iface in ifaces]}")
+            self.logger.log(f"Successfully disabled {[iface['readable_id'] for iface in ifaces]}")
 
     def _get_rmonEtherStats(self):
         return self._get("class/rmonEtherStats.json")
