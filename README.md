@@ -429,7 +429,7 @@ Voici un exemple d'exécution avec tous les paramètres (sauf les paramètres de
 docker run --rm --env-file /chemin/du/.env \
     -v "/chemin/switch_ips.txt:/data/switch_ips.txt" \
     -v "/chemin/du/dossier/outputs:/outputs" \
-    -v "chemin/du/dossier/references/CRC:/data/references_data" \
+    -v "/chemin/du/dossier/references/CRC:/data/references_data" \
     cisco-nxapi-wrapper:latest \
     /data/switch_ips.txt /outputs/logs /outputs/results \
     --unused_ports 90 0 --half_duplex --err_disabled --check_transceivers WARN  \
