@@ -101,6 +101,7 @@ def main(args):
         
     result.commit()
     logger.end()
+    atexit.unregister(close_files)
 
 
 
