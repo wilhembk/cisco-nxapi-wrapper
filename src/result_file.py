@@ -6,6 +6,9 @@ from typing import Dict, Tuple, cast, Any, List, Callable
 from datetime import datetime
 
 class Label(Enum):
+    """
+    Label to identify which type of data is being processed
+    """
     HOST_INFO = "host"
     UNUSED_PORTS = "unused"
     TRANSCEIVER = "transceiver"
@@ -35,13 +38,24 @@ class Label(Enum):
 
 
 class ResultOutput(ABC):
+    """
+    Abstract Class that shoud inherits any object that writes output
+    to the ResultFile
+    """
     @abstractmethod
     def write(self, output: Callable[[str], None]) -> None:
+        """
+        Write current data of the object, using the output
+        function as the "print" function
+        """
         pass
 
 
 class HostInfo(ResultOutput):
     def __init__(self, ip_addr: str, hostname: str, serial_number: str):
+        """
+        Sets HostInfo data
+        """
         self.ip_addr = ip_addr
         self.hostname = hostname
         self.serial_number = serial_number
@@ -52,6 +66,10 @@ class HostInfo(ResultOutput):
 
 class UnusedPorts(ResultOutput):
     def __init__(self, port_list: List[Dict[str, Any]] | None, unused_since: int | None, successful_down: bool | None):
+        """
+        Sets UnusedPorts data
+        All None variable are converted to their empty counter part
+        """
         self.port_list: List[Dict[str, Any]] = port_list if port_list != None else []
         self.unused_since: int = unused_since if unused_since != None else 0
         self.successful_down: bool = successful_down if successful_down != None else False
@@ -73,6 +91,9 @@ class UnusedPorts(ResultOutput):
 
 class HalfDuplexIfaces(ResultOutput):
     def __init__(self, port_list: List[Dict[str, Any]]):
+        """
+        Sets HalfDuplexIfaces data
+        """
         self.port_list: List[Dict[str, Any]] = port_list
 
     def write(self, output: Callable[[str], None]) -> None:
@@ -86,6 +107,9 @@ class HalfDuplexIfaces(ResultOutput):
         output("\n")
 
 class ErrDisabledIfaces(ResultOutput):
+    """
+    Sets ErrDisabledIfaces data
+    """
     def __init__(self):
         self.ifaces: List[Tuple[str, str]] = [] # (readable-iface-name, error type)
     
@@ -102,6 +126,9 @@ class ErrDisabledIfaces(ResultOutput):
 class TransceiverInfo(ResultOutput):
 
     def __init__(self):
+        """
+        Sets TransceiverInfo data
+        """
         self.notification: Dict[str, Dict[str, Dict[str, Any]]] = {}
         # Key 1: ifaces
         # Key 2: lane
@@ -116,6 +143,10 @@ class TransceiverInfo(ResultOutput):
 
 
     def init_interface_lane(self, iface: str, lane_number: str):
+        """
+        Initialize dictionnary for the specific lane number.
+        If the lane_number already exists, this does nothing.
+        """
         if iface not in self.notification.keys():
             self.notification[iface] = {lane_number: {}}
             return
@@ -213,6 +244,9 @@ class TransceiverInfo(ResultOutput):
 class cRCCounter(ResultOutput):
 
     def __init__(self, critical_delta: int):
+        """
+        Sets the cRCCounter data
+        """
         self.deltas: Dict[str, Tuple[int, int, int]] = {} # dn -> (delta, current_cRC, reference_cRC)
         self.critical_delta = critical_delta
 
@@ -241,10 +275,16 @@ class cRCCounter(ResultOutput):
 
 class PTPInfoGlobal(ResultOutput):
     def __init__(self):
+        """
+        Sets PTPInfoGlobal data
+        """
         self.gm_used: Dict[str, List[str]] = {}
 
     def add_clock(self, gm: str, clock: str):
-
+        """
+        Adds the clock to the dictionnary, creating an entry if the gm
+        does not exists.
+        """
         if gm not in self.gm_used.keys():
             self.gm_used[gm] = [clock]
             return
@@ -269,7 +309,10 @@ class PTPInfoGlobal(ResultOutput):
 class PTPInfoLocal(ResultOutput):
 
     def __init__(self):
-        """log_ptp :
+        """
+        Sets the PTPInfoLocal data
+        By default, all mac address are 0s
+        log_ptp :
         - 0 NEVER
         - 1 ONLY ON ERRORS
         - 2 ALWAYS
@@ -326,7 +369,10 @@ class ResultFile:
 
 
     def __init__(self, path: str):
-
+        """
+        Initialize ResultFile object, checking the file is writable.
+        If not, outputs inside the console.
+        """
         self.switch_outputs: Dict[str, Dict[Label, ResultOutput]] = {}
         # The first key is the switch ip_addr
         # The values is a dict where:
@@ -350,11 +396,20 @@ class ResultFile:
 
 
     def _init_dict(self, ip_addr: str):
+        """
+        PRIVATE
+        Initialize dictionnary if the dentry of ip_addr does not exists
+        """
         if ip_addr not in self.switch_outputs.keys():
             self.switch_outputs[ip_addr] = {}
 
 
     def _output(self, s: str):
+        """
+        PRIVATE
+        Check for the file availability, opening it if closed and outputs
+        in stdout if no file were given (or in the file)
+        """
         if self.f == None:
             print(s, end="")
             return
@@ -363,6 +418,10 @@ class ResultFile:
         self.f.write(s)
 
     def _end(self):
+        """
+        PRIVATE
+        Close the file descriptor if it exists
+        """
         if self.f == None or self.f.closed: 
             return
         self.f.close()

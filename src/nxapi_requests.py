@@ -40,6 +40,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 class NXCLI_API:
 
     def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None, timeout: int = 90):
+        """
+        Connection to NXAPI-CLI
+        """
         self.user_id = user_id
         self.password = password
         self.demo_path = demo_path
@@ -51,7 +54,8 @@ class NXCLI_API:
 
     def _wrap_cmd(self, cmd: str, method: str = "cli") -> Dict[str, Any]:
         """
-        Wrap the cmd inside the payload to send to the switch.
+        PRIVATE
+        Wraps the cmd inside the payload to send to the switch.
         The cmd requires authentication on the switch for it to work
         """
 
@@ -112,14 +116,18 @@ class NXCLI_API:
         try:
             res = cast(List[Dict[str, Any]], glom(data, "result.body.TABLE_interface.ROW_interface"))
             # glom returns unknown, we have to ignore its return type
-        except Exception as err:
-            self.logger.log(f"NXAPI returned incoherent results when checking for transceivers \n{err}")
+        except:
+            self.logger.log(f"NXAPI returned incoherent results when checking for transceivers \n")
             return []
 
         return list(filter(lambda iface: iface["sfp"] == "present",  res)) # type: ignore
 
     
     def check_for_tranceiver_alerts(self, filter_warn: bool = False) -> None:
+        """
+        Checks transceivers status and alerts in the ResultFile in case of issues
+        if filter_warn is set to True, warnings are not issued
+        """
         self.logger.log(f"Checking for alerts in transceiver status...")
         transceivers = self.get_transceiver_details()
 
@@ -145,7 +153,10 @@ class NXCLI_API:
 
 
     def check_light_level_lane(self, iface: str, lane: Dict[str, Any], filter_warn: bool) -> None:
-
+        """
+        Check light level of the lanes of a transceiver and alerts in case of issues
+        if filter_warn is set to True, warnings are not issued
+        """
         lane_number = lane["lane_number"]
 
         if "tx_pwr" not in lane.keys():
@@ -196,7 +207,10 @@ class NXCLI_API:
             return
 
     def check_temp(self, iface: str, lane: Dict[str, Any], filter_warn: bool) -> None:
-
+        """
+        Checks temperature of a transceiver and alerts in case of issues
+        if filter_warn is set to True, warnings are not issued
+        """
         temp_alrm_hi = float(lane["temp_alrm_hi"])
         temp_alrm_low = float(lane["temp_alrm_lo"])
         temp_warn_hi = float(lane["temp_warn_hi"])
@@ -219,7 +233,10 @@ class NXCLI_API:
 
         
     def check_current(self, iface: str, lane: Dict[str, Any], filter_warn: bool) -> None:
-
+        """
+        Checks the current flow of a transceiver and alerts in case of issues
+        if filter_warn is set to True, warnings are not issued
+        """
         current_alrm_hi = float(lane["current_alrm_hi"])
         current_alrm_low = float(lane["current_alrm_lo"])
         current_warn_hi = float(lane["current_warn_hi"])
@@ -243,7 +260,10 @@ class NXCLI_API:
     
     
     def check_voltage(self, iface: str, lane: Dict[str, Any], filter_warn: bool) -> None:
-
+        """
+        Checks voltage of a transceiver and alerts in case of issues
+        if filter_warn is set to True, warnings are not issued
+        """
         volt_alrm_hi = float(lane["volt_alrm_hi"])
         volt_alrm_low = float(lane["volt_alrm_lo"])
         volt_warn_hi = float(lane["volt_warn_hi"])
@@ -265,7 +285,10 @@ class NXCLI_API:
                 self.result.set_voltage(self.switch_ip, iface, volt, volt_warn_hi)
 
     def _get_ptp_corrections(self):
-        """Returns a list in chronological order showing ptp corrections"""
+        """
+        PRIVATE
+        Returns a list in chronological order showing ptp corrections
+        """
         try:
             res = cast(List[Dict[str, Any]], glom(self._wrap_cmd("show ptp corrections"), "result.body.TABLE_ptp.ROW_ptp"))
         except:
@@ -273,6 +296,10 @@ class NXCLI_API:
         return res
     
     def _get_ptp_parent(self) -> Dict[str, Any]:
+        """
+        PRIVATE
+        Returns the result of the `show ptp parent` command
+        """
         data = self._wrap_cmd("show ptp parent")
         if data == {}:
             return {}
@@ -284,6 +311,10 @@ class NXCLI_API:
             return {}
     
     def _get_clock_id(self) -> str:
+        """
+        PRIVATE
+        Returns the clock mac address of the current switch
+        """
         data = self._wrap_cmd("show ptp clock")
         if data == {}:
             return ""
@@ -296,6 +327,10 @@ class NXCLI_API:
     
 
     def _get_ptp_logs(self) -> str:
+        """
+        PRIVATE
+        Returns all switch logs lines that contains "ptp" inside them
+        """
         try:
             res = cast(str, glom(self._wrap_cmd("show logging logfile | grep -i ptp", method="cli_ascii"), "result.msg"))
         except:
@@ -304,7 +339,10 @@ class NXCLI_API:
 
 
     def get_critical_ptp_corrections(self, critical_correction: int) -> List[Dict[str, Any]]:
-
+        """
+        Returns in chronological order the list of PTP correction exceeding the provided threshold.
+        Notify those issues in the ResultFile
+        """
         self.result.set_ptp(self.switch_ip, critical_correction=critical_correction)
 
         corrections = self._get_ptp_corrections()
@@ -319,6 +357,11 @@ class NXCLI_API:
         return res
 
     def get_ptp_gm(self) -> Tuple[str, str, str] | None:
+        """
+        Returns a Tuple composed of: the switch's clock mac address, the parent clock, the gm clock
+        If some of this data can't be retrieved. Returns None.
+        Reports in the ResultFile
+        """
         clock_data = self._get_ptp_parent()
         if clock_data == {}:
             return None
@@ -333,8 +376,12 @@ class NXCLI_API:
         return clock_parent_and_gm
 
     def get_gm_change(self, log_level: int, since: int) -> List[Tuple[datetime, str, str]]:
+        """
+        Returns a list of Tuple signaling GM clock changes that happenned since the provided period
+        Providing: datetime of when it occurred, the previous GM, the new GM
+        Reports in the ReusltFile for changes.
+        """
         # Grandmaster clock has changed {MAC_1} to {MAC_2}
-
 
         logs = self._get_ptp_logs()
         self.result.set_ptp(self.switch_ip, log_ptp=log_level, logs=logs)
@@ -362,6 +409,10 @@ class NXCLI_API:
         return res
     
     def check_ptp(self, since: int, log_level: int, critical_correction: int) -> None:
+        """
+        Checks for PTP unusual behaviour (GM changes, and correction)
+        Reports in the ResultFile
+        """
         self.get_ptp_gm()
         self.get_critical_ptp_corrections(critical_correction)
         self.get_gm_change(log_level, since)
@@ -370,7 +421,10 @@ class NXCLI_API:
 class NXREST_API:
 
     def __init__(self, user_id: str, password: str, switch_ip: str, logger: Logger, result: ResultFile, demo_path: str | None = None, timeout: int = 90):
-        """Call login to initialise the object auth cookies and start making requests"""
+        """
+        Connection to NXAPI-REST
+        Call login to initialize connection fully.
+        """
         self.user_id = user_id
         self.password = password
         self.switch_ip = switch_ip
@@ -385,6 +439,10 @@ class NXREST_API:
 
 
     def login(self):
+        """
+        Login into NXAPI-REST. Call logout to end connection fully.
+        Returns False if the login has failed
+        """
         if self.demo_path != None:
             return True
             
@@ -427,7 +485,7 @@ class NXREST_API:
     
     def logout(self):
         """
-        Close the connection gracefully
+        Closes the connection gracefully
         """
 
         if self.demo_path != None:
@@ -453,7 +511,12 @@ class NXREST_API:
 
 
     def _get(self, point: str) -> Dict[str, Any]:
-
+        """
+        PRIVATE
+        Wraps the GET request of the https://<ip_switch>/api/<point> with the
+        correct authorization header.
+        Returns None in case of an error.
+        """
         if self.demo_path:
             self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/{self.switch_ip}/{point}")
             try:
@@ -483,9 +546,18 @@ class NXREST_API:
         return response.json()
     
     def _get_system(self) -> Dict[str, Any]:
+        """
+        PRIVATE
+        Returns raw response of /api/mo/sys.json
+        """
         return self._get("mo/sys.json")
 
     def get_hostname_and_serial(self) -> Tuple[str | None, str | None]:
+        """
+        Returns the hostname and serial number of the switch and reports to ReusltFile
+        Returns None, None if the connection has failed.
+
+        """
         if self.hostname != None:
             return self.hostname, self.serial
         self.logger.log(f"Getting switch hostname and serial number")
@@ -507,15 +579,28 @@ class NXREST_API:
 
 
     def _get_faults(self) -> Dict[str, Any]:
+        """
+        PRIVATE
+        Returns raw response of /api/class/faultInst.json
+        """
         return self._get("class/faultInst.json")
 
 
     def _get_ifaces(self) -> Dict[str, Any]:
+        """
+        PRIVATE
+        Returns raw response of /api/class/ethpmPhysIf.json
+        """
         return self._get("class/ethpmPhysIf.json")
     
 
     def get_ifaces_states(self, filter_admin_down: bool = False, filter_absent: bool = False) -> List[Dict[str, Any]]:
-
+        """
+        Returns the List of dictionnaries reporting interfaces states and filtered down accordingly
+        In this dictionnary you may read:
+        adminSt, dn, lastLinkStChg, operSt, operStQual, operDuplex, operErrDisQual, readable_id
+        readable_id is a custom entry returning the interface in the form eth{%d}/{%d}
+        """
         ifaces = self._get_ifaces()
         if ifaces == {}:
             return []
@@ -553,7 +638,7 @@ class NXREST_API:
 
     def print_ifaces(self, filter_admin_down: bool = False, filter_absent: bool = False) -> None:
         """
-        Print current interfaces state. Can filter out absent interfaces and interface
+        Prints current interfaces state. Can filter out absent interfaces and interface
         down by an admin.
         """
 
@@ -585,6 +670,9 @@ class NXREST_API:
 
 
     def print_system_info(self):
+        """
+        Prints system info with the current time, hostname and uptime
+        """
         system = self._get_system()
         if system == {}:
             self.logger.log(f"Could not fetch system information for {self.switch_ip}.")
@@ -607,6 +695,11 @@ class NXREST_API:
 
 
     def get_ifaces_down_since(self, days: int) -> List[Dict[str, Any]]:
+        """
+        Returns a list of unused ports state given the time period
+        Do not check for admin_down interfaces.
+        Reports data in the ResultFile
+        """
         self.logger.log(f"Looking for unused interface since {days} days...")
         data = self.get_ifaces_states(filter_admin_down=True)
         
@@ -627,6 +720,11 @@ class NXREST_API:
         return unused_ports  
     
     def get_half_duplex(self) -> List[Dict[str, Any]]:
+        """
+        Returns a list of ports state running in half_duplex
+        Do not check for admin_down or unplugged interfaces.
+        Reports data in the ResultFile
+        """
         self.logger.log(f"Checking for interfaces in half duplex...")
         data = self.get_ifaces_states(filter_admin_down=True, filter_absent=True)
 
@@ -641,6 +739,11 @@ class NXREST_API:
 
 
     def get_ifaces_err_disabled(self) -> List[Dict[str, Any]]:
+        """
+        Returns a list of ports state that were shut because of an error
+        Do not check for admin_down or unplugged interfaces.
+        Reports data in the ResultFile
+        """
         self.result.init_err_disabled(self.switch_ip)
         data = self.get_ifaces_states(filter_admin_down=True, filter_absent=True)
 
@@ -650,7 +753,12 @@ class NXREST_API:
         return err_disabled
 
     def _post_interfaceEntity(self, children: List[Dict[str, Any]]) -> bool:
-
+        """
+        PRIVATE
+        POST the payload containing "interfaceEntity: <children>" to /api/mo/sys.json
+        To modify current switch interfaces configuration
+        Returns False if the modification failed.
+        """
         if self.demo_path != None:
             return False
 
@@ -679,6 +787,10 @@ class NXREST_API:
 
 
     def down_ifaces(self, ifaces: List[Dict[str, Any]]) -> None:
+        """
+        Shuts the interfaces passed in the List directly on the switch.
+        BEWARE: It may cause NDFC desync
+        """
         if len(ifaces) == 0:
             return
 
@@ -700,12 +812,18 @@ class NXREST_API:
             self.logger.log(f"Successfully disabled {[iface['readable_id'] for iface in ifaces]}")
 
     def _get_rmonEtherStats(self) -> Dict[str, Any]:
+        """
+        PRIVATE
+        Returns raw response of /api/class/rmonEtherStats.json
+        """
         return self._get("class/rmonEtherStats.json")
 
 
     def _get_parsed_rmonEtherStats(self) -> Dict[str, Dict[str, str]]:
         """
-        Returns a nested dictionnary wich first key is the dn, and where the second key correspond to the all the stat associated to this interface.
+        PRIVATE
+        Returns a nested dictionnary wich first key is the dn, 
+        and where the second key correspond to the all the stat associated to this interface.
         """
         rmonEtherStats = self._get_rmonEtherStats()
         if rmonEtherStats == {}:
@@ -729,7 +847,10 @@ class NXREST_API:
 
 
     def get_cRCAlignErrors(self, critical_delta: int, ref_dir_path: str) -> None:
-
+        """
+        Checks for cRC counters exceeding the provided threshold according to the reference data.
+        Reports issues in the ResultFile
+        """
         data = self._get_parsed_rmonEtherStats()
         if len(data) == 0:
             return
@@ -772,4 +893,8 @@ class NXREST_API:
 
 
     def _get_stp(self) -> Dict[str, Any]:
+        """
+        PRIVATE
+        Returns raw response of /api/class/stpIf.json
+        """
         return self._get("class/stpIf.json")

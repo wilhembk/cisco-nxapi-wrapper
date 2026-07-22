@@ -22,6 +22,11 @@ class SwitchConnection:
         self.hostname, self.serial = None, None
 
     def login(self):
+        """
+        Login into NXAPI-REST, fetching hostname and serial number if the connection succeeded.
+        Returns False in case of connection failure
+        Call logout to shut down the connection gracefully
+        """
         res = self.rest.login()
         if res:
             # Getting hostname by default so it appears in the result file
@@ -30,9 +35,17 @@ class SwitchConnection:
             
     
     def logout(self):
+        """
+        Closes the NXAPI-REST connection gracefully
+        """
         return self.rest.logout()
     
     def get_ifaces_down_since(self, days: int) -> List[Dict[str, Any]]:
+        """
+        Returns a list of unused ports state given the time period
+        Do not check for admin_down interfaces.
+        Reports data in the ResultFile
+        """
         return self.rest.get_ifaces_down_since(days)
     
     def down_ifaces(self, ifaces: List[Dict[str, Any]]) -> None:
@@ -40,16 +53,38 @@ class SwitchConnection:
         return self.rest.down_ifaces(ifaces)
     
     def get_half_duplex(self) -> List[Dict[str, Any]]:
+        """
+        Returns a list of ports state running in half_duplex
+        Do not check for admin_down or unplugged interfaces.
+        Reports data in the ResultFile
+        """
         return self.rest.get_half_duplex()
     
     def get_cRCAlignErrors(self, critical_delta: int, ref_file_path: str) -> None:
+        """
+        Checks for cRC counters exceeding the provided threshold according to the reference data.
+        Reports issues in the ResultFile
+        """
         return self.rest.get_cRCAlignErrors(critical_delta, ref_file_path)
     
     def check_for_tranceiver_alerts(self, filter_warn: bool = False) -> None:
+        """
+        Checks transceivers status and alerts in the ResultFile in case of issues
+        if filter_warn is set to True, warnings are not issued
+        """
         return self.cli.check_for_tranceiver_alerts(filter_warn)
     
     def check_ptp(self, since: int, log_level: int, critical_correction: int):
+        """
+        Checks for PTP unusual behaviour (GM changes, and correction)
+        Reports in the ResultFile
+        """
         return self.cli.check_ptp(since, log_level, critical_correction)
 
     def get_ifaces_err_disabled(self):
+        """
+        Returns a list of ports state that were shut because of an error
+        Do not check for admin_down or unplugged interfaces.
+        Reports data in the ResultFile
+        """
         return self.rest.get_ifaces_err_disabled()

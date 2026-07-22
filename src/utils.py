@@ -40,6 +40,10 @@ class Logger:
     log_file_path = ""
 
     def __init__(self, path: str):
+        """
+        Initialize Logger object, checking the file is writable.
+        If not, outputs inside the console.
+        """
         self.log_dir_path = path
         lt = time.localtime()
         self.log_file_path = \
@@ -54,7 +58,10 @@ class Logger:
 
 
     def log(self, msg: str) -> None:
-
+        """
+        Logs the given message with the date and time attached to it.
+        Outputs in stdout if the file is not writable
+        """
         log_msg = f"{time.strftime('[%a, %d %b %Y %H:%M:%S]', time.localtime())} {msg}"
         if self.log_file_path == "" or self.f == None:
             # No logs files. We print in stdout
@@ -64,13 +71,23 @@ class Logger:
         self.f.write(log_msg+"\n")
 
     def end(self) -> None:
+        """
+        Closes the file descriptor if it exists
+        """
         if not self.f:
             return
         self.f.close()
 
 
 def down_ifaces(ifaces: List[Dict[str, Any]], auto_down: int, sw: SwitchConnection, ndfc_conn: NDFC_API | None, logger: Logger):
-                
+    """
+    Shuts down the interfaces according to the policy:
+    auto_down:
+    1 - Only on the switch
+    2 - Only on NDFC
+    3 - Try NDFC but if the switch is not managed by it, do it on the switch
+    There are safeguards for option 3, especially if the NDFC instance is unreachable: nothing will be done
+    """    
     if auto_down == 1:
         sw.down_ifaces(ifaces)
     
