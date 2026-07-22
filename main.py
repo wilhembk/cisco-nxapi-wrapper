@@ -8,7 +8,7 @@ from src.result_file import ResultFile
 from dotenv import load_dotenv
 import atexit
 
-def close_files(result, logger):
+def close_files(result: ResultFile, logger: Logger):
     result.commit()
     logger.end()
 
@@ -24,7 +24,7 @@ load_dotenv() # Loading the .env file containing password and username for the s
 
 # 3. Check for your flag with args.<your_flag_name>
 
-def main(args):
+def main(args: argparse.Namespace):
 
     
     switchuser=os.getenv("SWITCH_USER_ID")
@@ -111,7 +111,7 @@ def main(args):
 if __name__ == "__main__":
 
     counter = 0
-    def critical_delta(input):
+    def critical_delta(input: int | str) -> int | str:
         global counter
         if counter == 0:
             counter = 1

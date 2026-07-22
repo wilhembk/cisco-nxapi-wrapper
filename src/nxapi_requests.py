@@ -1,12 +1,17 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Dict, Any, List, Tuple, cast
+
 import requests
 import json
 import re
-from glom import glom 
-from typing import Dict
 import urllib3
-from src.utils import ANSI, Logger
-from src.result_file import ResultFile
+from glom import glom  # type: ignore
 from datetime import datetime
+
+if TYPE_CHECKING:
+    from src.utils import ANSI, Logger
+    from src.result_file import ResultFile
+
 
 # The certificate is self-signed. So we disable warnings.
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) 
@@ -44,7 +49,7 @@ class NXCLI_API:
         self.result = result
         self.endpoint = f"https://{switch_ip}/ins"
 
-    def _wrap_cmd(self, cmd: str, method: str = "cli"):
+    def _wrap_cmd(self, cmd: str, method: str = "cli") -> Dict[str, Any]:
         """
         Wrap the cmd inside the payload to send to the switch.
         The cmd requires authentication on the switch for it to work
@@ -63,7 +68,7 @@ class NXCLI_API:
 
 
         myheaders={'content-type':'application/json-rpc'}
-        payload=[
+        payload: List[Dict[str, Any]] =[
             {
                 "jsonrpc": "2.0",
                 "method": method,
@@ -97,7 +102,7 @@ class NXCLI_API:
         return response
     
 
-    def get_transceiver_details(self):
+    def get_transceiver_details(self) -> List[Dict[str, Any]]:
         """Returns the details of the transceivers, filtered down to plugged ones"""
 
         data = self._wrap_cmd("show interface transceiver details")
@@ -105,15 +110,16 @@ class NXCLI_API:
             return []
 
         try:
-            res = glom(data, "result.body.TABLE_interface.ROW_interface")
-        except:
-            self.logger.log("NXAPI returned incoherent results when checking for transceivers")
+            res = cast(List[Dict[str, Any]], glom(data, "result.body.TABLE_interface.ROW_interface"))
+            # glom returns unknown, we have to ignore its return type
+        except Exception as err:
+            self.logger.log(f"NXAPI returned incoherent results when checking for transceivers \n{err}")
             return []
 
-        return list(filter(lambda iface: iface["sfp"] == "present",  res))
+        return list(filter(lambda iface: iface["sfp"] == "present",  res)) # type: ignore
 
     
-    def check_for_tranceiver_alerts(self, filter_warn=False):
+    def check_for_tranceiver_alerts(self, filter_warn: bool = False) -> None:
         self.logger.log(f"Checking for alerts in transceiver status...")
         transceivers = self.get_transceiver_details()
 
@@ -138,7 +144,7 @@ class NXCLI_API:
                     self.check_current(iface, lane, filter_warn)
 
 
-    def check_light_level_lane(self, iface, lane, filter_warn):
+    def check_light_level_lane(self, iface: str, lane: Dict[str, Any], filter_warn: bool) -> None:
 
         lane_number = lane["lane_number"]
 
@@ -189,7 +195,7 @@ class NXCLI_API:
                 self.result.set_lane_rx(self.switch_ip, iface, lane_number, rx, rx_warn_hi)
             return
 
-    def check_temp(self, iface, lane, filter_warn):
+    def check_temp(self, iface: str, lane: Dict[str, Any], filter_warn: bool) -> None:
 
         temp_alrm_hi = float(lane["temp_alrm_hi"])
         temp_alrm_low = float(lane["temp_alrm_lo"])
@@ -212,7 +218,7 @@ class NXCLI_API:
                 self.result.set_temp(self.switch_ip, iface, temp, temp_warn_hi)
 
         
-    def check_current(self, iface, lane, filter_warn):
+    def check_current(self, iface: str, lane: Dict[str, Any], filter_warn: bool) -> None:
 
         current_alrm_hi = float(lane["current_alrm_hi"])
         current_alrm_low = float(lane["current_alrm_lo"])
@@ -236,7 +242,7 @@ class NXCLI_API:
 
     
     
-    def check_voltage(self, iface, lane, filter_warn):
+    def check_voltage(self, iface: str, lane: Dict[str, Any], filter_warn: bool) -> None:
 
         volt_alrm_hi = float(lane["volt_alrm_hi"])
         volt_alrm_low = float(lane["volt_alrm_lo"])
@@ -261,50 +267,50 @@ class NXCLI_API:
     def _get_ptp_corrections(self):
         """Returns a list in chronological order showing ptp corrections"""
         try:
-            res = glom(self._wrap_cmd("show ptp corrections"), "result.body.TABLE_ptp.ROW_ptp")
+            res = cast(List[Dict[str, Any]], glom(self._wrap_cmd("show ptp corrections"), "result.body.TABLE_ptp.ROW_ptp"))
         except:
             res = []
         return res
     
-    def _get_ptp_parent(self):
+    def _get_ptp_parent(self) -> Dict[str, Any]:
         data = self._wrap_cmd("show ptp parent")
         if data == {}:
             return {}
 
         try:
-            return glom(data, "result.body")
+            return cast(Dict[str, Any], glom(data, "result.body"))
         except:
             self.logger.log("NXAPI returned incoherent results when checking PTP parent")
             return {}
     
-    def _get_clock_id(self):
+    def _get_clock_id(self) -> str:
         data = self._wrap_cmd("show ptp clock")
         if data == {}:
             return ""
 
         try:
-            return glom(data, "result.body.clock-id")
+            return cast(str, glom(data, "result.body.clock-id"))
         except:
             self.logger.log("NXAPI returned incoherent results when checking PTP clock")
             return ""
     
 
-    def _get_ptp_logs(self):
+    def _get_ptp_logs(self) -> str:
         try:
-            res = glom(self._wrap_cmd("show logging logfile | grep -i ptp", method="cli_ascii"), "result.msg")
+            res = cast(str, glom(self._wrap_cmd("show logging logfile | grep -i ptp", method="cli_ascii"), "result.msg"))
         except:
             res = ""
         return res
 
 
-    def get_critical_ptp_corrections(self, critical_correction: int):
+    def get_critical_ptp_corrections(self, critical_correction: int) -> List[Dict[str, Any]]:
 
         self.result.set_ptp(self.switch_ip, critical_correction=critical_correction)
 
         corrections = self._get_ptp_corrections()
         if len(corrections) == 0:
             # Surely a grandmaster.
-            return 
+            return []
         
         res = list(filter(lambda e: int(e["correction-val"]) >= critical_correction, corrections))
         res.reverse()
@@ -312,7 +318,7 @@ class NXCLI_API:
 
         return res
 
-    def get_ptp_gm(self):
+    def get_ptp_gm(self) -> Tuple[str, str, str] | None:
         clock_data = self._get_ptp_parent()
         if clock_data == {}:
             return None
@@ -326,14 +332,14 @@ class NXCLI_API:
         self.result.set_ptp(self.switch_ip, clock_parent_and_gm=clock_parent_and_gm)
         return clock_parent_and_gm
 
-    def get_gm_change(self, log_level: int, since: int):
+    def get_gm_change(self, log_level: int, since: int) -> List[Tuple[datetime, str, str]]:
         # Grandmaster clock has changed {MAC_1} to {MAC_2}
 
 
         logs = self._get_ptp_logs()
         self.result.set_ptp(self.switch_ip, log_ptp=log_level, logs=logs)
 
-        res = []    
+        res: List[Tuple[datetime, str, str]] = []
 
         for line in logs.split("\n"):
             pattern = re.compile(r"(?P<date>\d{4}\s+[A-Za-z]{3}\s+\d{1,2}\s+\d{2}:\d{2}:\d{2}).*?Grandmaster clock has changed from (?P<mac_init>[0-9a-fA-F:]+) to (?P<mac_dest>[0-9a-fA-F:]+)")
@@ -355,7 +361,7 @@ class NXCLI_API:
         self.result.set_ptp(self.switch_ip, gm_changes=res)
         return res
     
-    def check_ptp(self, since: int, log_level: int, critical_correction: int):
+    def check_ptp(self, since: int, log_level: int, critical_correction: int) -> None:
         self.get_ptp_gm()
         self.get_critical_ptp_corrections(critical_correction)
         self.get_gm_change(log_level, since)
@@ -370,12 +376,12 @@ class NXREST_API:
         self.switch_ip = switch_ip
         self.demo_path = demo_path
         self.timeout = timeout
-        self.hostname = None
-        self.serial = None
+        self.hostname: str | None = None
+        self.serial: str | None = None
         self.api_url = f"https://{self.switch_ip}/api/"
         self.logger = logger
         self.result = result
-        self.auth_cookie = {}
+        self.auth_cookie: Dict[str, str] = {}
 
 
     def login(self):
@@ -446,7 +452,7 @@ class NXREST_API:
         self.auth_cookie = {}
 
 
-    def _get(self, point: str):
+    def _get(self, point: str) -> Dict[str, Any]:
 
         if self.demo_path:
             self.logger.log(f"Demo mode is activated. Fetching from local file {self.demo_path}/{self.switch_ip}/{point}")
@@ -476,12 +482,12 @@ class NXREST_API:
             return {}
         return response.json()
     
-    def _get_system(self):
+    def _get_system(self) -> Dict[str, Any]:
         return self._get("mo/sys.json")
 
-    def get_hostname_and_serial(self):
+    def get_hostname_and_serial(self) -> Tuple[str | None, str | None]:
         if self.hostname != None:
-            return self.hostname
+            return self.hostname, self.serial
         self.logger.log(f"Getting switch hostname and serial number")
         
         data = self._get_system()
@@ -490,8 +496,8 @@ class NXREST_API:
             return None, None
 
         try:
-            self.hostname = glom(data, ("imdata", ["topSystem.attributes.name"]))[0]
-            self.serial = glom(data, ("imdata", ["topSystem.attributes.serial"]))[0]
+            self.hostname = cast(List[str], glom(data, ("imdata", ["topSystem.attributes.name"])))[0]
+            self.serial = cast(List[str], glom(data, ("imdata", ["topSystem.attributes.serial"])))[0]
         except:
             self.logger.log(f"Could not parse hostname and serial for {self.switch_ip}")
             return None, None
@@ -500,15 +506,15 @@ class NXREST_API:
 
 
 
-    def _get_faults(self):
+    def _get_faults(self) -> Dict[str, Any]:
         return self._get("class/faultInst.json")
 
 
-    def _get_ifaces(self):
+    def _get_ifaces(self) -> Dict[str, Any]:
         return self._get("class/ethpmPhysIf.json")
     
 
-    def get_ifaces_states(self, filter_admin_down=False, filter_absent=False) -> list:
+    def get_ifaces_states(self, filter_admin_down: bool = False, filter_absent: bool = False) -> List[Dict[str, Any]]:
 
         ifaces = self._get_ifaces()
         if ifaces == {}:
@@ -527,15 +533,15 @@ class NXREST_API:
                 )
         
         try:
-            data = glom(ifaces, keep)
+            data = cast(List[Dict[str, Any]], glom(ifaces, keep))
         except:
             self.logger.log("NXAPI returned incoherent interface results")
             return []
         if filter_admin_down:
-            data = list(filter(lambda iface: iface["adminSt"].upper() != "DOWN", data))
+            data = [iface for iface in data if str(iface.get("adminSt", "")).upper() != "DOWN"]
 
         if filter_absent:
-            data = list(filter(lambda iface: iface["operStQual"].upper() != "XCVR-ABSENT", data))
+            data = [iface for iface in data if str(iface.get("operStQual", "")).upper() != "XCVR-ABSENT"]
 
 
         for i in range(len(data)):
@@ -545,7 +551,7 @@ class NXREST_API:
         return data
 
 
-    def print_ifaces(self, filter_admin_down=False, filter_absent=False):
+    def print_ifaces(self, filter_admin_down: bool = False, filter_absent: bool = False) -> None:
         """
         Print current interfaces state. Can filter out absent interfaces and interface
         down by an admin.
@@ -592,7 +598,7 @@ class NXREST_API:
                 }])
         
         try:
-            data = glom(system, keep)[0]
+            data = cast(Dict[str, Any], glom(system, keep)[0])
         except:
             self.logger.log(f"Could not parse system information for {self.switch_ip}.")
             return
@@ -600,17 +606,17 @@ class NXREST_API:
 
 
 
-    def get_ifaces_down_since(self, days):
+    def get_ifaces_down_since(self, days: int) -> List[Dict[str, Any]]:
         self.logger.log(f"Looking for unused interface since {days} days...")
         data = self.get_ifaces_states(filter_admin_down=True)
         
         today = datetime.today()
 
         # We check all down interfaces in data
-        unused_ports = []
-        for iface in filter(lambda iface: iface["operSt"].upper() != "UP", data):
+        unused_ports: List[Dict[str, Any]] = []
+        for iface in [iface for iface in data if str(iface.get("operSt", "")).upper() != "UP"]:
             # iface["laistLinkStChg"] = "YYYY-mm-ddTHH:MM:SS.ms+GMT"
-            down_since = datetime.strptime(iface["lastLinkStChg"].split("T")[0], "%Y-%m-%d")
+            down_since = datetime.strptime(str(iface.get("lastLinkStChg", "")).split("T")[0], "%Y-%m-%d")
             down_days = (today - down_since).days
             if down_days < days:
                 continue
@@ -620,13 +626,13 @@ class NXREST_API:
         self.result.set_unused_ports(ip_addr=self.switch_ip, port_list=unused_ports, unused_since=days)
         return unused_ports  
     
-    def get_half_duplex(self):
+    def get_half_duplex(self) -> List[Dict[str, Any]]:
         self.logger.log(f"Checking for interfaces in half duplex...")
         data = self.get_ifaces_states(filter_admin_down=True, filter_absent=True)
 
-        half_duplex_ifaces = []
-        for iface in filter(lambda iface: iface["operSt"].upper() != "DOWN", data):
-            if iface["operDuplex"] == "half":
+        half_duplex_ifaces: List[Dict[str, Any]] = []
+        for iface in [iface for iface in data if str(iface.get("operSt", "")).upper() != "DOWN"]:
+            if str(iface.get("operDuplex", "")) == "half":
                 self.logger.log(f"{iface['readable_id']} is in half duplex !!!")
                 half_duplex_ifaces.append(iface)
 
@@ -634,16 +640,16 @@ class NXREST_API:
         return half_duplex_ifaces
 
 
-    def get_ifaces_err_disabled(self):
+    def get_ifaces_err_disabled(self) -> List[Dict[str, Any]]:
         self.result.init_err_disabled(self.switch_ip)
         data = self.get_ifaces_states(filter_admin_down=True, filter_absent=True)
 
-        err_disabled = list(filter(lambda iface: iface["operErrDisQual"].upper() != "UP", data))
+        err_disabled = [iface for iface in data if str(iface.get("operErrDisQual", "")).upper() != "UP"]
         for iface in err_disabled:
             self.result.add_err_disabled(self.switch_ip, iface["readable_id"], iface["operErrDisQual"])
         return err_disabled
 
-    def _post_interfaceEntity(self, children):
+    def _post_interfaceEntity(self, children: List[Dict[str, Any]]) -> bool:
 
         if self.demo_path != None:
             return False
@@ -672,15 +678,15 @@ class NXREST_API:
             
 
 
-    def down_ifaces(self, ifaces):
+    def down_ifaces(self, ifaces: List[Dict[str, Any]]) -> None:
         if len(ifaces) == 0:
             return
 
-        children = [
+        children: List[Dict[str, Any]] = [
             {
                 "l1PhysIf": {
                     "attributes": {
-                        "dn": iface["dn"].rstrip("/phys"),
+                        "dn": str(iface.get("dn", "")).rstrip("/phys"),
                         "adminSt": "down"
                     }
                 }
@@ -693,7 +699,7 @@ class NXREST_API:
         if success:
             self.logger.log(f"Successfully disabled {[iface['readable_id'] for iface in ifaces]}")
 
-    def _get_rmonEtherStats(self):
+    def _get_rmonEtherStats(self) -> Dict[str, Any]:
         return self._get("class/rmonEtherStats.json")
 
 
@@ -708,7 +714,7 @@ class NXREST_API:
             return {}
         
         try:
-            data = glom(rmonEtherStats, ("imdata", ["rmonEtherStats.attributes"]))
+            data = cast(List[Dict[str, Any]], glom(rmonEtherStats, ("imdata", ["rmonEtherStats.attributes"])))
         except:
             self.logger.log("NXAPI returned incoherent results when checking RMON statistics")
             return {}
@@ -722,7 +728,7 @@ class NXREST_API:
         }
 
 
-    def get_cRCAlignErrors(self, critical_delta, ref_dir_path):
+    def get_cRCAlignErrors(self, critical_delta: int, ref_dir_path: str) -> None:
 
         data = self._get_parsed_rmonEtherStats()
         if len(data) == 0:
@@ -737,9 +743,9 @@ class NXREST_API:
             print(f"{ANSI.COLOR_RED}[ERROR] CRC Reference file {ref_file_path} is unreadable. Assuming no reference... {ANSI.RESET_ALL}")
             f = None
 
-        ref_data = {}
+        ref_data: Dict[str, Dict[str, Any]] = {}
         if f: 
-            ref_data = json.load(f)
+            ref_data = cast(Dict[str, Dict[str, Any]], json.load(f))
 
         for dn in data.keys():
             current_cRC = int(data[dn]["cRCAlignErrors"])
@@ -765,5 +771,5 @@ class NXREST_API:
 
 
 
-    def _get_stp(self):
+    def _get_stp(self) -> Dict[str, Any]:
         return self._get("class/stpIf.json")

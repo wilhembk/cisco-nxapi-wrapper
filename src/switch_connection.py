@@ -1,6 +1,11 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Any, Dict, List
+
 from src.nxapi_requests import NXCLI_API, NXREST_API
-from src.utils import Logger
-from src.result_file import ResultFile
+
+if TYPE_CHECKING:
+    from src.utils import Logger
+    from src.result_file import ResultFile
 
 # NOTE: `SwitchConnection` is the public facade used by `main.py`.
 # When you add a new monitoring method to `NXREST_API` or `NXCLI_API`, add a
@@ -27,20 +32,20 @@ class SwitchConnection:
     def logout(self):
         return self.rest.logout()
     
-    def get_ifaces_down_since(self, days):
+    def get_ifaces_down_since(self, days: int) -> List[Dict[str, Any]]:
         return self.rest.get_ifaces_down_since(days)
     
-    def down_ifaces(self, ifaces):
+    def down_ifaces(self, ifaces: List[Dict[str, Any]]) -> None:
         """Admin down interfaces with REST API. BEWARE of NDFC compatibility issues."""
         return self.rest.down_ifaces(ifaces)
     
-    def get_half_duplex(self):
+    def get_half_duplex(self) -> List[Dict[str, Any]]:
         return self.rest.get_half_duplex()
     
-    def get_cRCAlignErrors(self, critical_delta, ref_file_path):
+    def get_cRCAlignErrors(self, critical_delta: int, ref_file_path: str) -> None:
         return self.rest.get_cRCAlignErrors(critical_delta, ref_file_path)
     
-    def check_for_tranceiver_alerts(self, filter_warn=False):
+    def check_for_tranceiver_alerts(self, filter_warn: bool = False) -> None:
         return self.cli.check_for_tranceiver_alerts(filter_warn)
     
     def check_ptp(self, since: int, log_level: int, critical_correction: int):

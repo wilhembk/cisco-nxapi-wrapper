@@ -1,9 +1,15 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Dict, List, Any, cast
 
 import sys
 import time
-from glom import glom
+from glom import glom # type: ignore
 
-class ANSI():
+if TYPE_CHECKING:
+    from src.ndfc_requests import NDFC_API
+    from switch_connection import SwitchConnection
+
+class ANSI:
     RESET_ALL = "\x1b[0m" if sys.stdout.isatty() else ""
     COLOR_BLACK = "\x1b[30m" if sys.stdout.isatty() else ""
     COLOR_RED =  "\x1b[31m" if sys.stdout.isatty() else ""
@@ -47,7 +53,7 @@ class Logger:
             self.log_file_path = ""
 
 
-    def log(self, msg):
+    def log(self, msg: str) -> None:
 
         log_msg = f"{time.strftime('[%a, %d %b %Y %H:%M:%S]', time.localtime())} {msg}"
         if self.log_file_path == "" or self.f == None:
@@ -57,29 +63,37 @@ class Logger:
         
         self.f.write(log_msg+"\n")
 
-    def end(self):
+    def end(self) -> None:
         if not self.f:
             return
         self.f.close()
 
 
-def down_ifaces(ifaces, auto_down, sw, ndfc_conn, logger):
+def down_ifaces(ifaces: List[Dict[str, Any]], auto_down: int, sw: SwitchConnection, ndfc_conn: NDFC_API | None, logger: Logger):
                 
     if auto_down == 1:
         sw.down_ifaces(ifaces)
     
     if auto_down == 2:
-        if ndfc_conn == None or not ndfc_conn.working_connection:
+        if ndfc_conn == None:
             logger.log("Tried to down interfaces via NDFC, but connection was not established.")
             return
 
-        ports = glom(ifaces, ["readable_id"])
+        ports = cast(List[str], glom(ifaces, ["readable_id"]))
+        if sw.serial == None:
+            logger.log("The switch has no serial attached. No ports were shut (this shouldn't have happenned)")
+            return 
+        
         ndfc_conn.shut_ports(sw.switch_ip, sw.serial, ports)
 
     if auto_down == 3:
-        if ndfc_conn == None or not ndfc_conn.working_connection:
+        if ndfc_conn == None:
             logger.log("Tried to down interfaces via NDFC, but connection was not established.")
             return
+        
+        if sw.serial == None:
+            logger.log("The switch has no serial attached. No ports were shut (this shouldn't have happenned)")
+            return 
         
         if ndfc_conn.is_managed_by_ndfc(sw.serial) == None:
             logger.log(f"Could not determined if {sw.serial} is managed on NDFC. Doing nothing.")
@@ -89,5 +103,5 @@ def down_ifaces(ifaces, auto_down, sw, ndfc_conn, logger):
             sw.down_ifaces(ifaces)
             return 
 
-        ports = glom(ifaces, ["readable_id"])
+        ports = cast(List[str], glom(ifaces, ["readable_id"]))
         ndfc_conn.shut_ports(sw.switch_ip, sw.serial, ports)

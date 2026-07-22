@@ -1,9 +1,8 @@
 import time
-
 from enum import Enum
 from src.utils import ANSI
 from abc import ABC, abstractmethod
-from typing import Dict, Tuple, cast, Any, List
+from typing import Dict, Tuple, cast, Any, List, Callable
 from datetime import datetime
 
 class Label(Enum):
@@ -37,7 +36,7 @@ class Label(Enum):
 
 class ResultOutput(ABC):
     @abstractmethod
-    def write(self, output):
+    def write(self, output: Callable[[str], None]) -> None:
         pass
 
 
@@ -47,17 +46,17 @@ class HostInfo(ResultOutput):
         self.hostname = hostname
         self.serial_number = serial_number
     
-    def write(self, output):
+    def write(self, output: Callable[[str], None]) -> None:
         output(f"=============[ Switch: {self.hostname} ({self.ip_addr} | SERIAL: {self.serial_number}) ]=============\n\n")
 
 
 class UnusedPorts(ResultOutput):
-    def __init__(self, port_list, unused_since, successful_down):
-        self.port_list = port_list if port_list != None else []
-        self.unused_since = unused_since if unused_since != None else 0
-        self.successful_down = successful_down if successful_down != None else False
+    def __init__(self, port_list: List[Dict[str, Any]] | None, unused_since: int | None, successful_down: bool | None):
+        self.port_list: List[Dict[str, Any]] = port_list if port_list != None else []
+        self.unused_since: int = unused_since if unused_since != None else 0
+        self.successful_down: bool = successful_down if successful_down != None else False
 
-    def write(self, output):
+    def write(self, output: Callable[[str], None]) -> None:
         if len(self.port_list) == 0:
             output("There are no unused ports.\n\n")
             return
@@ -73,10 +72,10 @@ class UnusedPorts(ResultOutput):
         output("\n")
 
 class HalfDuplexIfaces(ResultOutput):
-    def __init__(self, port_list):
-        self.port_list = port_list
+    def __init__(self, port_list: List[Dict[str, Any]]):
+        self.port_list: List[Dict[str, Any]] = port_list
 
-    def write(self, output):
+    def write(self, output: Callable[[str], None]) -> None:
         if len(self.port_list) == 0:
             output("There are no interfaces running in half duplex.\n\n")
             return
@@ -90,7 +89,7 @@ class ErrDisabledIfaces(ResultOutput):
     def __init__(self):
         self.ifaces: List[Tuple[str, str]] = [] # (readable-iface-name, error type)
     
-    def write(self, output):
+    def write(self, output: Callable[[str], None]) -> None:
         if len(self.ifaces) == 0:
             output("There are no interfaces that are disabled due to an error\n\n")
             return
@@ -128,7 +127,7 @@ class TransceiverInfo(ResultOutput):
         
 
 
-    def write(self, output):
+    def write(self, output: Callable[[str], None]) -> None:
 
         if(len(self.notification) == 0):
             output("There are no issues with the transceivers' hardware.\n\n")
@@ -217,7 +216,7 @@ class cRCCounter(ResultOutput):
         self.deltas: Dict[str, Tuple[int, int, int]] = {} # dn -> (delta, current_cRC, reference_cRC)
         self.critical_delta = critical_delta
 
-    def write(self, output):
+    def write(self, output: Callable[[str], None]) -> None:
 
         if len(self.deltas) == 0:
             output("There are no additional cRC or Align errors compared to the last check\n\n")
@@ -253,7 +252,7 @@ class PTPInfoGlobal(ResultOutput):
         self.gm_used[gm].append(clock)
 
 
-    def write(self, output):
+    def write(self, output: Callable[[str], None]) -> None:
         gm_clocks = list(self.gm_used.keys())
         if len(gm_clocks) == 1:
             output(f"PTP: All switches are synced with the same Grandmaster clock: {gm_clocks[0]}\n\n")
@@ -280,12 +279,12 @@ class PTPInfoLocal(ResultOutput):
         self.clock_mac = "00:00:00:00:00:00"
         self.gm_mac = "00:00:00:00:00:00"
         self.critical_correction = 0
-        self.gm_changes = []
-        self.high_corrections = []
-        self.logs = ""
+        self.gm_changes: List[Tuple[datetime, str, str]] = []
+        self.high_corrections: List[Dict[str, Any]] = []
+        self.logs: str = ""
     
 
-    def write(self, output):
+    def write(self, output: Callable[[str], None]) -> None:
         if self.clock_mac == self.gm_mac:
             output(f"> This switch's clock {self.clock_mac} is Grandmaster\n")
         else:
@@ -406,7 +405,7 @@ class ResultFile:
         self._end()
 
 
-    def set_unused_ports(self, ip_addr, port_list = None, unused_since = None, successful_down = None):
+    def set_unused_ports(self, ip_addr: str, port_list: List[Dict[str, Any]] | None = None, unused_since: int | None = None, successful_down: bool | None = None) -> None:
 
         self._init_dict(ip_addr)
 
@@ -439,7 +438,7 @@ class ResultFile:
 
 
     # NOTE: Those are the simplest helper methods to populate your class output
-    def set_half_duplex_ifaces(self, ip_addr, port_list):
+    def set_half_duplex_ifaces(self, ip_addr: str, port_list: List[Dict[str, Any]]) -> None:
         self._init_dict(ip_addr)
         self.switch_outputs[ip_addr][Label.HALF_DUPLEX] = HalfDuplexIfaces(port_list)   
         
@@ -469,7 +468,7 @@ class ResultFile:
         transceiver_info.notification[iface][lane_number]["connected"] = connected
 
 
-    def set_lane_tx(self, ip_addr: str, iface: str, lane_number: str, tx_pwr: float, tx_threshold: float, is_alert=False):
+    def set_lane_tx(self, ip_addr: str, iface: str, lane_number: str, tx_pwr: float, tx_threshold: float, is_alert: bool = False) -> None:
         
         transceiver_info = self._init_set_lane(ip_addr, iface, lane_number)
         transceiver_info.notification[iface][lane_number]["tx"] = tx_pwr
@@ -477,21 +476,21 @@ class ResultFile:
         transceiver_info.notification[iface][lane_number]["status_tx"] = "WARN" if not is_alert else "ALERT"
 
 
-    def set_lane_rx(self, ip_addr: str, iface: str, lane_number: str, rx_pwr: float, rx_threshold: float, is_alert=False):
+    def set_lane_rx(self, ip_addr: str, iface: str, lane_number: str, rx_pwr: float, rx_threshold: float, is_alert: bool = False) -> None:
         
         transceiver_info = self._init_set_lane(ip_addr, iface, lane_number)
         transceiver_info.notification[iface][lane_number]["rx"] = rx_pwr
         transceiver_info.notification[iface][lane_number]["rx_threshold"] = rx_threshold
         transceiver_info.notification[iface][lane_number]["status_rx"] = "WARN" if not is_alert else "ALERT"
 
-    def set_temp(self, ip_addr: str, iface: str, temp_pwr: float, temp_threshold: float, is_alert=False):
+    def set_temp(self, ip_addr: str, iface: str, temp_pwr: float, temp_threshold: float, is_alert: bool = False) -> None:
         
         transceiver_info = self._init_set_lane(ip_addr, iface, "all")
         transceiver_info.notification[iface]["all"]["temp"] = temp_pwr
         transceiver_info.notification[iface]["all"]["temp_threshold"] = temp_threshold
         transceiver_info.notification[iface]["all"]["status_temp"] = "WARN" if not is_alert else "ALERT"
 
-    def set_voltage(self, ip_addr: str, iface: str, voltage_pwr: float, voltage_threshold: float, is_alert=False):
+    def set_voltage(self, ip_addr: str, iface: str, voltage_pwr: float, voltage_threshold: float, is_alert: bool = False) -> None:
         
         transceiver_info = self._init_set_lane(ip_addr, iface, "all")
         transceiver_info.notification[iface]["all"]["voltage"] = voltage_pwr
@@ -499,7 +498,7 @@ class ResultFile:
         transceiver_info.notification[iface]["all"]["status_voltage"] = "WARN" if not is_alert else "ALERT"
 
 
-    def set_current(self, ip_addr: str, iface: str, current_pwr: float, current_threshold: float, is_alert=False):
+    def set_current(self, ip_addr: str, iface: str, current_pwr: float, current_threshold: float, is_alert: bool = False) -> None:
         
         transceiver_info = self._init_set_lane(ip_addr, iface, "all")
         transceiver_info.notification[iface]["all"]["current"] = current_pwr

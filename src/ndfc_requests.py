@@ -1,22 +1,30 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, List, Dict
+
 import requests
-from requests import Response
 import json
 import urllib3
-from src.utils import Logger
-from src.result_file import ResultFile
-from typing import List
+
+if TYPE_CHECKING:
+    from requests import Response
+    from src.utils import Logger
+    from src.result_file import ResultFile
 
 # The certificate is self-signed. So we disable warnings.
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning) 
 
 class NDFC_API:
     def __init__(self, domain: str, username: str, password: str, logger: Logger, result: ResultFile, timeout: int = 90):
+        """
+        Connection to NDFC API
+        Throws Exception if it can't retrieve the connection token.
+        """
         self.domain = domain
         self.username = username
         self.password = password
         self.logger = logger
         self.result = result
-        self.ndfc_managed = dict()
+        self.ndfc_managed: Dict[str, bool] = dict() # serial : managed_by_ndfc ?
         self.timeout = timeout
         self.token = self._get_jwttoken()
         if self.token == "":
@@ -24,7 +32,11 @@ class NDFC_API:
         
 
 
-    def _get_jwttoken(self):
+    def _get_jwttoken(self) -> str:
+        """
+        PRIVATE
+        Returns the jwttoken required to authenticate API calls to NDFC
+        """
 
         headers={"content-type":"application/json"}
         payload={
@@ -52,6 +64,12 @@ class NDFC_API:
 
 
     def _get_endpoint(self, endpoint: str) -> Response | None:
+        """
+        PRIVATE
+        Wraps the GET request of the https://<ip_ndfc>/<endpoint> with the
+        correct authorization header.
+        Returns None in case of an error.
+        """
 
         if self.token == "":
             return None
@@ -73,6 +91,12 @@ class NDFC_API:
         return res
     
     def _post_endpoint(self, endpoint: str, payload: str) -> Response | None:
+        """
+        PRIVATE
+        Wraps the POST request of the https://<ip_ndfc>/<endpoint> with the
+        correct authorization header.
+        Returns None in case of an error.
+        """
 
         if self.token == "":
             return None
@@ -101,6 +125,8 @@ class NDFC_API:
         Check if NDFC manages this serial number by getting intent-interfaces
         if intent-interfaces is empty, we say that ndfc does not
         manage this switch.
+        Returns None if management by NDFC is unsure because of 
+        an internal server error, or a failed connection.
         """
 
         if self.token == "":
@@ -129,7 +155,10 @@ class NDFC_API:
     
 
     def shut_ports(self, switch_ip: str, serial_number: str, ports: List[str]) -> bool:
-        """Returns if the shutdown was successfull or not"""
+        """
+        Shuts the requested ports on NDFC and push the result in the ResultFile
+        Returns if the shutdown was successfull or not
+        """
 
         if len(ports) == 0:
             return True
@@ -141,7 +170,7 @@ class NDFC_API:
 
         formatted_ports = [iface.replace("eth", "Ethernet") for iface in ports]
 
-        payload = {
+        payload: Dict[str, str | List[Dict[str, str]]] = {
             "operation": "shut",
             "interfaces": [
                 {
