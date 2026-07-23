@@ -203,6 +203,14 @@ Pour consulter la documentation il faut aller dans `Help Center > Lan Fabric > L
 
 Le script a pour vocation d'être un cronjob. Il prend en entrée les tests à réaliser et renvoie en sortie un fichier de log et de résultats pour faciliter l'intervention.
 
+Vous pouvez télécharger le script en `.zip`:
+![Download example](ressources/download.png)
+
+Ou bien en clonant le répertoire `git`:
+```bash
+git clone https://codeberg.org/wilhembk/cisco-nxapi-wrapper.git
+```
+
 ## Premier démarrage
 
 Le script est compatible avec Python 3.10+ (3.11 recommandé). Assurez-vous d'avoir `pip` installé.
@@ -367,8 +375,6 @@ Consider unplugging or disabling them to not be notified again.
 
 ## Avec Docker
 
-## Avec Docker
-
 Le script est fourni avec un `Dockerfile` et peut donc être exécuté facilement dans un conteneur Docker. Ainsi, il peut être déployé sur plusieurs machines pour faire des analyses en parallèle.
 
 Récupérez ce conteneur directement depuis [Docker Hub](https://hub.docker.com/r/wilhembk/cisco-nxapi-wrapper):
@@ -377,8 +383,9 @@ docker pull wilhembk/cisco-nxapi-wrapper
 ```
 Ou bien vous pouvez aussi le construire directement, en étant dans le dossier de travail:
 ```bash
-docker build -t cisco-nxapi-wrapper .
+docker build -t wilhembk/cisco-nxapi-wrapper .
 ```
+> Vous pouvez donner le nom que vous souhaitez au container plutôt que `wilhembk/cisco-nxapi-wrapper`, mais veillez à repercutez ce changement sur la commande `docker run` plus bas 
 
 ### Configuration nécessaire
 
@@ -430,7 +437,7 @@ docker run --rm --env-file /chemin/du/.env \
     -v "/chemin/switch_ips.txt:/data/switch_ips.txt" \
     -v "/chemin/du/dossier/outputs:/outputs" \
     -v "/chemin/du/dossier/references/CRC:/data/references_data" \
-    cisco-nxapi-wrapper:latest \
+    wilhembk/cisco-nxapi-wrapper:latest \
     /data/switch_ips.txt /outputs/logs /outputs/results \
     --unused_ports 90 0 --half_duplex --err_disabled --check_transceivers WARN  \
     --CRC 5 /data/references_data --PTP 2 1 500 --timeout 30
