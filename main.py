@@ -1,3 +1,8 @@
+"""
+Author: Wilhem Blondel
+Website: https://wilhemb.fr
+"""
+
 import argparse
 import os
 from src.switch_connection import SwitchConnection

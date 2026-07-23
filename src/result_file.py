@@ -1,3 +1,8 @@
+"""
+Author: Wilhem Blondel
+Website: https://wilhemb.fr
+"""
+
 import time
 from enum import Enum
 from src.utils import ANSI

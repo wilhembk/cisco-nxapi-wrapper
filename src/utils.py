@@ -1,3 +1,8 @@
+"""
+Author: Wilhem Blondel
+Website: https://wilhemb.fr
+"""
+
 from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, List, Any, cast
 
