@@ -203,12 +203,21 @@ Pour consulter la documentation il faut aller dans `Help Center > Lan Fabric > L
 
 Le script a pour vocation d'être un cronjob. Il prend en entrée les tests à réaliser et renvoie en sortie un fichier de log et de résultats pour faciliter l'intervention.
 
-Vous pouvez télécharger le script en `.zip`:
-![Download example](ressources/download.png)
+Vous pouvez télécharger le script en `.zip` sur [Codeberg](https://codeberg.org/wilhembk/cisco-nxapi-wrapper):
 
-Ou bien en clonant le répertoire `git`:
+![How to download on Codeberg](ressources/download.png)
+
+Ou sur [GitHub](https://github.com/wilhembk/cisco-nxapi-wrapper):
+
+![How to download on GitHub](ressources/download_github.png)
+
+Ou bien en clonant le répertoire `git` de Codeberg:
 ```bash
 git clone https://codeberg.org/wilhembk/cisco-nxapi-wrapper.git
+```
+Ou le répertoire miroir disponible sur GitHub
+```bash
+git clone https://github.com/wilhembk/cisco-nxapi-wrapper.git
 ```
 
 ## Premier démarrage
